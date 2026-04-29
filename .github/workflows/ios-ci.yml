@@ -1,0 +1,40 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [ develop, main ]
+    paths: ['**/*.swift', 'Package.swift']
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Chạy trên Linux — MIỄN PHÍ
+  unit-tests:
+    name: Unit Tests (Linux - Free)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & Test
+        run: swift test --filter SharedKitTests -v
+      - name: SwiftLint
+        run: |
+          brew install swiftlint 2>/dev/null || true
+          swiftlint --strict || echo "SwiftLint warnings found"
+
+  # Job 2: Chạy trên macOS — tốn quota, chỉ khi merge main
+  ios-build:
+    name: iOS Build + Screenshot
+    runs-on: macos-14
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+      - name: Build
+        run: swift build
+      # Bước chụp screenshot sẽ thêm vào sau khi có .xcodeproj
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-results
+          path: .build/

@@ -1,0 +1,8 @@
+--allman false
+--indent 4
+--trimwhitespace always
+--commas inline
+--semicolons never
+--linebreaks lf
+--maxwidth 120
+--swiftversion 5.9
