@@ -9,7 +9,8 @@ struct AppFeature {
         var isAuthenticated: Bool = false
         var selectedTab: Tab = .home
         
-        // Child states (Sprint 1 sẽ phức tạp hơn)
+        // Child states
+        var auth = AuthFeature.State()
         // var home: HomeFeature.State = .init()
     }
     
@@ -19,6 +20,9 @@ struct AppFeature {
         case appLaunched
         case tabSelected(Tab)
         case authStateChanged(Bool)
+        
+        // Child actions
+        case auth(AuthFeature.Action)
     }
     
     // MARK: - Body (Reducer)
@@ -36,7 +40,12 @@ struct AppFeature {
             case let .authStateChanged(isAuth):
                 state.isAuthenticated = isAuth
                 return .none
+            case .auth:
+                return .none
             }
+        }
+        Scope(state: \.auth, action: \.auth) {
+            AuthFeature()
         }
     }
     
