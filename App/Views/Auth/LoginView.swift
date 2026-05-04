@@ -88,13 +88,17 @@ public struct LoginView: View {
                                 Image(systemName: "lock.fill")
                                     .foregroundColor(.gray)
                                     .frame(width: 30)
+                                    .scaleEffect(viewModel.isLoginMode ? 0.5 : 1.0)
                                 SecureField("Xác nhận Mật khẩu", text: $viewModel.confirmPassword)
                                     .foregroundColor(.white)
                             }
                             .padding()
                             .background(Color.white.opacity(0.08))
                             .cornerRadius(12)
-                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .transition(.asymmetric(
+                                insertion: .opacity.combined(with: .scale(scale: 0.9, anchor: .top)).combined(with: .offset(y: -20)),
+                                removal: .opacity.combined(with: .scale(scale: 0.9, anchor: .top)).combined(with: .offset(y: -20))
+                            ))
                         }
                     }
                     .padding(24)
@@ -149,18 +153,25 @@ public struct LoginView: View {
                     
                     // Nút chuyển chế độ
                     Button {
-                        withAnimation(.spring()) {
+                        // Hiệu ứng Haptic
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                        
+                        withAnimation(.spring(response: 0.5, dampingFraction: 0.7, blendDuration: 0.5)) {
                             viewModel.toggleMode()
                         }
                     } label: {
                         HStack(spacing: 4) {
                             Text(viewModel.isLoginMode ? "Chưa có tài khoản?" : "Đã có tài khoản?")
                                 .foregroundColor(.gray)
+                                .transition(.opacity)
                             Text(viewModel.isLoginMode ? "Đăng ký ngay" : "Đăng nhập")
                                 .foregroundColor(Color(hex: "#D4AF37"))
                                 .fontWeight(.bold)
+                                .transition(.opacity)
                         }
                         .font(.system(size: 15))
+                        .padding(.vertical, 8)
                     }
                     .padding(.top, 10)
                 }
