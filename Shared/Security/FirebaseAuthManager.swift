@@ -1,6 +1,4 @@
 import Foundation
-
-#if canImport(FirebaseAuth)
 import FirebaseAuth
 
 /// Lớp bọc (Wrapper) các chức năng xác thực của Firebase.
@@ -32,27 +30,3 @@ public actor FirebaseAuthManager {
         try Auth.auth().signOut()
     }
 }
-#else
-/// Mock Manager cho máy Windows/Linux không cài được Firebase SDK
-public actor FirebaseAuthManager {
-    public static let shared = FirebaseAuthManager()
-    private init() {}
-    
-    public var currentUserUID: String? { return nil }
-    
-    public func signIn(email: String, password: String) async throws -> String {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        if email.isEmpty || password.isEmpty {
-            throw NSError(domain: "AuthError", code: 400, userInfo: [NSLocalizedDescriptionKey: "Vui lòng nhập đầy đủ thông tin"])
-        }
-        return "mock_user_123"
-    }
-    
-    public func signUp(email: String, password: String) async throws -> String {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        return "mock_user_123"
-    }
-    
-    public func signOut() throws {}
-}
-#endif

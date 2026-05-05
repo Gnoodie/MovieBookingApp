@@ -1,19 +1,13 @@
 import SwiftUI
-
-// Nhúng thư viện Firebase
-#if canImport(FirebaseCore)
 import FirebaseCore
-#endif
 
 // Tạo AppDelegate để khởi tạo Firebase
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        #if canImport(FirebaseCore)
         FirebaseApp.configure()
         print("✅ Đã khởi tạo Firebase thành công!")
-        #endif
         
         return true
     }
