@@ -62,6 +62,9 @@ public class AuthViewModel: ObservableObject {
                     print("Đăng ký thành công với UID: \(uid)")
                 }
                 
+                // Lưu UID / Token vào Két sắt (Keychain) để ghi nhớ đăng nhập
+                KeychainWrapper.shared.save(uid, forKey: "access_token")
+                
                 self.isLoading = false
                 
                 // Đổi trạng thái toàn App để chuyển vào màn hình Home

@@ -11,7 +11,10 @@ public class AppViewModel: ObservableObject {
     }
     
     public init() {
-        // Có thể check Keychain xem người dùng đã đăng nhập trước đó chưa
-        // Nếu có thì isAuthenticated = true
+        // Kiểm tra xem Két sắt Keychain đã có token chưa
+        // Nếu có thì đổi trạng thái sang đã đăng nhập để bỏ qua màn Login
+        if let _ = KeychainWrapper.shared.get(forKey: "access_token") {
+            self.isAuthenticated = true
+        }
     }
 }
