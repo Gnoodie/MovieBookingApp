@@ -21,17 +21,22 @@ public class AppViewModel: ObservableObject {
     /// Đăng xuất: Xoá token, xoá cache, quay về màn hình Login
     @MainActor
     public func signOut() {
-        do {
-            try FirebaseAuthManager.shared.signOut()
-        } catch {
-            print("⚠️ Lỗi đăng xuất Firebase: \(error)")
+        // Gọi Firebase signOut trong Task vì FirebaseAuthManager là Actor
+        Task {
+            do {
+                try await FirebaseAuthManager.shared.signOut()
+            } catch {
+                print("⚠️ Lỗi đăng xuất Firebase: \(error)")
+            }
         }
         
         // Xoá token khỏi Két sắt
         KeychainWrapper.shared.delete(forKey: "access_token")
         
-        // Xoá dữ liệu cache
-        CacheRepository.shared.clearAll()
+        // Xoá dữ liệu cache (UserDefaults)
+        UserDefaults.standard.removeObject(forKey: "cached_movies")
+        UserDefaults.standard.removeObject(forKey: "cached_tickets")
+        UserDefaults.standard.removeObject(forKey: "cached_movies_timestamp")
         
         // Quay về màn hình đăng nhập với hiệu ứng mượt
         withAnimation(.easeInOut(duration: 0.3)) {
