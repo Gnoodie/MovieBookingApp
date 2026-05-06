@@ -1,116 +1,122 @@
 import SwiftUI
 import FirebaseCore
+import ComposableArchitecture
 
-// Tạo AppDelegate để khởi tạo Firebase
+// MARK: - AppDelegate
+
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         FirebaseApp.configure()
-        print("✅ Đã khởi tạo Firebase thành công!")
-        
+        print("✅ Firebase đã khởi tạo thành công!")
         return true
     }
 }
 
+// MARK: - Main App
+
 @main
 struct MovieBookingAppApp: App {
-    // Kết nối AppDelegate vào chu kỳ sống của SwiftUI
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
-    // Khởi tạo ViewModel tổng quản lý trạng thái của App
     @StateObject private var appViewModel = AppViewModel()
-    
-    // Trạng thái cho lớp che mờ bảo mật
+    @StateObject private var router = AppRouter()
+
     @Environment(\.scenePhase) private var scenePhase
     @State private var showPrivacyOverlay = false
-    
+
     var body: some Scene {
         WindowGroup {
             ZStack {
-                // Điều hướng màn hình dựa vào trạng thái đăng nhập
                 if appViewModel.isAuthenticated {
-                    // Màn hình chính tạm thời với nút Đăng xuất
-                    VStack(spacing: 30) {
-                        Spacer()
-                        
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(Color(hex: "#D4AF37"))
-                        
-                        Text("Đăng nhập thành công!")
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(.white)
-                        
-                        Text("Trang chủ sẽ được xây dựng ở Sprint 2")
-                            .font(.system(size: 16))
-                            .foregroundColor(.gray)
-                        
-                        Spacer()
-                        
-                        // Nút Đăng xuất
-                        Button {
-                            appViewModel.signOut()
-                        } label: {
-                            HStack {
-                                Image(systemName: "rectangle.portrait.and.arrow.right")
-                                Text("Đăng xuất")
-                                    .fontWeight(.semibold)
-                            }
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 40)
-                            .padding(.vertical, 16)
-                            .background(Color.red.opacity(0.7))
-                            .cornerRadius(14)
-                        }
-                        .padding(.bottom, 60)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(
-                        LinearGradient(
-                            colors: [Color(hex: "#0f0c29"), Color(hex: "#302b63"), Color(hex: "#24243e")],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    MainTabView()
+                        .environmentObject(router)
                 } else {
-                    // Hiển thị màn hình đăng nhập đầu tiên
                     LoginView(appViewModel: appViewModel)
                 }
-                
-                // Lớp che mờ bảo mật khi app chuyển sang background
+
+                // Privacy overlay khi app vào background
                 if showPrivacyOverlay {
-                    ZStack {
-                        Color.black.ignoresSafeArea()
-                        
-                        VStack(spacing: 12) {
-                            Image(systemName: "lock.shield.fill")
-                                .font(.system(size: 50))
-                                .foregroundColor(Color(hex: "#D4AF37"))
-                            Text("Cinematicket")
-                                .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .transition(.opacity)
+                    PrivacyOverlayView()
+                        .transition(.opacity)
                 }
             }
             .onChange(of: scenePhase) { newPhase in
-                switch newPhase {
-                case .active:
-                    // Người dùng quay lại App → ẩn lớp che
-                    withAnimation(.easeOut(duration: 0.2)) {
-                        showPrivacyOverlay = false
-                    }
-                case .inactive, .background:
-                    // App bị thu nhỏ hoặc chuyển sang background → hiện lớp che
-                    withAnimation {
-                        showPrivacyOverlay = true
-                    }
-                @unknown default:
-                    break
+                withAnimation(.easeOut(duration: 0.2)) {
+                    showPrivacyOverlay = (newPhase == .inactive || newPhase == .background)
                 }
             }
         }
     }
 }
+
+// MARK: - Main Tab View
+
+struct MainTabView: View {
+    @EnvironmentObject var router: AppRouter
+    @State private var selectedTab: Int = 0
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            // Tab 1: Phim (Home)
+            HomeView(store: Store(
+                initialState: HomeFeature.State()
+            ) {
+                HomeFeature()
+            })
+            .environmentObject(router)
+            .tabItem {
+                Label("Phim", systemImage: "film")
+            }
+            .tag(0)
+
+            // Tab 2: Tìm kiếm
+            PlaceholderView(title: "Tìm kiếm — Sprint 2+")
+                .tabItem {
+                    Label("Khám phá", systemImage: "magnifyingglass")
+                }
+                .tag(1)
+
+            // Tab 3: Vé của tôi
+            PlaceholderView(title: "Vé của tôi — Sprint 4")
+                .tabItem {
+                    Label("Vé", systemImage: "ticket.fill")
+                }
+                .tag(2)
+
+            // Tab 4: Hồ sơ
+            PlaceholderView(title: "Hồ sơ — Sprint 5")
+                .tabItem {
+                    Label("Tôi", systemImage: "person.circle")
+                }
+                .tag(3)
+        }
+        .tint(Color(hex: "#D4AF37"))
+        .onAppear {
+            // Style tab bar
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Color(hex: "#0D0D1A"))
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+}
+
+// MARK: - Privacy Overlay
+
+private struct PrivacyOverlayView: View {
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack(spacing: 12) {
+                Image(systemName: "lock.shield.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(Color(hex: "#D4AF37"))
+                Text("Cinematicket")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white)
+            }
+        }
+    }
+}
+
