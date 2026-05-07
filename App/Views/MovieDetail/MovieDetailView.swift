@@ -1,12 +1,15 @@
 import SwiftUI
-import ComposableArchitecture
 
 // MARK: - MovieDetailView
 
 struct MovieDetailView: View {
-    @Bindable var store: StoreOf<MovieDetailFeature>
+    @StateObject private var viewModel: MovieDetailViewModel
     @EnvironmentObject var router: AppRouter
     @Environment(\.dismiss) private var dismiss
+
+    init(movie: Movie) {
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
+    }
 
     var body: some View {
         ZStack {
@@ -17,30 +20,30 @@ struct MovieDetailView: View {
                 VStack(spacing: 0) {
                     // MARK: Hero Section (Backdrop + Trailer)
                     HeroSection(
-                        movie: store.movie,
-                        isTrailerPlaying: store.isTrailerPlaying,
-                        onTrailerTap: { store.send(.trailerTapped) }
+                        movie: viewModel.movie,
+                        isTrailerPlaying: viewModel.isTrailerPlaying,
+                        onTrailerTap: { viewModel.trailerTapped() }
                     )
                     .frame(height: UIScreen.main.bounds.height * 0.40)
 
                     // MARK: Movie Info
                     VStack(alignment: .leading, spacing: 20) {
                         // Title + Rating row
-                        TitleRatingRow(movie: store.movie)
+                        TitleRatingRow(movie: viewModel.movie)
 
                         // Genre chips
-                        GenreChipsRow(genres: store.movie.genre)
+                        GenreChipsRow(genres: viewModel.movie.genre)
 
                         // Synopsis
-                        SynopsisSection(text: store.movie.synopsis)
+                        SynopsisSection(text: viewModel.movie.synopsis)
 
                         // Cast
-                        if !store.movie.cast.isEmpty {
-                            CastRowView(cast: store.movie.cast)
+                        if !viewModel.movie.cast.isEmpty {
+                            CastRowView(cast: viewModel.movie.cast)
                         }
 
                         // Director
-                        InfoRow(label: "Đạo diễn", value: store.movie.director)
+                        InfoRow(label: "Đạo diễn", value: viewModel.movie.director)
 
                         Spacer().frame(height: 100)  // Space for floating button
                     }
@@ -53,7 +56,7 @@ struct MovieDetailView: View {
             VStack {
                 Spacer()
                 BuyTicketFloatingButton {
-                    router.navigateTo(.showtimePicker(movie: store.movie))
+                    router.navigateTo(.showtimePicker(movie: viewModel.movie))
                 }
             }
 
@@ -77,11 +80,11 @@ struct MovieDetailView: View {
 
                     // Favorite button
                     Button {
-                        store.send(.toggleFavorite)
+                        viewModel.toggleFavorite()
                     } label: {
-                        Image(systemName: store.isFavorite ? "heart.fill" : "heart")
+                        Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(store.isFavorite ? .red : .white)
+                            .foregroundColor(viewModel.isFavorite ? .red : .white)
                             .frame(width: 36, height: 36)
                             .background(Color.black.opacity(0.6))
                             .clipShape(Circle())
@@ -93,8 +96,8 @@ struct MovieDetailView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear { store.send(.onAppear) }
-        .onDisappear { store.send(.onDisappear) }
+        .onAppear { viewModel.onAppear() }
+        .onDisappear { viewModel.onDisappear() }
     }
 }
 

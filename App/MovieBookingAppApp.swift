@@ -1,6 +1,5 @@
 import SwiftUI
 import FirebaseCore
-import ComposableArchitecture
 
 // MARK: - AppDelegate
 
@@ -58,11 +57,7 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             // Tab 1: Phim (Home)
-            HomeView(store: Store(
-                initialState: HomeFeature.State()
-            ) {
-                HomeFeature()
-            })
+            HomeView()
             .environmentObject(router)
             .tabItem {
                 Label("Phim", systemImage: "film")

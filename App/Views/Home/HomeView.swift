@@ -1,10 +1,9 @@
 import SwiftUI
-import ComposableArchitecture
 
 // MARK: - HomeView
 
 struct HomeView: View {
-    @Bindable var store: StoreOf<HomeFeature>
+    @StateObject private var viewModel = HomeViewModel()
     @EnvironmentObject var router: AppRouter
 
     var body: some View {
@@ -24,18 +23,18 @@ struct HomeView: View {
                 )
                 .ignoresSafeArea()
 
-                if store.isLoading && store.trendingMovies.isEmpty {
+                if viewModel.isLoading && viewModel.trendingMovies.isEmpty {
                     HomeLoadingView()
-                } else if let errorMsg = store.errorMessage, store.trendingMovies.isEmpty {
+                } else if let errorMsg = viewModel.errorMessage, viewModel.trendingMovies.isEmpty {
                     HomeErrorView(message: errorMsg) {
-                        store.send(.pullToRefresh)
+                        viewModel.pullToRefresh()
                     }
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(spacing: 0) {
                             // MARK: Hero Carousel
-                            if !store.heroMovies.isEmpty {
-                                HeroCarouselView(movies: store.heroMovies) { movie in
+                            if !viewModel.heroMovies.isEmpty {
+                                HeroCarouselView(movies: viewModel.heroMovies) { movie in
                                     router.navigateTo(.movieDetail(movie))
                                 }
                                 .frame(height: UIScreen.main.bounds.height * 0.55)
@@ -43,35 +42,32 @@ struct HomeView: View {
 
                             // MARK: Search + Filter
                             VStack(spacing: 12) {
-                                SearchBarView(text: Binding(
-                                    get: { store.searchQuery },
-                                    set: { store.send(.searchQueryChanged($0)) }
-                                ))
+                                SearchBarView(text: $viewModel.searchQuery)
 
                                 FilterChipView(
-                                    selectedFilter: store.selectedFilter
+                                    selectedFilter: viewModel.selectedFilter
                                 ) { filter in
-                                    store.send(.filterChanged(filter))
+                                    viewModel.selectedFilter = filter
                                 }
                             }
                             .padding(.top, 20)
                             .padding(.horizontal, 16)
 
                             // MARK: Now Playing
-                            if !store.nowPlayingMovies.isEmpty {
+                            if !viewModel.nowPlayingMovies.isEmpty {
                                 MovieSectionView(
                                     title: "Đang Chiếu",
-                                    movies: store.displayMovies,
+                                    movies: viewModel.displayMovies,
                                     onMovieTap: { router.navigateTo(.movieDetail($0)) }
                                 )
                                 .padding(.top, 24)
                             }
 
                             // MARK: Coming Soon
-                            if !store.comingSoonMovies.isEmpty {
+                            if !viewModel.comingSoonMovies.isEmpty {
                                 MovieSectionView(
                                     title: "Sắp Chiếu",
-                                    movies: store.comingSoonMovies,
+                                    movies: viewModel.comingSoonMovies,
                                     onMovieTap: { router.navigateTo(.movieDetail($0)) }
                                 )
                                 .padding(.top, 8)
@@ -82,7 +78,7 @@ struct HomeView: View {
                         }
                     }
                     .refreshable {
-                        store.send(.pullToRefresh)
+                        viewModel.pullToRefresh()
                     }
                 }
             }
@@ -90,20 +86,12 @@ struct HomeView: View {
             .navigationDestination(for: AppRoute.self) { route in
                 switch route {
                 case .movieDetail(let movie):
-                    MovieDetailView(store: Store(
-                        initialState: MovieDetailFeature.State(movie: movie)
-                    ) {
-                        MovieDetailFeature()
-                    })
-                    .environmentObject(router)
+                    MovieDetailView(movie: movie)
+                        .environmentObject(router)
 
                 case .showtimePicker(let movie):
-                    ShowtimePickerView(store: Store(
-                        initialState: ShowtimeFeature.State(movie: movie)
-                    ) {
-                        ShowtimeFeature()
-                    })
-                    .environmentObject(router)
+                    ShowtimePickerView(movie: movie)
+                        .environmentObject(router)
 
                 default:
                     PlaceholderView(title: "Sắp ra mắt trong Sprint tiếp theo")
@@ -111,10 +99,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            store.send(.onAppear)
-        }
-        .onDisappear {
-            store.send(.onDisappear)
+            viewModel.onAppear()
         }
     }
 }

@@ -1,10 +1,10 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.5
 import PackageDescription
 
 let package = Package(
     name: "MovieBookingApp",
     platforms: [
-        .iOS(.v16)
+        .iOS(.v15)
     ],
     products: [
         .library(
@@ -16,12 +16,7 @@ let package = Package(
         // Firebase iOS SDK — dùng Firestore làm backend
         .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
-            from: "11.0.0"
-        ),
-        // The Composable Architecture — State management cho screens mới
-        .package(
-            url: "https://github.com/pointfreeco/swift-composable-architecture",
-            from: "1.0.0"
+            from: "9.6.0"
         ),
     ],
     targets: [

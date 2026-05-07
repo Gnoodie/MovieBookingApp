@@ -1,14 +1,17 @@
 import SwiftUI
-import ComposableArchitecture
 
 // MARK: - ShowtimePickerView
 
 /// Màn hình chọn ngày → rạp → suất chiếu
 /// Push từ MovieDetailView ("Mua Vé Ngay" button)
 struct ShowtimePickerView: View {
-    @Bindable var store: StoreOf<ShowtimeFeature>
+    @StateObject private var viewModel: ShowtimeViewModel
     @EnvironmentObject var router: AppRouter
     @Environment(\.dismiss) private var dismiss
+
+    init(movie: Movie) {
+        _viewModel = StateObject(wrappedValue: ShowtimeViewModel(movie: movie))
+    }
 
     var body: some View {
         ZStack {
@@ -17,41 +20,41 @@ struct ShowtimePickerView: View {
             VStack(spacing: 0) {
                 // MARK: Header
                 ShowtimeHeader(
-                    movieTitle: store.movie.title,
+                    movieTitle: viewModel.movie.title,
                     onDismiss: { dismiss() }
                 )
 
                 // MARK: Date Picker Strip
                 DatePickerStrip(
-                    dates: store.availableDates,
-                    selectedDate: store.selectedDate
+                    dates: viewModel.availableDates,
+                    selectedDate: viewModel.selectedDate
                 ) { date in
-                    store.send(.dateSelected(date))
+                    viewModel.selectedDate = date
                 }
                 .padding(.vertical, 12)
 
                 // MARK: Cinema List
-                if store.isLoadingCinemas {
+                if viewModel.isLoadingCinemas {
                     LoadingSection()
-                } else if store.sortedCinemas.isEmpty {
+                } else if viewModel.sortedCinemas.isEmpty {
                     EmptyCinemasView()
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack(spacing: 12) {
-                            ForEach(store.sortedCinemas) { cinema in
+                            ForEach(viewModel.sortedCinemas) { cinema in
                                 CinemaAccordionView(
                                     cinema: cinema,
-                                    showtimes: store.showtimesByCinema[cinema.id] ?? [],
-                                    isExpanded: store.expandedCinemaId == cinema.id,
-                                    isLoadingShowtimes: store.isLoadingShowtimes,
-                                    userLat: store.userLatitude,
-                                    userLon: store.userLongitude,
-                                    onCinemaTap: { store.send(.cinemaTapped(cinema)) },
+                                    showtimes: viewModel.showtimesByCinema[cinema.id] ?? [],
+                                    isExpanded: viewModel.expandedCinemaId == cinema.id,
+                                    isLoadingShowtimes: viewModel.isLoadingShowtimes,
+                                    userLat: viewModel.userLatitude,
+                                    userLon: viewModel.userLongitude,
+                                    onCinemaTap: { viewModel.cinemaTapped(cinema) },
                                     onShowtimeTap: { showtime in
-                                        store.send(.showtimeTapped(showtime))
+                                        viewModel.showtimeTapped(showtime)
                                         router.navigateTo(.seatMap(
                                             showtime: showtime,
-                                            movie: store.movie
+                                            movie: viewModel.movie
                                         ))
                                     }
                                 )
@@ -66,8 +69,7 @@ struct ShowtimePickerView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear { store.send(.onAppear) }
-        .onDisappear { store.send(.onDisappear) }
+        .onAppear { viewModel.onAppear() }
     }
 }
 
