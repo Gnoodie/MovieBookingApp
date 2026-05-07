@@ -7,10 +7,7 @@ struct HomeView: View {
     @EnvironmentObject var router: AppRouter
 
     var body: some View {
-        NavigationStack(path: Binding(
-            get: { router.path },
-            set: { router.path = $0 }
-        )) {
+        NavigationView {
             ZStack {
                 // Background gradient
                 LinearGradient(
@@ -34,10 +31,8 @@ struct HomeView: View {
                         VStack(spacing: 0) {
                             // MARK: Hero Carousel
                             if !viewModel.heroMovies.isEmpty {
-                                HeroCarouselView(movies: viewModel.heroMovies) { movie in
-                                    router.navigateTo(.movieDetail(movie))
-                                }
-                                .frame(height: UIScreen.main.bounds.height * 0.55)
+                                HeroCarouselView(movies: viewModel.heroMovies)
+                                    .frame(height: UIScreen.main.bounds.height * 0.55)
                             }
 
                             // MARK: Search + Filter
@@ -57,8 +52,7 @@ struct HomeView: View {
                             if !viewModel.nowPlayingMovies.isEmpty {
                                 MovieSectionView(
                                     title: "Đang Chiếu",
-                                    movies: viewModel.displayMovies,
-                                    onMovieTap: { router.navigateTo(.movieDetail($0)) }
+                                    movies: viewModel.displayMovies
                                 )
                                 .padding(.top, 24)
                             }
@@ -67,8 +61,7 @@ struct HomeView: View {
                             if !viewModel.comingSoonMovies.isEmpty {
                                 MovieSectionView(
                                     title: "Sắp Chiếu",
-                                    movies: viewModel.comingSoonMovies,
-                                    onMovieTap: { router.navigateTo(.movieDetail($0)) }
+                                    movies: viewModel.comingSoonMovies
                                 )
                                 .padding(.top, 8)
                             }
@@ -81,23 +74,12 @@ struct HomeView: View {
                         viewModel.pullToRefresh()
                     }
                 }
+
             }
             .navigationBarHidden(true)
-            .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .movieDetail(let movie):
-                    MovieDetailView(movie: movie)
-                        .environmentObject(router)
-
-                case .showtimePicker(let movie):
-                    ShowtimePickerView(movie: movie)
-                        .environmentObject(router)
-
-                default:
-                    PlaceholderView(title: "Sắp ra mắt trong Sprint tiếp theo")
-                }
-            }
+            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
             viewModel.onAppear()
         }
@@ -143,9 +125,9 @@ private struct SearchBarView: View {
 // MARK: - Movie Section (Horizontal Scroll)
 
 private struct MovieSectionView: View {
+    @EnvironmentObject var router: AppRouter
     let title: String
     let movies: [Movie]
-    let onMovieTap: (Movie) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -163,8 +145,12 @@ private struct MovieSectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(movies) { movie in
-                        MovieCardView(movie: movie)
-                            .onTapGesture { onMovieTap(movie) }
+                        NavigationLink(destination: MovieDetailView(movie: movie)
+                            .environmentObject(router)
+                        ) {
+                            MovieCardView(movie: movie)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.horizontal, 16)

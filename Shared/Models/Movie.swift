@@ -3,36 +3,36 @@ import Foundation
 // MARK: - Movie
 
 /// Entity đại diện cho một bộ phim trong hệ thống
-struct Movie: Identifiable, Equatable, Hashable, Codable {
-    let id: String
-    let title: String               // Tên tiếng Việt hiển thị
-    let originalTitle: String       // Tên gốc (tiếng Anh, Hàn...)
-    let posterURL: URL?             // Ảnh poster dọc
-    let backdropURL: URL?           // Ảnh nền ngang (hero banner)
-    let synopsis: String            // Tóm tắt nội dung
-    let duration: Int               // Thời lượng (phút)
-    let rating: Double              // Điểm đánh giá 0.0 – 10.0
-    let genre: [String]             // Thể loại: ["Hành động", "Khoa học viễn tưởng"]
-    let releaseDate: Date
-    let ageRating: AgeRating
-    let trailerURL: URL?
-    let cast: [String]              // Diễn viên chính
-    let director: String
-    let isNowPlaying: Bool          // true = đang chiếu, false = sắp chiếu
+public struct Movie: Identifiable, Equatable, Hashable, Codable {
+    public let id: String
+    public let title: String               // Tên tiếng Việt hiển thị
+    public let originalTitle: String       // Tên gốc (tiếng Anh, Hàn...)
+    public let posterURL: URL?             // Ảnh poster dọc
+    public let backdropURL: URL?           // Ảnh nền ngang (hero banner)
+    public let synopsis: String            // Tóm tắt nội dung
+    public let duration: Int               // Thời lượng (phút)
+    public let rating: Double              // Điểm đánh giá 0.0 – 10.0
+    public let genre: [String]             // Thể loại: ["Hành động", "Khoa học viễn tưởng"]
+    public let releaseDate: Date
+    public let ageRating: AgeRating
+    public let trailerURL: URL?
+    public let cast: [String]              // Diễn viên chính
+    public let director: String
+    public let isNowPlaying: Bool          // true = đang chiếu, false = sắp chiếu
 
     // MARK: - Nested Types
 
-    enum AgeRating: String, Codable, CaseIterable {
+    public enum AgeRating: String, Codable, CaseIterable {
         case general = "P"      // Mọi lứa tuổi
         case teens13 = "T13"    // Từ 13 tuổi
         case teens16 = "T16"    // Từ 16 tuổi
         case adults18 = "T18"   // Từ 18 tuổi
 
         /// Nhãn hiển thị trên UI
-        var displayLabel: String { rawValue }
+        public var displayLabel: String { rawValue }
 
         /// Màu nhãn (dùng trong DesignSystem)
-        var colorName: String {
+        public var colorName: String {
             switch self {
             case .general:  return "statusSuccess"
             case .teens13:  return "accentTeal"

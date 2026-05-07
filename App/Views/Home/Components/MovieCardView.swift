@@ -76,7 +76,7 @@ struct MovieCardView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 5)
                         .padding(.vertical, 2)
-                        .background(Color(named: movie.ageRating.colorName).opacity(0.8))
+                        .background(Color(movie.ageRating.colorName).opacity(0.8))
                         .cornerRadius(4)
                 }
                 .frame(maxWidth: 130)

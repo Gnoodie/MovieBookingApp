@@ -3,7 +3,7 @@ import Foundation
 // MARK: - AppRoute
 
 /// Centralized navigation enum cho toàn bộ app
-/// Sử dụng với NavigationStack + navigationDestination
+/// Dùng cho deep link và điều hướng đa màn hình
 enum AppRoute: Hashable {
     case home
     case movieDetail(Movie)

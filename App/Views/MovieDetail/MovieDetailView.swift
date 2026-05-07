@@ -4,8 +4,8 @@ import SwiftUI
 
 struct MovieDetailView: View {
     @StateObject private var viewModel: MovieDetailViewModel
-    @EnvironmentObject var router: AppRouter
     @Environment(\.dismiss) private var dismiss
+    @State private var showtimePickerActive = false
 
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
@@ -56,9 +56,16 @@ struct MovieDetailView: View {
             VStack {
                 Spacer()
                 BuyTicketFloatingButton {
-                    router.navigateTo(.showtimePicker(movie: viewModel.movie))
+                    showtimePickerActive = true
                 }
             }
+            NavigationLink(
+                destination: ShowtimePickerView(movie: viewModel.movie),
+                isActive: $showtimePickerActive
+            ) {
+                EmptyView()
+            }
+            .hidden()
 
             // MARK: Back Button
             VStack {

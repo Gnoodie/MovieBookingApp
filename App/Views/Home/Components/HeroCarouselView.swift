@@ -5,8 +5,8 @@ import SwiftUI
 /// Top 5 phim HOT với auto-scroll mỗi 5 giây
 /// Poster tràn viền, gradient overlay phía dưới
 struct HeroCarouselView: View {
+    @EnvironmentObject var router: AppRouter
     let movies: [Movie]
-    let onMovieTap: (Movie) -> Void
 
     @State private var currentIndex: Int = 0
     @State private var isDragging: Bool = false
@@ -19,9 +19,13 @@ struct HeroCarouselView: View {
             // MARK: TabView Carousel
             TabView(selection: $currentIndex) {
                 ForEach(Array(movies.enumerated()), id: \.offset) { index, movie in
-                    HeroSlideView(movie: movie)
-                        .tag(index)
-                        .onTapGesture { onMovieTap(movie) }
+                    NavigationLink(destination: MovieDetailView(movie: movie)
+                        .environmentObject(router)
+                    ) {
+                        HeroSlideView(movie: movie)
+                            .tag(index)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -140,7 +144,7 @@ private struct HeroInfoOverlay: View {
                 .foregroundColor(.white)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color(named: movie.ageRating.colorName).opacity(0.85))
+                .background(Color(movie.ageRating.colorName).opacity(0.85))
                 .cornerRadius(6)
 
             // Movie title

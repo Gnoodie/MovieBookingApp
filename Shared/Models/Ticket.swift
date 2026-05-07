@@ -3,46 +3,46 @@ import Foundation
 // MARK: - Ticket
 
 /// Entity đại diện cho một vé đã mua thành công
-struct Ticket: Identifiable, Equatable, Codable {
-    let id: String                  // UUID của vé
-    let bookingId: String           // Mã đặt chỗ (hiển thị cho người dùng)
-    let movieTitle: String          // Snapshot — không thay đổi dù movie data thay đổi
-    let moviePosterURL: URL?
-    let cinemaName: String
-    let cinemaAddress: String
-    let hallName: String
-    let showtime: Date
-    let format: String              // "IMAX", "2D"...
-    let language: String            // "VI", "EN"...
-    let seats: [BookedSeat]
-    let totalAmount: Decimal
-    let status: TicketStatus
-    let purchasedAt: Date
-    let qrCodeData: String          // String encode vào QR — dùng để soát vé tại rạp
-    let expiresAt: Date?            // Nếu là vé có hạn (presale)
+public struct Ticket: Identifiable, Equatable, Codable {
+    public let id: String                  // UUID của vé
+    public let bookingId: String           // Mã đặt chỗ (hiển thị cho người dùng)
+    public let movieTitle: String          // Snapshot — không thay đổi dù movie data thay đổi
+    public let moviePosterURL: URL?
+    public let cinemaName: String
+    public let cinemaAddress: String
+    public let hallName: String
+    public let showtime: Date
+    public let format: String              // "IMAX", "2D"...
+    public let language: String            // "VI", "EN"...
+    public let seats: [BookedSeat]
+    public let totalAmount: Decimal
+    public let status: TicketStatus
+    public let purchasedAt: Date
+    public let qrCodeData: String          // String encode vào QR — dùng để soát vé tại rạp
+    public let expiresAt: Date?            // Nếu là vé có hạn (presale)
 
     // MARK: - Computed Properties
 
     /// Mã đặt chỗ định dạng đẹp: "MBK-2024-001234"
-    var displayBookingId: String {
+    public var displayBookingId: String {
         "MBK-\(bookingId.uppercased())"
     }
 
     /// Danh sách tên ghế: "A5, A6, A7"
-    var seatLabels: String {
+    public var seatLabels: String {
         seats.map(\.displayName).joined(separator: ", ")
     }
 
     /// Số lượng vé
-    var ticketCount: Int { seats.count }
+    public var ticketCount: Int { seats.count }
 
-    var isActive: Bool { status == .active }
+    public var isActive: Bool { status == .active }
 
     // MARK: - Nested Types
 
-    struct BookedSeat: Equatable, Codable, Identifiable {
-        var id: String { "\(row)\(number)" }
-        let row: String
+    public struct BookedSeat: Equatable, Codable, Identifiable {
+        public var id: String { "\(row)\(number)" }
+        public let row: String
         let number: Int
         let type: String            // "Standard", "VIP", "Couple"
         let price: Decimal
@@ -50,7 +50,7 @@ struct Ticket: Identifiable, Equatable, Codable {
         var displayName: String { "\(row)\(number)" }
     }
 
-    enum TicketStatus: String, Codable, CaseIterable {
+    public enum TicketStatus: String, Codable, CaseIterable {
         case active    = "active"    // Vé hợp lệ, chưa dùng
         case used      = "used"      // Đã soát vé vào rạp
         case cancelled = "cancelled" // Đã hủy, có thể được hoàn tiền
