@@ -26,6 +26,17 @@ struct SeatMapCanvas: View {
             let yOffset = max(0, (geo.size.height - (canvasSize.height * scale)) / 2)
             
             ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color(hex: "#0D0D1A"), Color(hex: "#09090C")],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .shadow(color: .black.opacity(0.35), radius: 10, x: 0, y: 8)
+
                 Canvas { context, size in
                     // 1. Áp dụng transform cho zoom và pan
                     context.translateBy(x: offset.width, y: offset.height)
@@ -42,7 +53,6 @@ struct SeatMapCanvas: View {
                     
                 }
                 .frame(width: geo.size.width, height: geo.size.height)
-                // Pinch to Zoom
                 .gesture(
                     MagnificationGesture()
                         .onChanged { val in
@@ -72,7 +82,6 @@ struct SeatMapCanvas: View {
                             }
                         }
                 )
-                // Áp dụng offset căn giữa nếu map nhỏ hơn màn hình
                 .offset(x: xOffset, y: yOffset)
             }
             .clipped()
@@ -103,6 +112,18 @@ struct SeatMapCanvas: View {
             height: SeatMapLayout.screenCurveHeight
         )
         
+        let screenBackground = CGRect(
+            x: screenRect.minX,
+            y: screenRect.minY + 6,
+            width: screenRect.width,
+            height: screenRect.height - 6
+        )
+        let backgroundPath = Path(roundedRect: screenBackground, cornerRadius: screenBackground.height / 2)
+        context.fill(
+            backgroundPath,
+            with: .color(Color.white.opacity(0.08))
+        )
+
         var path = Path()
         path.move(to: CGPoint(x: screenRect.minX, y: screenRect.maxY))
         path.addQuadCurve(
@@ -112,18 +133,17 @@ struct SeatMapCanvas: View {
         
         context.stroke(
             path,
-            with: .color(Color(hex: "#D4AF37").opacity(0.8)),
+            with: .color(Color(hex: "#D4AF37").opacity(0.85)),
             lineWidth: 4
         )
         
-        // Chữ "MÀN HÌNH"
         let text = Text("MÀN HÌNH")
-            .font(.system(size: 10, weight: .bold))
+            .font(.system(size: 11, weight: .bold))
             .foregroundColor(.gray)
         let resolvedText = context.resolve(text)
         context.draw(
             resolvedText,
-            at: CGPoint(x: screenRect.midX, y: screenRect.maxY + 10),
+            at: CGPoint(x: screenRect.midX, y: screenRect.maxY + 12),
             anchor: .top
         )
     }
@@ -133,14 +153,26 @@ struct SeatMapCanvas: View {
             let yPos = SeatMapLayout.screenCurveHeight + SeatMapLayout.screenMarginBottom +
                        CGFloat(rowIndex) * (SeatMapLayout.seatHeight + SeatMapLayout.rowSpacing)
             
+            let labelRect = CGRect(
+                x: 0,
+                y: yPos + (SeatMapLayout.seatHeight - 28) / 2,
+                width: SeatMapLayout.rowLabelWidth,
+                height: 28
+            )
+            let labelPath = Path(roundedRect: labelRect, cornerRadius: 14)
+            context.fill(
+                labelPath,
+                with: .color(Color.white.opacity(0.08))
+            )
+
             let text = Text(row)
                 .font(.system(size: 14, weight: .bold))
                 .foregroundColor(.white)
             let resolvedText = context.resolve(text)
-            
+
             context.draw(
                 resolvedText,
-                at: CGPoint(x: SeatMapLayout.rowLabelWidth / 2, y: yPos + SeatMapLayout.seatHeight / 2),
+                at: CGPoint(x: labelRect.midX, y: labelRect.midY),
                 anchor: .center
             )
         }
@@ -191,20 +223,22 @@ struct SeatMapCanvas: View {
     
     private func seatColor(for seat: Seat, isSelected: Bool) -> Color {
         if isSelected {
-            return Color(hex: "#D4AF37") // Gold
+            return Color(hex: "#22C55E") // Selected seat green
         }
         
         switch seat.status {
-        case .booked, .held:
-            return Color(hex: "#333333") // Xám đậm
+        case .booked:
+            return Color(hex: "#374151") // Dark gray
+        case .held:
+            return Color(hex: "#F97316") // Orange for held
         case .mine:
-            return Color(hex: "#D4AF37") // Vàng nhạt (đang hold)
+            return Color(hex: "#2563EB") // Blue for user's held seats
         case .available:
             switch seat.type {
-            case .standard: return Color(hex: "#E0E0E0") // Xám nhạt
-            case .vip: return Color(hex: "#F0C850") // Vàng
-            case .couple: return Color(hex: "#FF66CC") // Hồng
-            case .wheelchair: return Color(hex: "#00C853") // Xanh lá
+            case .standard: return Color(hex: "#E5E7EB") // Light gray
+            case .vip: return Color(hex: "#FBBF24") // Amber for VIP
+            case .couple: return Color(hex: "#FB7185") // Pink for couple
+            case .wheelchair: return Color(hex: "#34D399") // Mint for wheelchair
             case .unavailable: return .clear
             }
         case .unavailable:

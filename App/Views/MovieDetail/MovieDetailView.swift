@@ -25,7 +25,7 @@ struct MovieDetailView: View {
                         isTrailerPlaying: viewModel.isTrailerPlaying,
                         onTrailerTap: { viewModel.trailerTapped() }
                     )
-                    .frame(height: min(UIScreen.main.bounds.height * 0.36, 320))
+                    .frame(height: min(UIScreen.main.bounds.height * 0.35, 280))
 
                     // MARK: Movie Info
                     VStack(alignment: .leading, spacing: 20) {
@@ -46,7 +46,7 @@ struct MovieDetailView: View {
                         // Director
                         InfoRow(label: "Đạo diễn", value: viewModel.movie.director)
 
-                        Spacer().frame(height: 100)  // Space for floating button
+                        Spacer().frame(height: 80)  // Space for floating button
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)

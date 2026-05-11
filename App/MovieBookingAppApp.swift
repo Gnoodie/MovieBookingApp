@@ -64,8 +64,7 @@ struct MainTabView: View {
             }
             .tag(0)
 
-            // Tab 2: Tìm kiếm
-            PlaceholderView(title: "Tìm kiếm — Sprint 2+")
+            SearchView()
                 .tabItem {
                     Label("Khám phá", systemImage: "magnifyingglass")
                 }

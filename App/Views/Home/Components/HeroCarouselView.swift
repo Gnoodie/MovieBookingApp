@@ -5,11 +5,12 @@ import SwiftUI
 /// Top 5 phim HOT với auto-scroll mỗi 5 giây
 /// Poster tràn viền, gradient overlay phía dưới
 struct HeroCarouselView: View {
-    @EnvironmentObject var router: AppRouter
     let movies: [Movie]
 
     @State private var currentIndex: Int = 0
     @State private var isDragging: Bool = false
+    @State private var selectedMovieForDetail: Movie? = nil
+    @State private var selectedMovieForShowtime: Movie? = nil
 
     // Auto-scroll timer
     private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
@@ -19,13 +20,14 @@ struct HeroCarouselView: View {
             // MARK: TabView Carousel
             TabView(selection: $currentIndex) {
                 ForEach(Array(movies.enumerated()), id: \.offset) { index, movie in
-                    NavigationLink(destination: MovieDetailView(movie: movie)
-                        .environmentObject(router)
-                    ) {
+                    ZStack {
                         HeroSlideView(movie: movie)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedMovieForDetail = movie
+                            }
                             .tag(index)
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -45,9 +47,17 @@ struct HeroCarouselView: View {
 
                 // Movie info
                 if movies.indices.contains(currentIndex) {
-                    HeroInfoOverlay(movie: movies[currentIndex])
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 16)
+                    HeroInfoOverlay(
+                        movie: movies[currentIndex],
+                        onBuyTicket: {
+                            selectedMovieForShowtime = movies[currentIndex]
+                        },
+                        onViewDetail: {
+                            selectedMovieForDetail = movies[currentIndex]
+                        }
+                    )
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 16)
                 }
             }
 
@@ -66,6 +76,49 @@ struct HeroCarouselView: View {
                 }
                 .padding(.bottom, 8)
             }
+
+            // Hidden navigation links for button actions
+            NavigationLink(
+                destination: Group {
+                    if let movie = selectedMovieForDetail {
+                        MovieDetailView(movie: movie)
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: Binding(
+                    get: { selectedMovieForDetail != nil },
+                    set: { isActive in
+                        if !isActive {
+                            selectedMovieForDetail = nil
+                        }
+                    }
+                )
+            ) {
+                EmptyView()
+            }
+            .hidden()
+
+            NavigationLink(
+                destination: Group {
+                    if let movie = selectedMovieForShowtime {
+                        ShowtimePickerView(movie: movie)
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: Binding(
+                    get: { selectedMovieForShowtime != nil },
+                    set: { isActive in
+                        if !isActive {
+                            selectedMovieForShowtime = nil
+                        }
+                    }
+                )
+            ) {
+                EmptyView()
+            }
+            .hidden()
         }
         .clipped()
         .onReceive(timer) { _ in
@@ -134,6 +187,8 @@ private struct HeroSlideView: View {
 
 private struct HeroInfoOverlay: View {
     let movie: Movie
+    let onBuyTicket: () -> Void
+    let onViewDetail: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -171,30 +226,34 @@ private struct HeroInfoOverlay: View {
 
             // CTA Row
             HStack(spacing: 12) {
-                HStack(spacing: 6) {
-                    Image(systemName: "ticket.fill")
-                    Text("Mua Vé")
-                        .fontWeight(.bold)
+                Button(action: onBuyTicket) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "ticket.fill")
+                        Text("Mua Vé")
+                            .fontWeight(.bold)
+                    }
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color(hex: "#D4AF37"))
+                    .cornerRadius(12)
                 }
-                .foregroundColor(.black)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(Color(hex: "#D4AF37"))
-                .cornerRadius(12)
 
-                HStack(spacing: 6) {
-                    Image(systemName: "info.circle")
-                    Text("Chi tiết")
+                Button(action: onViewDetail) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "info.circle")
+                        Text("Chi tiết")
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color.white.opacity(0.12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
+                    )
+                    .cornerRadius(12)
                 }
-                .foregroundColor(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
-                .background(Color.white.opacity(0.12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
-                )
-                .cornerRadius(12)
             }
         }
     }

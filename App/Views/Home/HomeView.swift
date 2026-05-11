@@ -35,18 +35,7 @@ struct HomeView: View {
                                     .frame(height: UIScreen.main.bounds.height * 0.55)
                             }
 
-                            // MARK: Search + Filter
-                            VStack(spacing: 12) {
-                                SearchBarView(text: $viewModel.searchQuery)
-
-                                FilterChipView(
-                                    selectedFilter: viewModel.selectedFilter
-                                ) { filter in
-                                    viewModel.selectedFilter = filter
-                                }
-                            }
-                            .padding(.top, 20)
-                            .padding(.horizontal, 16)
+                            Spacer().frame(height: 24)
 
                             // MARK: Now Playing
                             if !viewModel.nowPlayingMovies.isEmpty {
@@ -86,41 +75,6 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Search Bar
-
-private struct SearchBarView: View {
-    @Binding var text: String
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-
-            TextField("Tìm kiếm phim...", text: $text)
-                .foregroundColor(.white)
-                .autocorrectionDisabled()
-
-            if !text.isEmpty {
-                Button {
-                    text = ""
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
-                }
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
-                )
-        )
-    }
-}
 
 // MARK: - Movie Section (Horizontal Scroll)
 
