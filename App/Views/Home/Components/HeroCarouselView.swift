@@ -172,36 +172,30 @@ private struct HeroInfoOverlay: View {
 
             // CTA Row
             HStack(spacing: 12) {
-                // Buy ticket button
-                Button {} label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "ticket.fill")
-                        Text("Mua Vé")
-                            .fontWeight(.bold)
-                    }
-                    .foregroundColor(.black)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(Color(hex: "#D4AF37"))
-                    .cornerRadius(12)
+                HStack(spacing: 6) {
+                    Image(systemName: "ticket.fill")
+                    Text("Mua Vé")
+                        .fontWeight(.bold)
                 }
+                .foregroundColor(.black)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Color(hex: "#D4AF37"))
+                .cornerRadius(12)
 
-                // Info button
-                Button {} label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "info.circle")
-                        Text("Chi tiết")
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(Color.white.opacity(0.12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
-                    )
-                    .cornerRadius(12)
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle")
+                    Text("Chi tiết")
                 }
+                .foregroundColor(.white)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(Color.white.opacity(0.12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
+                )
+                .cornerRadius(12)
             }
         }
     }
