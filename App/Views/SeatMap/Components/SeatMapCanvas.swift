@@ -54,22 +54,23 @@ struct SeatMapCanvas: View {
                             lastScale = 1.0
                         }
                 )
-                // Drag to Pan
                 .simultaneousGesture(
-                    DragGesture()
+                    DragGesture(minimumDistance: 0)
                         .onChanged { val in
-                            offset = CGSize(
-                                width: lastOffset.width + val.translation.width,
-                                height: lastOffset.height + val.translation.height
-                            )
+                            if abs(val.translation.width) > 10 || abs(val.translation.height) > 10 {
+                                offset = CGSize(
+                                    width: lastOffset.width + val.translation.width,
+                                    height: lastOffset.height + val.translation.height
+                                )
+                            }
                         }
                         .onEnded { val in
-                            lastOffset = offset
+                            if abs(val.translation.width) < 10 && abs(val.translation.height) < 10 {
+                                handleTap(at: val.location, xOffset: xOffset, yOffset: yOffset)
+                            } else {
+                                lastOffset = offset
+                            }
                         }
-                )
-                // Tap to Select Seat
-                .simultaneousGesture(
-                    seatTapGesture(xOffset: xOffset, yOffset: yOffset)
                 )
                 // Áp dụng offset căn giữa nếu map nhỏ hơn màn hình
                 .offset(x: xOffset, y: yOffset)
@@ -79,27 +80,6 @@ struct SeatMapCanvas: View {
     }
     
     // MARK: - Taps
-
-    private func seatTapGesture(xOffset: CGFloat, yOffset: CGFloat) -> some Gesture {
-        #if os(visionOS)
-        return AnyGesture(
-            SpatialTapGesture()
-                .onEnded { event in
-                    handleTap(at: event.location, xOffset: xOffset, yOffset: yOffset)
-                }
-        )
-        #else
-        return AnyGesture(
-            DragGesture(minimumDistance: 0)
-                .onEnded { value in
-                    guard abs(value.translation.width) < 10, abs(value.translation.height) < 10 else {
-                        return
-                    }
-                    handleTap(at: value.location, xOffset: xOffset, yOffset: yOffset)
-                }
-        )
-        #endif
-    }
 
     private func handleTap(at location: CGPoint, xOffset: CGFloat, yOffset: CGFloat) {
         let tapX = (location.x - offset.width - xOffset) / scale

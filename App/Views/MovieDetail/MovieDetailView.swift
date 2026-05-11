@@ -25,7 +25,7 @@ struct MovieDetailView: View {
                         isTrailerPlaying: viewModel.isTrailerPlaying,
                         onTrailerTap: { viewModel.trailerTapped() }
                     )
-                    .frame(height: UIScreen.main.bounds.height * 0.40)
+                    .frame(height: min(UIScreen.main.bounds.height * 0.36, 320))
 
                     // MARK: Movie Info
                     VStack(alignment: .leading, spacing: 20) {
@@ -74,12 +74,18 @@ struct MovieDetailView: View {
                     Button {
                         dismiss()
                     } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.white)
-                            .frame(width: 36, height: 36)
-                            .background(Color.black.opacity(0.6))
-                            .clipShape(Circle())
+                        HStack(spacing: 8) {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.white)
+                            Text("Quay về")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Color.black.opacity(0.6))
+                        .clipShape(Capsule())
                     }
                     .padding(.leading, 16)
                     .padding(.top, 56)

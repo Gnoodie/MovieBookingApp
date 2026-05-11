@@ -74,12 +74,11 @@ struct HeroCarouselView: View {
                 currentIndex = (currentIndex + 1) % max(movies.count, 1)
             }
         }
-        .gesture(
+        .simultaneousGesture(
             DragGesture()
                 .onChanged { _ in isDragging = true }
                 .onEnded { _ in
                     isDragging = false
-                    // Resume auto-scroll sau 5s bằng cách không làm gì — timer sẽ tiếp tục
                 }
         )
     }
