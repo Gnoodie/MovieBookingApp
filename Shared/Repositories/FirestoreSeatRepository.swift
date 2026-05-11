@@ -93,10 +93,10 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
         let id = doc.documentID
         let row = data["row"] as? String ?? ""
         let number = data["number"] as? Int ?? 0
-        let price = data["price"] as? Int ?? 0
         
         let typeRaw = data["type"] as? String ?? "standard"
         let type = Seat.SeatType(rawValue: typeRaw) ?? .standard
+        let priceMultiplier = data["priceMultiplier"] as? Double ?? type.priceMultiplier
         
         // Xác định status, nếu heldBy là mình thì thành 'mine'
         let statusRaw = data["status"] as? String ?? "available"
@@ -110,6 +110,6 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
             }
         }
         
-        return Seat(id: id, row: row, number: number, type: type, status: status, price: price)
+        return Seat(id: id, row: row, number: number, type: type, status: status, priceMultiplier: priceMultiplier)
     }
 }

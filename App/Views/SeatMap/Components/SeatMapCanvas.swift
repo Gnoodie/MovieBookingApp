@@ -69,20 +69,7 @@ struct SeatMapCanvas: View {
                 )
                 // Tap to Select Seat
                 .simultaneousGesture(
-                    SpatialTapGesture()
-                        .onEnded { event in
-                            // Chuyển toạ độ tap (trên màn hình) về toạ độ Canvas gốc
-                            let tapX = (event.location.x - offset.width) / scale
-                            let tapY = (event.location.y - offset.height) / scale
-                            let point = CGPoint(x: tapX, y: tapY)
-                            
-                            if let seat = layout.seat(at: point) {
-                                // Haptic feedback nhẹ
-                                let generator = UIImpactFeedbackGenerator(style: .medium)
-                                generator.impactOccurred()
-                                onSeatTapped(seat)
-                            }
-                        }
+                    seatTapGesture(xOffset: xOffset, yOffset: yOffset)
                 )
                 // Áp dụng offset căn giữa nếu map nhỏ hơn màn hình
                 .offset(x: xOffset, y: yOffset)
@@ -91,6 +78,41 @@ struct SeatMapCanvas: View {
         }
     }
     
+    // MARK: - Taps
+
+    private func seatTapGesture(xOffset: CGFloat, yOffset: CGFloat) -> some Gesture {
+        #if os(visionOS)
+        return AnyGesture(
+            SpatialTapGesture()
+                .onEnded { event in
+                    handleTap(at: event.location, xOffset: xOffset, yOffset: yOffset)
+                }
+        )
+        #else
+        return AnyGesture(
+            DragGesture(minimumDistance: 0)
+                .onEnded { value in
+                    guard abs(value.translation.width) < 10, abs(value.translation.height) < 10 else {
+                        return
+                    }
+                    handleTap(at: value.location, xOffset: xOffset, yOffset: yOffset)
+                }
+        )
+        #endif
+    }
+
+    private func handleTap(at location: CGPoint, xOffset: CGFloat, yOffset: CGFloat) {
+        let tapX = (location.x - offset.width - xOffset) / scale
+        let tapY = (location.y - offset.height - yOffset) / scale
+        let point = CGPoint(x: tapX, y: tapY)
+
+        if let seat = layout.seat(at: point) {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+            onSeatTapped(seat)
+        }
+    }
+
     // MARK: - Drawing Functions
     
     private func drawScreen(context: GraphicsContext, width: CGFloat) {
@@ -202,7 +224,6 @@ struct SeatMapCanvas: View {
             case .standard: return Color(hex: "#E0E0E0") // Xám nhạt
             case .vip: return Color(hex: "#F0C850") // Vàng
             case .couple: return Color(hex: "#FF66CC") // Hồng
-            case .imax: return Color(hex: "#00D4FF") // Xanh lam
             case .wheelchair: return Color(hex: "#00C853") // Xanh lá
             case .unavailable: return .clear
             }

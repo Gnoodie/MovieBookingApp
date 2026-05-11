@@ -233,34 +233,20 @@ final class SeatMapViewModel: ObservableObject {
         holdTimerSeconds = Self.holdDurationSeconds
 
         timerTask = Task { [weak self] in
-            // Tạo AsyncStream đếm ngược 1 giây/lần
-            let stream = AsyncStream<Int> { continuation in
-                var remaining = SeatMapViewModel.holdDurationSeconds
-                let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { t in
-                    remaining -= 1
-                    continuation.yield(remaining)
-                    if remaining <= 0 {
-                        t.invalidate()
-                        continuation.finish()
-                    }
-                }
-                // Cleanup khi stream bị cancel
-                continuation.onTermination = { _ in
-                    timer.invalidate()
-                }
-                // Thêm timer vào RunLoop để chạy khi app ở background mode
-                RunLoop.main.add(timer, forMode: .common)
-            }
-
-            for await seconds in stream {
-                guard let self = self else { break }
-                if Task.isCancelled { break }
-
-                await MainActor.run {
-                    self.holdTimerSeconds = seconds
+            while let self = self, !Task.isCancelled {
+                do {
+                    try await Task.sleep(nanoseconds: 1_000_000_000)
+                } catch {
+                    break
                 }
 
-                if seconds <= 0 {
+                guard let remaining = self.holdTimerSeconds, remaining > 0 else {
+                    continue
+                }
+
+                self.holdTimerSeconds = remaining - 1
+
+                if self.holdTimerSeconds == 0 {
                     await self.handleTimerExpired()
                     break
                 }

@@ -17,6 +17,20 @@ struct Showtime: Identifiable, Equatable, Hashable, Codable {
     let availableSeats: Int         // Số ghế còn trống (cập nhật real-time qua SSE)
     let totalSeats: Int
 
+    // MARK: - Display Helpers
+
+    var cinemaName: String {
+        Cinema.mocks.first(where: { $0.id == cinemaId })?.name ?? cinemaId
+    }
+
+    var hallName: String {
+        Cinema.mocks.first(where: { $0.id == cinemaId })?.halls.first(where: { $0.id == hallId })?.name ?? hallId
+    }
+
+    var locationLabel: String {
+        [cinemaName, hallName].joined(separator: " - ")
+    }
+
     // MARK: - Computed Properties
 
     /// Thời lượng phim tính từ startTime đến endTime
