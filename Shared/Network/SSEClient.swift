@@ -15,6 +15,10 @@ public final class SSEClient: NSObject, URLSessionDataDelegate {
     private var task: URLSessionDataTask?
     private var url: URL
     
+    private var retryCount = 0
+    private let maxRetries = 3
+    private var buffer: String = ""
+    
     public init(url: URL) {
         self.url = url
         super.init()
@@ -22,6 +26,8 @@ public final class SSEClient: NSObject, URLSessionDataDelegate {
     
     /// Bắt đầu mở luồng kết nối liên tục tới Server
     public func connect() {
+        task?.cancel()
+        
         let configuration = URLSessionConfiguration.default
         // Tắt timeout để giữ luồng sống liên tục
         configuration.timeoutIntervalForRequest = TimeInterval(Int.max)
@@ -49,16 +55,30 @@ public final class SSEClient: NSObject, URLSessionDataDelegate {
         session?.invalidateAndCancel()
         task = nil
         session = nil
+        retryCount = 0
+        buffer = ""
         print("Đã đóng kết nối SSE")
     }
     
     // MARK: - URLSessionDataDelegate
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        retryCount = 0 // Reset retry count upon receiving data
         guard let messageString = String(data: data, encoding: .utf8) else { return }
         
-        // Phân tích cú pháp cơ bản của SSE (data: {...}\n\n)
-        let lines = messageString.components(separatedBy: .newlines)
+        buffer += messageString
+        let blocks = buffer.components(separatedBy: "\n\n")
+        
+        // Khối cuối cùng có thể chưa hoàn chỉnh, giữ lại trong buffer
+        buffer = blocks.last ?? ""
+        
+        for i in 0..<(blocks.count - 1) {
+            parseEventBlock(blocks[i])
+        }
+    }
+    
+    private func parseEventBlock(_ block: String) {
+        let lines = block.components(separatedBy: .newlines)
         var currentEvent: String? = nil
         var currentData: String = ""
         
@@ -67,25 +87,34 @@ public final class SSEClient: NSObject, URLSessionDataDelegate {
                 currentEvent = line.replacingOccurrences(of: "event:", with: "").trimmingCharacters(in: .whitespaces)
             } else if line.hasPrefix("data:") {
                 currentData += line.replacingOccurrences(of: "data:", with: "").trimmingCharacters(in: .whitespaces)
-            } else if line.isEmpty && !currentData.isEmpty {
-                // Đã đọc xong một Block Event
-                DispatchQueue.main.async {
-                    self.delegate?.sseClient(self, didReceiveEvent: currentEvent, message: currentData)
-                }
-                currentData = ""
-                currentEvent = nil
+            }
+        }
+        
+        if !currentData.isEmpty {
+            DispatchQueue.main.async {
+                self.delegate?.sseClient(self, didReceiveEvent: currentEvent, message: currentData)
             }
         }
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if let error = error {
-            // Loại trừ lỗi do chúng ta chủ động Cancel
-            if (error as NSError).code != NSURLErrorCancelled {
-                DispatchQueue.main.async {
-                    self.delegate?.sseClient(self, didEncounterError: error)
-                }
+        guard let error = error as NSError?, error.code != NSURLErrorCancelled else { return }
+        
+        DispatchQueue.main.async {
+            self.delegate?.sseClient(self, didEncounterError: error)
+        }
+        
+        // Auto-reconnect với exponential backoff (tối đa 3 lần)
+        if retryCount < maxRetries {
+            retryCount += 1
+            let delay = pow(2.0, Double(retryCount))
+            print("⚠️ SSE mất kết nối. Thử lại lần \(retryCount)/\(maxRetries) sau \(delay)s...")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                self?.connect()
             }
+        } else {
+            print("🚨 SSE ngắt kết nối vĩnh viễn sau \(maxRetries) lần thử lại.")
         }
     }
 }

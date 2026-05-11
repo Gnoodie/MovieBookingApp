@@ -1,4 +1,5 @@
 import SwiftUI
+import AVKit
 
 // MARK: - MovieDetailView
 
@@ -117,43 +118,68 @@ private struct HeroSection: View {
 
     var body: some View {
         ZStack {
-            // Backdrop image
-            AsyncImage(url: movie.backdropURL) { phase in
-                switch phase {
-                case .success(let image):
-                    image.resizable().scaledToFill()
-                case .empty:
-                    ShimmerView()
-                default:
-                    Color(hex: "#1C1C1E")
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .clipped()
-
-            // Gradient to black at bottom
-            LinearGradient(
-                colors: [Color.clear, Color.clear, Color(hex: "#000000")],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-
-            // Trailer play button
-            if let trailerURL = movie.trailerURL, !isTrailerPlaying {
-                Button(action: onTrailerTap) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.black.opacity(0.6))
-                            .frame(width: 60, height: 60)
-                        Image(systemName: "play.fill")
-                            .font(.system(size: 22))
-                            .foregroundColor(.white)
-                            .offset(x: 2)
+            if isTrailerPlaying, let trailerURL = movie.trailerURL {
+                TrailerPlayerView(url: trailerURL)
+            } else {
+                // Backdrop image
+                AsyncImage(url: movie.backdropURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    case .empty:
+                        ShimmerView()
+                    default:
+                        Color(hex: "#1C1C1E")
                     }
-                    .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 12)
+                }
+                .frame(maxWidth: .infinity)
+                .clipped()
+
+                // Gradient to black at bottom
+                LinearGradient(
+                    colors: [Color.clear, Color.clear, Color(hex: "#000000")],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                // Trailer play button
+                if movie.trailerURL != nil {
+                    Button(action: onTrailerTap) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.black.opacity(0.6))
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(.white)
+                                .offset(x: 2)
+                        }
+                        .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 12)
+                    }
                 }
             }
         }
+    }
+}
+
+// MARK: - TrailerPlayerView
+
+private struct TrailerPlayerView: View {
+    let url: URL
+    @State private var player: AVPlayer?
+
+    var body: some View {
+        VideoPlayer(player: player)
+            .onAppear {
+                let avPlayer = AVPlayer(url: url)
+                avPlayer.isMuted = true
+                avPlayer.play()
+                self.player = avPlayer
+            }
+            .onDisappear {
+                player?.pause()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
