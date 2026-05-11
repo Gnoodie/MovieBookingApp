@@ -8,6 +8,7 @@ struct ShowtimePickerView: View {
     @StateObject private var viewModel: ShowtimeViewModel
     @EnvironmentObject var router: AppRouter
     @Environment(\.dismiss) private var dismiss
+    @State private var selectedShowtimeForSeatMap: Showtime? = nil
 
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: ShowtimeViewModel(movie: movie))
@@ -52,10 +53,7 @@ struct ShowtimePickerView: View {
                                     onCinemaTap: { viewModel.cinemaTapped(cinema) },
                                     onShowtimeTap: { showtime in
                                         viewModel.showtimeTapped(showtime)
-                                        router.navigateTo(.seatMap(
-                                            showtime: showtime,
-                                            movie: viewModel.movie
-                                        ))
+                                        selectedShowtimeForSeatMap = showtime
                                     }
                                 )
                             }
@@ -67,6 +65,28 @@ struct ShowtimePickerView: View {
 
                 Spacer(minLength: 0)
             }
+
+            NavigationLink(
+                destination: Group {
+                    if let showtime = selectedShowtimeForSeatMap {
+                        SeatMapView(showtime: showtime, movie: viewModel.movie)
+                            .environmentObject(router)
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: Binding(
+                    get: { selectedShowtimeForSeatMap != nil },
+                    set: { isActive in
+                        if !isActive {
+                            selectedShowtimeForSeatMap = nil
+                        }
+                    }
+                )
+            ) {
+                EmptyView()
+            }
+            .hidden()
         }
         .navigationBarHidden(true)
         .onAppear { viewModel.onAppear() }
