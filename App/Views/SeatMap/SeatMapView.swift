@@ -17,11 +17,11 @@ struct SeatMapView: View {
     init(showtime: Showtime, movie: Movie) {
         _viewModel = StateObject(wrappedValue: SeatMapViewModel(showtime: showtime, movie: movie, seatRepository: FirestoreSeatRepository()))
     }
-    
+
     var body: some View {
         ZStack {
             Color(hex: "#000000").ignoresSafeArea()
-            
+
             if viewModel.isLoading {
                 VStack(spacing: 16) {
                     ProgressView().tint(Color(hex: "#D4AF37")).scaleEffect(1.5)
@@ -36,12 +36,11 @@ struct SeatMapView: View {
                 }
             } else if let seatMap = viewModel.seatMap {
                 let layout = SeatMapLayout(seatMap: seatMap)
-                
+
                 VStack(spacing: 0) {
                     // MARK: Header
                     HStack(spacing: 16) {
                         Button {
-                            // Cần release hold nếu đang hold trước khi back
                             if viewModel.isHoldActive {
                                 viewModel.cancelTimerAndRelease()
                             }
@@ -53,14 +52,13 @@ struct SeatMapView: View {
                                 .background(Color.white.opacity(0.15))
                                 .clipShape(Circle())
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 2) {
                             Text(viewModel.movie.title)
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(.white)
                                 .lineLimit(1)
-                            
-                            // Format: "19:30 - CGV Vincom" (dùng DateFormatter tuỳ ý, ở đây mock string ngắn gọn)
+
                             Text("Hôm nay - \(viewModel.showtime.cinemaName)")
                                 .font(.system(size: 13))
                                 .foregroundColor(.gray)
@@ -71,7 +69,7 @@ struct SeatMapView: View {
                     .padding(.top, 56)
                     .padding(.bottom, 16)
                     .background(Color(hex: "#1C1C1E"))
-                    
+
                     // MARK: Canvas
                     SeatMapCanvas(
                         layout: layout,
@@ -82,42 +80,41 @@ struct SeatMapView: View {
                     )
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .zIndex(1)
-                    
+
                     // MARK: Legend
                     SeatLegendView()
                         .padding(.bottom, 120)
                 }
-                
+
                 // MARK: Overlays
                 VStack {
-                    // Timer bar nếu đang hold
                     if viewModel.isHoldActive {
                         FloatingHoldTimerBar(
                             timeFormatted: viewModel.holdTimerFormatted,
                             isWarning: viewModel.isTimerWarning
                         )
-                        .padding(.top, 100) // Đẩy xuống dưới Header
+                        .padding(.top, 100)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
-                    
+
                     Spacer()
-                    
-                    // Mini Cart
+
+                    // Mini Cart — bấm 1 lần là đủ:
+                    // Nếu chưa hold → hold, onChange tự navigate sau khi thành công
+                    // Nếu đã hold → navigate ngay
                     MiniCartView(
                         selectedSeats: viewModel.selectedSeats,
                         totalPrice: viewModel.totalPriceFormatted,
                         onContinue: {
                             if viewModel.isHoldActive {
-                                // Đã hold ghế thành công → sang chọn F&B
                                 navigateToFnB = true
                             } else {
-                                // Chưa hold → gọi API hold trước
                                 viewModel.holdSelectedSeats()
                             }
                         }
                     )
                 }
-                
+
                 // Loading overlay khi đang gọi API hold
                 if viewModel.isHoldingSeats {
                     Color.black.opacity(0.5).ignoresSafeArea()
@@ -129,28 +126,33 @@ struct SeatMapView: View {
                         .tint(Color(hex: "#D4AF37"))
                 }
             }
-        }
-        .navigationBarHidden(true)
-        .background(
-            // NavigationLink ẩn — trigger khi hold thành công và user bấm "Tiếp tục"
+
+            // MARK: NavigationLink ẩn
+            // QUAN TRỌNG: Phải nằm trong ZStack, KHÔNG phải .background()
+            // iOS 15: NavigationLink trong .background() không kích hoạt navigation
             NavigationLink(
                 destination: FnBMenuView(
                     selectedSeats: viewModel.selectedSeats,
                     showtime: viewModel.showtime,
                     movie: viewModel.movie
                 ) { fnbItems in
-                    // Callback: F&B đã chọn xong → chuẩn bị sang Checkout
                     self.selectedFnBItems = fnbItems
                     // TODO Phase 3: navigate sang CheckoutView
-                    print("F&B done, items: \(fnbItems.count), proceeding to Checkout")
+                    print("✅ F&B done: \(fnbItems.count) items selected")
                 }
                 .environmentObject(router),
                 isActive: $navigateToFnB
             ) { EmptyView() }
-        )
+        }
+        .navigationBarHidden(true)
+        // Auto-navigate sau khi holdSelectedSeats() thành công — không cần bấm lần 2
+        .onChange(of: viewModel.isHoldActive) { isActive in
+            if isActive {
+                navigateToFnB = true
+            }
+        }
         .onAppear { viewModel.onAppear() }
         .onDisappear { viewModel.onDisappear() }
-        // Alert Conflict
         .alert(isPresented: $viewModel.showConflictAlert) {
             Alert(
                 title: Text("Ghế đã bị chọn"),
@@ -158,13 +160,11 @@ struct SeatMapView: View {
                 dismissButton: .default(Text("Đồng ý"))
             )
         }
-        // Alert Timeout
         .alert(isPresented: $viewModel.showTimerExpiredAlert) {
             Alert(
                 title: Text("Hết thời gian giữ ghế"),
                 message: Text("Thời gian giữ ghế đã hết. Vui lòng chọn lại ghế."),
                 dismissButton: .default(Text("Đồng ý")) {
-                    // dismiss để về màn hình suất chiếu (theo roadmap)
                     dismiss()
                 }
             )
