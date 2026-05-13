@@ -144,6 +144,8 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
             }
         }
 
-        return Seat(id: id, row: row, number: number, type: type, status: status, priceMultiplier: priceMultiplier)
+        let coupleGroupId = data["coupleGroupId"] as? String
+
+        return Seat(id: id, row: row, number: number, type: type, status: status, priceMultiplier: priceMultiplier, coupleGroupId: coupleGroupId)
     }
 }
