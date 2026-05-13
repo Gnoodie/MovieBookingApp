@@ -27,6 +27,25 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "showtimes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "cinemaId", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" },
+        { "fieldPath": "movieId", "order": "ASCENDING" },
+        { "fieldPath": "startTime", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "showtimes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "movieId", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" },
+        { "fieldPath": "startTime", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
