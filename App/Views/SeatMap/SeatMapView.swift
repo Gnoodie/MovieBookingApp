@@ -60,6 +60,11 @@ struct SeatMapView: View {
                 dismissButton: .default(Text("Đồng ý"))
             )
         }
+        .alert("Cặp ghế không khả dụng", isPresented: $viewModel.showPartnerUnavailableAlert) {
+            Button("Đồng ý", role: .cancel) {}
+        } message: {
+            Text("Ghế \(viewModel.partnerUnavailableSeatName) đã được đặt. Vui lòng chọn cặp ghế khác.")
+        }
         .alert(isPresented: $viewModel.showTimerExpiredAlert) {
             Alert(
                 title: Text("Hết thời gian giữ ghế"),

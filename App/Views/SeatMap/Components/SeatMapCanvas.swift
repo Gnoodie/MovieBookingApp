@@ -168,22 +168,19 @@ struct SeatMapCanvas: View {
         // Vẽ couple theo cặp — mỗi cặp chỉ vẽ connector 1 lần
         var drawnPairs = Set<String>()
         for seat in coupleSeats {
-            drawSingleSeat(context: context, seat: seat) // vẽ ghế như bình thường
+            drawSingleSeat(context: context, seat: seat)
 
-            // Vẽ connector ♥ giữa 2 ghế — chỉ 1 lần cho mỗi cặp
-            guard !drawnPairs.contains(seat.id) else { continue }
+            guard !drawnPairs.contains(seat.id),
+                  let groupId = seat.coupleGroupId else { continue }
+
             if let partner = coupleSeats.first(where: {
-                $0.id != seat.id
-                && $0.row == seat.row
-                && abs($0.number - seat.number) == 1
+                $0.id != seat.id && $0.coupleGroupId == groupId
             }) {
-                // Đánh dấu cả 2 đã xử lý
                 drawnPairs.insert(seat.id)
                 drawnPairs.insert(partner.id)
 
                 let leftSeat  = seat.number < partner.number ? seat : partner
                 let rightSeat = seat.number < partner.number ? partner : seat
-
                 drawCoupleBracket(context: context, leftSeat: leftSeat, rightSeat: rightSeat)
             }
         }
@@ -196,41 +193,44 @@ struct SeatMapCanvas: View {
         renderSeatShape(context: context, frame: frame, seat: seat, isSelected: isSelected)
     }
 
-    /// Vẽ dấu nối giữa 2 ghế couple: đường bracket phía dưới + icon ♥ ở giữa
+    /// Vẽ dấu nối giữa 2 ghế couple: bracket phía dưới + icon ♥ ở giữa
     private func drawCoupleBracket(context: GraphicsContext, leftSeat: Seat, rightSeat: Seat) {
         guard
             let leftFrame  = layout.seatFrames[leftSeat.id],
             let rightFrame = layout.seatFrames[rightSeat.id]
         else { return }
 
-        let isEitherSelected = selectedSeatIds.contains(leftSeat.id) || selectedSeatIds.contains(rightSeat.id)
-        let isBooked = leftSeat.status == .booked || leftSeat.status == .held
+        let isEitherSelected  = selectedSeatIds.contains(leftSeat.id) || selectedSeatIds.contains(rightSeat.id)
+        let isEitherUnavailable = leftSeat.status == .booked || leftSeat.status == .held
+                               || rightSeat.status == .booked || rightSeat.status == .held
 
-        let accentColor: Color = isEitherSelected
-            ? Color(hex: "#39D98A")
-            : isBooked
-                ? Color(hex: "#FF6B9D").opacity(0.2)
-                : Color(hex: "#FF6B9D").opacity(0.7)
+        // Màu connector theo trạng thái cặp
+        let accentColor: Color
+        if isEitherSelected {
+            accentColor = Color(hex: "#39D98A")           // Đang chọn → xanh mint
+        } else if isEitherUnavailable {
+            accentColor = Color(hex: "#FF6B9D").opacity(0.2) // 1 trong 2 đã đặt → mờ
+        } else {
+            accentColor = Color(hex: "#FF6B9D").opacity(0.7) // Cả 2 trống → hồng
+        }
 
-        // Khoảng giữa 2 ghế
-        let gapMinX = leftFrame.maxX
-        let gapMaxX = rightFrame.minX
-        let midX    = (gapMinX + gapMaxX) / 2
-        let midY    = leftFrame.midY
+        let midX = (leftFrame.maxX + rightFrame.minX) / 2
+        let midY = leftFrame.midY
 
-        // Bracket phía dưới nối 2 ghế
+        // Bracket phía dưới
         if scale > 0.7 {
             let bracketY = leftFrame.maxY + 3
             var bracketPath = Path()
-            bracketPath.move(to: CGPoint(x: leftFrame.midX, y: bracketY))
-            bracketPath.addLine(to: CGPoint(x: leftFrame.midX, y: bracketY + 4))
+            bracketPath.move(to: CGPoint(x: leftFrame.midX,  y: bracketY))
+            bracketPath.addLine(to: CGPoint(x: leftFrame.midX,  y: bracketY + 4))
             bracketPath.addLine(to: CGPoint(x: rightFrame.midX, y: bracketY + 4))
             bracketPath.addLine(to: CGPoint(x: rightFrame.midX, y: bracketY))
-            context.stroke(bracketPath, with: .color(accentColor.opacity(0.6)),
+            context.stroke(bracketPath,
+                           with: .color(accentColor.opacity(0.6)),
                            style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
         }
 
-        // Icon ♥ ở giữa khoảng gap
+        // Icon ♥
         guard scale > 0.65 else { return }
         let heartSize: CGFloat = isEitherSelected ? 12 : 10
         let heartText = Text("♥")
@@ -239,6 +239,16 @@ struct SeatMapCanvas: View {
         context.draw(context.resolve(heartText),
                      at: CGPoint(x: midX, y: midY),
                      anchor: .center)
+
+        // Nếu 1 trong 2 đã booked: vẽ dấu ✕ nhỏ trên ♥ để báo không thể chọn
+        if isEitherUnavailable && scale > 0.8 {
+            let xText = Text("✕")
+                .font(.system(size: 7, weight: .black))
+                .foregroundColor(Color.red.opacity(0.6))
+            context.draw(context.resolve(xText),
+                         at: CGPoint(x: midX + 7, y: midY - 5),
+                         anchor: .center)
+        }
     }
 
     /// Render shape + màu + viền + số ghế cho 1 ô ghế

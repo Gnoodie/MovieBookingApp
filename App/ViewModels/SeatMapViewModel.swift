@@ -23,9 +23,13 @@ final class SeatMapViewModel: ObservableObject {
     /// true khi đang trong trạng thái hold (đã gọi POST /seats/hold thành công)
     @Published var isHoldActive: Bool = false
 
-    /// Alert hiện khi ghế bị người khác chọn trước (409 conflict)
+    /// Alert hiện khi ghế bị người khác chọn trước (409 conflict từ server)
     @Published var showConflictAlert: Bool = false
     @Published var conflictSeatName: String = ""
+
+    /// Alert hiện khi tap ghế couple nhưng partner đã booked/held
+    @Published var showPartnerUnavailableAlert: Bool = false
+    @Published var partnerUnavailableSeatName: String = ""
 
     /// Alert hiện khi hold timer hết giờ
     @Published var showTimerExpiredAlert: Bool = false
@@ -161,13 +165,15 @@ final class SeatMapViewModel: ObservableObject {
     // MARK: - Seat Selection
 
     /// Tap vào một ghế — toggle select.
-    /// Nếu là ghế couple: tự động chọn/bỏ cả 2 ghế trong cặp.
+    /// Ghế couple: kiểm tra cả cặp trước khi cho chọn.
     func seatTapped(_ seat: Seat) {
-        guard seat.status == .available || seat.status == .mine else { return }
-
         if seat.type == .couple {
+            // Couple: cho phép tap vào ghế available hoặc mine
+            // (guard partner ở trong handleCoupleSeatTapped)
+            guard seat.status == .available || seat.status == .mine else { return }
             handleCoupleSeatTapped(seat)
         } else {
+            guard seat.status == .available || seat.status == .mine else { return }
             handleSingleSeatTapped(seat)
         }
     }
@@ -190,9 +196,19 @@ final class SeatMapViewModel: ObservableObject {
 
     private func handleCoupleSeatTapped(_ seat: Seat) {
         guard let seats = seatMap?.seats else { return }
-        guard let partner = partnerSeat(of: seat, in: seats) else {
-            // Không tìm được partner → treat như ghế đơn
-            handleSingleSeatTapped(seat)
+
+        // Không tìm được partner → ghế couple lỗi data, không cho chọn
+        guard let partner = partnerSeat(of: seat, in: seats) else { return }
+
+        // Nếu partner đã booked/held → cả cặp không thể chọn
+        let partnerUnavailable = partner.status == .booked
+            || partner.status == .held
+            || partner.status == .unavailable
+
+        if partnerUnavailable {
+            // Alert riêng: partner đã bị đặt → cả cặp không thể chọn
+            partnerUnavailableSeatName = "\(seat.displayName) & \(partner.displayName)"
+            showPartnerUnavailableAlert = true
             return
         }
 
@@ -207,25 +223,15 @@ final class SeatMapViewModel: ObservableObject {
                 Task { await releaseCurrentHold() }
             }
         } else {
-            // Kiểm tra partner có available không
-            guard partner.status == .available || partner.status == .mine else {
-                // Partner đã bị đặt → không cho chọn, hiện thông báo
-                conflictSeatName = partner.displayName
-                showConflictAlert = true
-                return
-            }
-
-            // Kiểm tra còn đủ slot không (cần 2 slot)
-            let slotsNeeded = 2
-            guard selectedSeatIds.count + slotsNeeded <= Self.maxSeatSelection else { return }
+            // Cần đủ 2 slot trống
+            guard selectedSeatIds.count + 2 <= Self.maxSeatSelection else { return }
 
             selectedSeatIds.insert(seat.id)
             selectedSeatIds.insert(partner.id)
         }
     }
 
-    /// Tìm ghế partner của một ghế couple dựa theo coupleGroupId.
-    /// E1+E2 cùng group "E-couple-1" → luôn đúng cặp dù số không kề nhau.
+    /// Tìm ghế partner dựa theo coupleGroupId — không dùng vị trí số.
     private func partnerSeat(of seat: Seat, in seats: [Seat]) -> Seat? {
         guard let groupId = seat.coupleGroupId else { return nil }
         return seats.first {
