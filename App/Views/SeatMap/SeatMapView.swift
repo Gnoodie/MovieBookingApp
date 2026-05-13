@@ -3,133 +3,37 @@ import SwiftUI
 // MARK: - SeatMapView
 
 /// Màn hình chọn ghế chính của Sprint 3
-/// Tích hợp SeatMapCanvas, Legend, MiniCart và logic Hold ghế
+/// v2: Header cải thiện, animation mượt, layout tổng thể đẹp hơn
 struct SeatMapView: View {
     @StateObject private var viewModel: SeatMapViewModel
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var router: AppRouter
 
-    /// Trigger navigation sang FnBMenuView khi hold ghế thành công
     @State private var navigateToFnB: Bool = false
-    /// F&B items đã chọn (được set sau khi FnBMenuView trả về)
     @State private var selectedFnBItems: [FnBOrderItem] = []
 
     init(showtime: Showtime, movie: Movie) {
-        _viewModel = StateObject(wrappedValue: SeatMapViewModel(showtime: showtime, movie: movie, seatRepository: FirestoreSeatRepository()))
+        _viewModel = StateObject(wrappedValue: SeatMapViewModel(
+            showtime: showtime,
+            movie: movie,
+            seatRepository: FirestoreSeatRepository()
+        ))
     }
 
     var body: some View {
         ZStack {
-            Color(hex: "#000000").ignoresSafeArea()
+            Color(hex: "#06060C").ignoresSafeArea()
 
             if viewModel.isLoading {
-                VStack(spacing: 16) {
-                    ProgressView().tint(Color(hex: "#D4AF37")).scaleEffect(1.5)
-                    Text("Đang tải sơ đồ rạp...").foregroundColor(.gray)
-                }
+                loadingView
             } else if let error = viewModel.errorMessage {
-                VStack(spacing: 16) {
-                    Image(systemName: "exclamationmark.triangle").font(.system(size: 40)).foregroundColor(.red)
-                    Text(error).foregroundColor(.white)
-                    Button("Thử lại") { viewModel.loadSeats() }
-                        .padding().background(Color(hex: "#D4AF37")).cornerRadius(8).foregroundColor(.black)
-                }
+                errorView(error)
             } else if let seatMap = viewModel.seatMap {
                 let layout = SeatMapLayout(seatMap: seatMap)
-
-                VStack(spacing: 0) {
-                    // MARK: Header
-                    HStack(spacing: 16) {
-                        Button {
-                            if viewModel.isHoldActive {
-                                viewModel.cancelTimerAndRelease()
-                            }
-                            dismiss()
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(.white)
-                                .frame(width: 36, height: 36)
-                                .background(Color.white.opacity(0.15))
-                                .clipShape(Circle())
-                        }
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(viewModel.movie.title)
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white)
-                                .lineLimit(1)
-
-                            Text("Hôm nay - \(viewModel.showtime.cinemaName)")
-                                .font(.system(size: 13))
-                                .foregroundColor(.gray)
-                        }
-                        Spacer()
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 56)
-                    .padding(.bottom, 16)
-                    .background(Color(hex: "#1C1C1E"))
-
-                    // MARK: Canvas
-                    SeatMapCanvas(
-                        layout: layout,
-                        selectedSeatIds: viewModel.selectedSeatIds,
-                        onSeatTapped: { seat in
-                            viewModel.seatTapped(seat)
-                        }
-                    )
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .zIndex(1)
-
-                    // MARK: Legend
-                    SeatLegendView()
-                        .padding(.bottom, 120)
-                }
-
-                // MARK: Overlays
-                VStack {
-                    if viewModel.isHoldActive {
-                        FloatingHoldTimerBar(
-                            timeFormatted: viewModel.holdTimerFormatted,
-                            isWarning: viewModel.isTimerWarning
-                        )
-                        .padding(.top, 100)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                    }
-
-                    Spacer()
-
-                    // Mini Cart — bấm 1 lần là đủ:
-                    // Nếu chưa hold → hold, onChange tự navigate sau khi thành công
-                    // Nếu đã hold → navigate ngay
-                    MiniCartView(
-                        selectedSeats: viewModel.selectedSeats,
-                        totalPrice: viewModel.totalPriceFormatted,
-                        onContinue: {
-                            if viewModel.isHoldActive {
-                                navigateToFnB = true
-                            } else {
-                                viewModel.holdSelectedSeats()
-                            }
-                        }
-                    )
-                }
-
-                // Loading overlay khi đang gọi API hold
-                if viewModel.isHoldingSeats {
-                    Color.black.opacity(0.5).ignoresSafeArea()
-                    ProgressView("Đang giữ ghế...")
-                        .padding()
-                        .background(Color(hex: "#1C1C1E"))
-                        .cornerRadius(12)
-                        .foregroundColor(.white)
-                        .tint(Color(hex: "#D4AF37"))
-                }
+                mainContent(layout: layout)
             }
 
-            // MARK: NavigationLink ẩn
-            // QUAN TRỌNG: Phải nằm trong ZStack, KHÔNG phải .background()
-            // iOS 15: NavigationLink trong .background() không kích hoạt navigation
+            // NavigationLink ẩn
             NavigationLink(
                 destination: FnBMenuView(
                     selectedSeats: viewModel.selectedSeats,
@@ -137,7 +41,6 @@ struct SeatMapView: View {
                     movie: viewModel.movie
                 ) { fnbItems in
                     self.selectedFnBItems = fnbItems
-                    // TODO Phase 3: navigate sang CheckoutView
                     print("✅ F&B done: \(fnbItems.count) items selected")
                 }
                 .environmentObject(router),
@@ -145,11 +48,8 @@ struct SeatMapView: View {
             ) { EmptyView() }
         }
         .navigationBarHidden(true)
-        // Auto-navigate sau khi holdSelectedSeats() thành công — không cần bấm lần 2
         .onChange(of: viewModel.isHoldActive) { isActive in
-            if isActive {
-                navigateToFnB = true
-            }
+            if isActive { navigateToFnB = true }
         }
         .onAppear { viewModel.onAppear() }
         .onDisappear { viewModel.onDisappear() }
@@ -164,10 +64,173 @@ struct SeatMapView: View {
             Alert(
                 title: Text("Hết thời gian giữ ghế"),
                 message: Text("Thời gian giữ ghế đã hết. Vui lòng chọn lại ghế."),
-                dismissButton: .default(Text("Đồng ý")) {
-                    dismiss()
-                }
+                dismissButton: .default(Text("Đồng ý")) { dismiss() }
             )
         }
+    }
+
+    // MARK: - Loading View
+
+    private var loadingView: some View {
+        VStack(spacing: 20) {
+            ZStack {
+                Circle()
+                    .stroke(Color(hex: "#1C1C2E"), lineWidth: 4)
+                    .frame(width: 56, height: 56)
+                Circle()
+                    .trim(from: 0, to: 0.7)
+                    .stroke(Color(hex: "#D4AF37"), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                    .frame(width: 56, height: 56)
+                    .rotationEffect(.degrees(-90))
+                    .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: UUID())
+            }
+            Text("Đang tải sơ đồ rạp...")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundColor(Color(hex: "#888888"))
+        }
+    }
+
+    // MARK: - Error View
+
+    private func errorView(_ error: String) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: "wifi.exclamationmark")
+                .font(.system(size: 44))
+                .foregroundColor(Color(hex: "#FF6B6B"))
+            Text(error)
+                .font(.system(size: 15, design: .rounded))
+                .foregroundColor(Color(hex: "#888888"))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+            Button("Thử lại") { viewModel.loadSeats() }
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundColor(.black)
+                .padding(.horizontal, 28)
+                .padding(.vertical, 13)
+                .background(Color(hex: "#D4AF37"))
+                .clipShape(Capsule())
+        }
+    }
+
+    // MARK: - Main Content
+
+    private func mainContent(layout: SeatMapLayout) -> some View {
+        ZStack {
+            VStack(spacing: 0) {
+                headerView
+                    .background(Color(hex: "#0D0D1A"))
+
+                SeatMapCanvas(
+                    layout: layout,
+                    selectedSeatIds: viewModel.selectedSeatIds,
+                    onSeatTapped: { seat in viewModel.seatTapped(seat) }
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                SeatLegendView()
+                    .padding(.bottom, 100)
+            }
+
+            // Overlays
+            VStack {
+                if viewModel.isHoldActive {
+                    FloatingHoldTimerBar(
+                        timeFormatted: viewModel.holdTimerFormatted,
+                        isWarning: viewModel.isTimerWarning
+                    )
+                    .padding(.top, 110)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .animation(.spring(response: 0.4, dampingFraction: 0.8), value: viewModel.isHoldActive)
+                }
+
+                Spacer()
+
+                MiniCartView(
+                    selectedSeats: viewModel.selectedSeats,
+                    totalPrice: viewModel.totalPriceFormatted,
+                    onContinue: {
+                        if viewModel.isHoldActive {
+                            navigateToFnB = true
+                        } else {
+                            viewModel.holdSelectedSeats()
+                        }
+                    }
+                )
+            }
+
+            // Hold loading overlay
+            if viewModel.isHoldingSeats {
+                Color.black.opacity(0.6).ignoresSafeArea()
+                VStack(spacing: 12) {
+                    ProgressView()
+                        .tint(Color(hex: "#39D98A"))
+                        .scaleEffect(1.4)
+                    Text("Đang giữ ghế...")
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundColor(.white)
+                }
+                .padding(28)
+                .background(Color(hex: "#1C1C2E"))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+        }
+    }
+
+    // MARK: - Header
+
+    private var headerView: some View {
+        HStack(spacing: 14) {
+            Button {
+                if viewModel.isHoldActive { viewModel.cancelTimerAndRelease() }
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(width: 38, height: 38)
+                    .background(Color.white.opacity(0.1))
+                    .clipShape(Circle())
+            }
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(viewModel.movie.title)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+
+                HStack(spacing: 4) {
+                    Image(systemName: "mappin.circle.fill")
+                        .font(.system(size: 11))
+                        .foregroundColor(Color(hex: "#888888"))
+                    Text(viewModel.showtime.cinemaName)
+                        .font(.system(size: 12, design: .rounded))
+                        .foregroundColor(Color(hex: "#888888"))
+                }
+            }
+
+            Spacer()
+
+            // Số ghế đã chọn
+            if !viewModel.selectedSeats.isEmpty {
+                Text("\(viewModel.selectedSeats.count) ghế")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color(hex: "#39D98A"))
+                    .clipShape(Capsule())
+                    .transition(.scale.combined(with: .opacity))
+                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.selectedSeats.count)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 56)
+        .padding(.bottom, 14)
+        .overlay(
+            Rectangle()
+                .fill(Color.white.opacity(0.05))
+                .frame(height: 1),
+            alignment: .bottom
+        )
     }
 }

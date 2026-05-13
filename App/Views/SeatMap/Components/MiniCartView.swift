@@ -3,70 +3,108 @@ import SwiftUI
 // MARK: - MiniCartView
 
 /// Float ở dưới cùng, hiển thị danh sách ghế đang chọn và tổng tiền
+/// v2: Animation mượt hơn, visual cải thiện
 struct MiniCartView: View {
     let selectedSeats: [Seat]
     let totalPrice: String
     let onContinue: () -> Void
-    
+
+    private var hasSeats: Bool { !selectedSeats.isEmpty }
+
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                if selectedSeats.isEmpty {
-                    Text("Vui lòng chọn ghế")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.gray)
+        HStack(spacing: 12) {
+            // MARK: Seat Info
+            VStack(alignment: .leading, spacing: 3) {
+                if hasSeats {
+                    HStack(spacing: 6) {
+                        // Badge số lượng ghế
+                        Text("\(selectedSeats.count)")
+                            .font(.system(size: 11, weight: .black, design: .rounded))
+                            .foregroundColor(.black)
+                            .frame(width: 20, height: 20)
+                            .background(Color(hex: "#39D98A"))
+                            .clipShape(Circle())
+
+                        let seatNames = selectedSeats.map(\.displayName).joined(separator: ", ")
+                        Text(seatNames)
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .leading)))
+
+                    Text(totalPrice)
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color(hex: "#39D98A"))
+                        .transition(.opacity)
                 } else {
-                    let seatNames = selectedSeats.map(\.displayName).joined(separator: ", ")
-                    Text("Ghế: \(seatNames)")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    
-                    Text("Tạm tính: \(totalPrice)")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(hex: "#00D2D3"))
+                    HStack(spacing: 6) {
+                        Image(systemName: "hand.tap")
+                            .font(.system(size: 13))
+                            .foregroundColor(Color(hex: "#555566"))
+                        Text("Chọn ghế để tiếp tục")
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundColor(Color(hex: "#555566"))
+                    }
+                    .transition(.opacity)
                 }
             }
-            
+            .animation(.easeInOut(duration: 0.25), value: hasSeats)
+
             Spacer()
-            
+
+            // MARK: Continue Button
             Button(action: onContinue) {
-                HStack {
+                HStack(spacing: 6) {
                     Text("Tiếp tục")
-                        .font(.system(size: 15, weight: .bold))
-                    Image(systemName: "chevron.right")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                    Image(systemName: "arrow.right")
                         .font(.system(size: 12, weight: .bold))
                 }
-                .foregroundColor(.black)
+                .foregroundColor(hasSeats ? .black : Color(hex: "#333344"))
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(selectedSeats.isEmpty ? Color.gray : Color(hex: "#00D2D3"))
-                .cornerRadius(12)
+                .padding(.vertical, 13)
+                .background(
+                    hasSeats
+                    ? Color(hex: "#39D98A")
+                    : Color(hex: "#1E1E2E")
+                )
+                .clipShape(Capsule())
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: hasSeats)
             }
-            .disabled(selectedSeats.isEmpty)
+            .disabled(!hasSeats)
+            .scaleEffect(hasSeats ? 1.0 : 0.96)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: hasSeats)
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(hex: "#1C1C1E").opacity(0.9))
-                // Glassmorphism effect iOS 15 compatible
-                .background(BlurView(style: .systemThinMaterialDark).clipShape(RoundedRectangle(cornerRadius: 16)))
-                .shadow(color: .black.opacity(0.3), radius: 10, y: -5)
-        )
         .padding(.horizontal, 16)
-        .padding(.bottom, 24)
+        .padding(.vertical, 14)
+        .background(
+            ZStack {
+                BlurView(style: .systemUltraThinMaterialDark)
+                Color(hex: "#0D0D1A").opacity(0.7)
+                // Top border line
+                VStack {
+                    Rectangle()
+                        .fill(Color.white.opacity(0.08))
+                        .frame(height: 1)
+                    Spacer()
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        )
+        .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: -8)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 20)
     }
 }
 
 // MARK: - BlurView
 
-/// UIViewRepresentable cho UIBlurEffect để hỗ trợ tốt trên iOS 15
 struct BlurView: UIViewRepresentable {
     let style: UIBlurEffect.Style
-    
+
     func makeUIView(context: Context) -> UIVisualEffectView {
-        return UIVisualEffectView(effect: UIBlurEffect(style: style))
+        UIVisualEffectView(effect: UIBlurEffect(style: style))
     }
-    
     func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
 }
