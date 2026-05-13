@@ -68,9 +68,13 @@ struct SearchView: View {
                 .ignoresSafeArea()
 
                 VStack(spacing: 16) {
-                    SearchBar(query: $viewModel.query, onCommit: viewModel.searchMovies, onClear: viewModel.clearSearch)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 16)
+                    SearchBar(
+                        query: $viewModel.query,
+                        onCommit: { viewModel.searchMovies() },  // ✅ wrap closure
+                        onClear: {viewModel.clearSearch() }
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
 
                     if viewModel.query.isEmpty {
                         VStack(spacing: 12) {
@@ -150,8 +154,8 @@ private struct SearchBar: View {
 
             TextField("Tìm kiếm phim...", text: $query, onCommit: onCommit)
                 .foregroundColor(.white)
-                .autocorrectionDisabled()
-                .submitLabel(.search)
+                .disableAutocorrection(true)
+                .submitLabel(SubmitLabel.search)
 
             if !query.isEmpty {
                 Button(action: onClear) {

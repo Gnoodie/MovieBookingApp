@@ -61,7 +61,7 @@ final class SeatMapViewModel: ObservableObject {
     }
 
     var totalPrice: Decimal {
-        let basePrice = Decimal(showtime.basePrice)
+        let basePrice = showtime.basePrice
         return selectedSeats.reduce(Decimal(0)) { $0 + $1.price(basePrice: basePrice) }
     }
 

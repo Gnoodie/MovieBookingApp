@@ -121,7 +121,8 @@ enum FirestoreMovieMapper {
             ageRating: ageRating,
             trailerURL: trailerURL,
             cast: cast,
-            director: director
+            director: director,
+            isNowPlaying: true
         )
     }
 

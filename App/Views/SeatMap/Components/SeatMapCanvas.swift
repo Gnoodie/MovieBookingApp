@@ -76,7 +76,10 @@ struct SeatMapCanvas: View {
                         }
                         .onEnded { val in
                             if abs(val.translation.width) < 10 && abs(val.translation.height) < 10 {
-                                handleTap(at: val.location, xOffset: xOffset, yOffset: yOffset)
+                                // ✅ KHÔNG truyền xOffset/yOffset vào đây
+                                // vì Canvas đã bị .offset() bởi SwiftUI,
+                                // DragGesture.location đã tính theo vị trí thực của Canvas
+                                handleTap(at: val.location)
                             } else {
                                 lastOffset = offset
                             }
@@ -90,9 +93,9 @@ struct SeatMapCanvas: View {
     
     // MARK: - Taps
 
-    private func handleTap(at location: CGPoint, xOffset: CGFloat, yOffset: CGFloat) {
-        let tapX = (location.x - offset.width - xOffset) / scale
-        let tapY = (location.y - offset.height - yOffset) / scale
+    private func handleTap(at location: CGPoint) {
+        let tapX = (location.x - offset.width) / scale
+        let tapY = (location.y - offset.height) / scale
         let point = CGPoint(x: tapX, y: tapY)
 
         if let seat = layout.seat(at: point) {
