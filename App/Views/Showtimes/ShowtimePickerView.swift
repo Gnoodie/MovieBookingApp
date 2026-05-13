@@ -151,7 +151,7 @@ private struct EmptyCinemasView: View {
     var body: some View {
         VStack(spacing: 16) {
             Spacer()
-            Image(systemName: "film.slash")
+            Image(systemName: "video.slash")
                 .font(.system(size: 44))
                 .foregroundColor(.gray)
             Text("Không có rạp chiếu")
