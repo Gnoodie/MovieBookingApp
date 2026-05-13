@@ -8,7 +8,12 @@ struct SeatMapView: View {
     @StateObject private var viewModel: SeatMapViewModel
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var router: AppRouter
-    
+
+    /// Trigger navigation sang FnBMenuView khi hold ghế thành công
+    @State private var navigateToFnB: Bool = false
+    /// F&B items đã chọn (được set sau khi FnBMenuView trả về)
+    @State private var selectedFnBItems: [FnBOrderItem] = []
+
     init(showtime: Showtime, movie: Movie) {
         _viewModel = StateObject(wrappedValue: SeatMapViewModel(showtime: showtime, movie: movie, seatRepository: FirestoreSeatRepository()))
     }
@@ -103,11 +108,10 @@ struct SeatMapView: View {
                         totalPrice: viewModel.totalPriceFormatted,
                         onContinue: {
                             if viewModel.isHoldActive {
-                                // Nếu đã hold rồi thì đi tiếp Checkout (Sprint 4)
-                                // router.navigateTo(.checkout)
-                                print("Tiếp tục sang Checkout")
+                                // Đã hold ghế thành công → sang chọn F&B
+                                navigateToFnB = true
                             } else {
-                                // Chưa hold thì gọi API hold
+                                // Chưa hold → gọi API hold trước
                                 viewModel.holdSelectedSeats()
                             }
                         }
@@ -127,6 +131,23 @@ struct SeatMapView: View {
             }
         }
         .navigationBarHidden(true)
+        .background(
+            // NavigationLink ẩn — trigger khi hold thành công và user bấm "Tiếp tục"
+            NavigationLink(
+                destination: FnBMenuView(
+                    selectedSeats: viewModel.selectedSeats,
+                    showtime: viewModel.showtime,
+                    movie: viewModel.movie
+                ) { fnbItems in
+                    // Callback: F&B đã chọn xong → chuẩn bị sang Checkout
+                    self.selectedFnBItems = fnbItems
+                    // TODO Phase 3: navigate sang CheckoutView
+                    print("F&B done, items: \(fnbItems.count), proceeding to Checkout")
+                }
+                .environmentObject(router),
+                isActive: $navigateToFnB
+            ) { EmptyView() }
+        )
         .onAppear { viewModel.onAppear() }
         .onDisappear { viewModel.onDisappear() }
         // Alert Conflict
