@@ -7,11 +7,11 @@ struct SeatLegendView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                LegendItem(color: Color(hex: "#00D09C"), label: "Thường")
-                LegendItem(color: Color(hex: "#FFB300"), label: "VIP")
-                LegendItem(color: Color(hex: "#FF4081"), label: "Sweetbox")
-                LegendItem(color: Color(hex: "#D4AF37"), label: "Đang chọn")
-                LegendItem(color: Color(hex: "#333333"), label: "Đã bán")
+                LegendItem(color: Color(hex: "#5B8DEF"), label: "Thường")
+                LegendItem(color: Color(hex: "#FF9F43"), label: "VIP")
+                LegendItem(color: Color(hex: "#FF6B9D"), label: "Sweetbox 💑")
+                LegendItem(color: Color(hex: "#00D2D3"), label: "Đang chọn")
+                LegendItem(color: Color(hex: "#57606F"), label: "Đã mua")
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

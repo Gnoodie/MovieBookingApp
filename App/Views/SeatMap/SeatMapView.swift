@@ -80,6 +80,7 @@ struct SeatMapView: View {
                     
                     // MARK: Legend
                     SeatLegendView()
+                        .padding(.bottom, 120)
                 }
                 
                 // MARK: Overlays

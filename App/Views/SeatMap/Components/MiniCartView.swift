@@ -24,7 +24,7 @@ struct MiniCartView: View {
                     
                     Text("Tạm tính: \(totalPrice)")
                         .font(.system(size: 12))
-                        .foregroundColor(Color(hex: "#D4AF37"))
+                        .foregroundColor(Color(hex: "#00D2D3"))
                 }
             }
             
@@ -40,7 +40,7 @@ struct MiniCartView: View {
                 .foregroundColor(.black)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
-                .background(selectedSeats.isEmpty ? Color.gray : Color(hex: "#D4AF37"))
+                .background(selectedSeats.isEmpty ? Color.gray : Color(hex: "#00D2D3"))
                 .cornerRadius(12)
             }
             .disabled(selectedSeats.isEmpty)

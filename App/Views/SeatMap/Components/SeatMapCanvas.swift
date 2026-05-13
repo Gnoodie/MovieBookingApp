@@ -187,7 +187,7 @@ struct SeatMapCanvas: View {
             
             let isSelected = selectedSeatIds.contains(seat.id)
             let fillColor = seatColor(for: seat, isSelected: isSelected)
-            let borderColor = isSelected ? Color(hex: "#D4AF37") : Color.clear
+            let borderColor = isSelected ? Color(hex: "#00D2D3") : Color.clear
             
             let path = Path(roundedRect: frame, cornerRadius: 6)
             
@@ -216,20 +216,20 @@ struct SeatMapCanvas: View {
     
     private func seatColor(for seat: Seat, isSelected: Bool) -> Color {
         if isSelected {
-            return Color(hex: "#D4AF37") // Gold/Yellow
+            return Color(hex: "#00D2D3") // Mint
         }
         
         switch seat.status {
         case .booked, .held:
-            return Color(hex: "#333333") // Dark gray
+            return Color(hex: "#57606F") // Gray
         case .mine:
-            return Color(hex: "#D4AF37")
+            return Color(hex: "#00D2D3")
         case .available:
             switch seat.type {
-            case .standard: return Color(hex: "#00D09C") // Green
-            case .vip: return Color(hex: "#FFB300") // Orange
-            case .couple: return Color(hex: "#FF4081") // Pink
-            case .wheelchair: return Color(hex: "#00D09C")
+            case .standard: return Color(hex: "#5B8DEF") // Navy
+            case .vip: return Color(hex: "#FF9F43") // Amber
+            case .couple: return Color(hex: "#FF6B9D") // Pink
+            case .wheelchair: return Color(hex: "#5B8DEF")
             case .unavailable: return .clear
             }
         case .unavailable:
