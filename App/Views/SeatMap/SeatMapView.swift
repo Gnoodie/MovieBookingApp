@@ -10,7 +10,7 @@ struct SeatMapView: View {
     @EnvironmentObject var router: AppRouter
     
     init(showtime: Showtime, movie: Movie) {
-        _viewModel = StateObject(wrappedValue: SeatMapViewModel(showtime: showtime, movie: movie))
+        _viewModel = StateObject(wrappedValue: SeatMapViewModel(showtime: showtime, movie: movie, seatRepository: FirestoreSeatRepository()))
     }
     
     var body: some View {

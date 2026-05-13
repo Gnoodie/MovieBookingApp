@@ -125,20 +125,28 @@ final class SeatMapViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        Task {
-            do {
-                let seats = try await seatRepository.fetchSeats(showtimeId: showtime.id)
-                // Build SeatMap từ flat array seats
+        sseTask?.cancel()
+        sseTask = Task {
+            for await seats in seatRepository.listenToSeats(showtimeId: showtime.id) {
                 let rows = Array(Set(seats.map { $0.row })).sorted()
+                
+                // Cập nhật lại danh sách đang chọn nếu có người khác lấy mất
+                var updatedSelectedIds = self.selectedSeatIds
+                for seat in seats {
+                    if self.selectedSeatIds.contains(seat.id) {
+                        if (seat.status == .held || seat.status == .booked) && !self.isHoldActive {
+                            updatedSelectedIds.remove(seat.id)
+                        }
+                    }
+                }
+                self.selectedSeatIds = updatedSelectedIds
+                
                 self.seatMap = SeatMap(
-                    showtimeId: showtime.id,
+                    showtimeId: self.showtime.id,
                     rows: rows,
                     seats: seats,
                     screenLabel: "MÀN HÌNH"
                 )
-                self.isLoading = false
-            } catch {
-                self.errorMessage = error.localizedDescription
                 self.isLoading = false
             }
         }

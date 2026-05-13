@@ -7,9 +7,9 @@ struct SeatLegendView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                LegendItem(color: Color(hex: "#E0E0E0"), label: "Thường")
-                LegendItem(color: Color(hex: "#F0C850"), label: "VIP")
-                LegendItem(color: Color(hex: "#FF66CC"), label: "Couple")
+                LegendItem(color: Color(hex: "#00D09C"), label: "Thường")
+                LegendItem(color: Color(hex: "#FFB300"), label: "VIP")
+                LegendItem(color: Color(hex: "#FF4081"), label: "Sweetbox")
                 LegendItem(color: Color(hex: "#D4AF37"), label: "Đang chọn")
                 LegendItem(color: Color(hex: "#333333"), label: "Đã bán")
             }
@@ -26,9 +26,9 @@ private struct LegendItem: View {
     
     var body: some View {
         HStack(spacing: 6) {
-            RoundedRectangle(cornerRadius: 4)
+            RoundedRectangle(cornerRadius: 6)
                 .fill(color)
-                .frame(width: 16, height: 16)
+                .frame(width: 20, height: 20)
             Text(label)
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(.white)

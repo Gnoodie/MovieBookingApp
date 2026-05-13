@@ -17,6 +17,32 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
         return try snapshot.documents.compactMap { try mapSeat($0) }
     }
     
+    func listenToSeats(showtimeId: String) -> AsyncStream<[Seat]> {
+        AsyncStream { continuation in
+            let listener = db.collection("showtimes")
+                .document(showtimeId)
+                .collection("seats")
+                .addSnapshotListener { snapshot, error in
+                    guard let docs = snapshot?.documents else {
+                        return
+                    }
+                    // Dùng compactMap an toàn hơn
+                    let seats = docs.compactMap { doc -> Seat? in
+                        do {
+                            return try self.mapSeat(doc)
+                        } catch {
+                            return nil
+                        }
+                    }
+                    continuation.yield(seats)
+                }
+            
+            continuation.onTermination = { @Sendable _ in
+                listener.remove()
+            }
+        }
+    }
+    
     func holdSeats(showtimeId: String, seatIds: [String]) async throws -> HoldResponse {
         // Thực hiện Firestore Transaction để đảm bảo không bị race condition khi giữ ghế
         // Production khuyến khích dùng Firebase Cloud Functions để an toàn hơn

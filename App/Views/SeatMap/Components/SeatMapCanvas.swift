@@ -136,8 +136,8 @@ struct SeatMapCanvas: View {
         
         context.stroke(
             path,
-            with: .color(Color(hex: "#D4AF37").opacity(0.85)),
-            lineWidth: 4
+            with: .color(Color(hex: "#888888")),
+            style: StrokeStyle(lineWidth: 6, lineCap: .round)
         )
         
         let text = Text("MÀN HÌNH")
@@ -203,7 +203,7 @@ struct SeatMapCanvas: View {
             if scale > 0.8 {
                 let text = Text("\(seat.number)")
                     .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(seat.status == .available || isSelected ? .black : .white.opacity(0.5))
+                    .foregroundColor(.white)
                 
                 context.draw(
                     context.resolve(text),
@@ -211,37 +211,25 @@ struct SeatMapCanvas: View {
                     anchor: .center
                 )
             }
-            
-            // Vẽ dấu X nếu đã booked
-            if seat.status == .booked {
-                var crossPath = Path()
-                crossPath.move(to: CGPoint(x: frame.minX + 6, y: frame.minY + 6))
-                crossPath.addLine(to: CGPoint(x: frame.maxX - 6, y: frame.maxY - 6))
-                crossPath.move(to: CGPoint(x: frame.maxX - 6, y: frame.minY + 6))
-                crossPath.addLine(to: CGPoint(x: frame.minX + 6, y: frame.maxY - 6))
-                context.stroke(crossPath, with: .color(.white.opacity(0.5)), lineWidth: 2)
-            }
         }
     }
     
     private func seatColor(for seat: Seat, isSelected: Bool) -> Color {
         if isSelected {
-            return Color(hex: "#22C55E") // Selected seat green
+            return Color(hex: "#D4AF37") // Gold/Yellow
         }
         
         switch seat.status {
-        case .booked:
-            return Color(hex: "#374151") // Dark gray
-        case .held:
-            return Color(hex: "#F97316") // Orange for held
+        case .booked, .held:
+            return Color(hex: "#333333") // Dark gray
         case .mine:
-            return Color(hex: "#2563EB") // Blue for user's held seats
+            return Color(hex: "#D4AF37")
         case .available:
             switch seat.type {
-            case .standard: return Color(hex: "#E5E7EB") // Light gray
-            case .vip: return Color(hex: "#FBBF24") // Amber for VIP
-            case .couple: return Color(hex: "#FB7185") // Pink for couple
-            case .wheelchair: return Color(hex: "#34D399") // Mint for wheelchair
+            case .standard: return Color(hex: "#00D09C") // Green
+            case .vip: return Color(hex: "#FFB300") // Orange
+            case .couple: return Color(hex: "#FF4081") // Pink
+            case .wheelchair: return Color(hex: "#00D09C")
             case .unavailable: return .clear
             }
         case .unavailable:

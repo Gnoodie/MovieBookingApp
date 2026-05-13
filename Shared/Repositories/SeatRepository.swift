@@ -4,6 +4,7 @@ import Foundation
 
 protocol SeatRepositoryProtocol {
     func fetchSeats(showtimeId: String) async throws -> [Seat]
+    func listenToSeats(showtimeId: String) -> AsyncStream<[Seat]>
     func holdSeats(showtimeId: String, seatIds: [String]) async throws -> HoldResponse
     func releaseSeats(holdId: String) async throws
 }
@@ -19,6 +20,12 @@ struct HoldResponse: Codable {
 struct MockSeatRepository: SeatRepositoryProtocol {
     func fetchSeats(showtimeId: String) async throws -> [Seat] {
         return SeatMap.mock(showtimeId: showtimeId).seats
+    }
+    
+    func listenToSeats(showtimeId: String) -> AsyncStream<[Seat]> {
+        AsyncStream { continuation in
+            continuation.yield(SeatMap.mock(showtimeId: showtimeId).seats)
+        }
     }
     
     func holdSeats(showtimeId: String, seatIds: [String]) async throws -> HoldResponse {
