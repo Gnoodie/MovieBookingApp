@@ -9,7 +9,7 @@ struct MovieDetailView: View {
     @State private var showtimePickerActive = false
 
     init(movie: Movie) {
-        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie, movieRepository: FirestoreMovieRepository()))
     }
 
     var body: some View {

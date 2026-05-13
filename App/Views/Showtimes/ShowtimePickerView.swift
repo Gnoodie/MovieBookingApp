@@ -11,7 +11,7 @@ struct ShowtimePickerView: View {
     @State private var selectedShowtimeForSeatMap: Showtime? = nil
 
     init(movie: Movie) {
-        _viewModel = StateObject(wrappedValue: ShowtimeViewModel(movie: movie))
+        _viewModel = StateObject(wrappedValue: ShowtimeViewModel(movie: movie, showtimeRepository: FirestoreCinemaRepository()))
     }
 
     var body: some View {

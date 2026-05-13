@@ -55,7 +55,7 @@ final class SearchViewModel: ObservableObject {
 }
 
 struct SearchView: View {
-    @StateObject private var viewModel = SearchViewModel()
+    @StateObject private var viewModel = SearchViewModel(movieRepository: FirestoreMovieRepository())
 
     var body: some View {
         NavigationView {

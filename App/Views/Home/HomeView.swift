@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - HomeView
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = HomeViewModel(movieRepository: FirestoreMovieRepository())
     @EnvironmentObject var router: AppRouter
 
     var body: some View {
