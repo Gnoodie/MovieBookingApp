@@ -224,14 +224,12 @@ final class SeatMapViewModel: ObservableObject {
         }
     }
 
-    /// Tìm ghế partner của một ghế couple:
-    /// Cùng hàng (row), cùng type = couple, số ghế kề nhau (±1), khác id.
+    /// Tìm ghế partner của một ghế couple dựa theo coupleGroupId.
+    /// E1+E2 cùng group "E-couple-1" → luôn đúng cặp dù số không kề nhau.
     private func partnerSeat(of seat: Seat, in seats: [Seat]) -> Seat? {
-        seats.first {
-            $0.id != seat.id
-            && $0.type == .couple
-            && $0.row == seat.row
-            && abs($0.number - seat.number) == 1
+        guard let groupId = seat.coupleGroupId else { return nil }
+        return seats.first {
+            $0.id != seat.id && $0.coupleGroupId == groupId
         }
     }
 
