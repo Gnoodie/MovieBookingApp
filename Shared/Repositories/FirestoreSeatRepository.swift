@@ -124,18 +124,26 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
         let type = Seat.SeatType(rawValue: typeRaw) ?? .standard
         let priceMultiplier = data["priceMultiplier"] as? Double ?? type.priceMultiplier
         
-        // Xác định status, nếu heldBy là mình thì thành 'mine'
+        // Xác định status, kiểm tra holdExpiresAt nếu ghế đang held
         let statusRaw = data["status"] as? String ?? "available"
         var status = Seat.SeatStatus(rawValue: statusRaw) ?? .available
-        
+
         if status == .held {
-            let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
-            let heldBy = data["heldBy"] as? String
-            if heldBy == userId {
-                status = .mine
+            // Kiểm tra hold đã hết hạn chưa — nếu rồi → coi như available
+            if let expiresAt = (data["holdExpiresAt"] as? Timestamp)?.dateValue(),
+               expiresAt < Date() {
+                // Hold đã hết hạn (server chưa cleanup) → available
+                status = .available
+            } else {
+                // Hold còn hiệu lực — kiểm tra có phải mình đang hold không
+                let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
+                let heldBy = data["heldBy"] as? String
+                if heldBy == userId {
+                    status = .mine
+                }
             }
         }
-        
+
         return Seat(id: id, row: row, number: number, type: type, status: status, priceMultiplier: priceMultiplier)
     }
 }

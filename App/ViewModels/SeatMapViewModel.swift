@@ -49,6 +49,9 @@ final class SeatMapViewModel: ObservableObject {
 
     /// Task quản lý hold timer AsyncStream
     private var timerTask: Task<Void, Never>? = nil
+    
+    /// Lưu thời điểm hết hạn để tính đúng giờ khi app bị suspend
+    private var expirationDate: Date? = nil
 
     /// Task quản lý SSE stream
     private var sseTask: Task<Void, Never>? = nil
@@ -238,6 +241,7 @@ final class SeatMapViewModel: ObservableObject {
 
     private func startHoldTimer() {
         timerTask?.cancel()
+        expirationDate = Date().addingTimeInterval(TimeInterval(Self.holdDurationSeconds))
         holdTimerSeconds = Self.holdDurationSeconds
 
         timerTask = Task { [weak self] in
@@ -248,15 +252,18 @@ final class SeatMapViewModel: ObservableObject {
                     break
                 }
 
-                guard let remaining = self.holdTimerSeconds, remaining > 0 else {
+                guard let expire = self.expirationDate else {
                     continue
                 }
+                
+                let remaining = Int(expire.timeIntervalSinceNow)
 
-                self.holdTimerSeconds = remaining - 1
-
-                if self.holdTimerSeconds == 0 {
+                if remaining <= 0 {
+                    self.holdTimerSeconds = 0
                     await self.handleTimerExpired()
                     break
+                } else {
+                    self.holdTimerSeconds = remaining
                 }
             }
         }
@@ -320,6 +327,7 @@ final class SeatMapViewModel: ObservableObject {
         currentHoldId = nil
         isHoldActive = false
         holdTimerSeconds = nil
+        expirationDate = nil
         timerTask?.cancel()
         timerTask = nil
 
