@@ -33,7 +33,6 @@ struct FloatingHoldTimerBar: View {
                 Text(timeFormatted)
                     .font(.system(size: 16, weight: .black, design: .monospaced))
                     .foregroundColor(isWarning ? .red : .white)
-                    .contentTransition(.numericText())
             }
         }
         .padding(.horizontal, 18)

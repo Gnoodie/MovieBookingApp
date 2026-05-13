@@ -17,7 +17,7 @@ struct SeatMapCanvas: View {
     @State private var lastOffset: CGSize = .zero
 
     // MARK: - Constants
-    private let coupleExtraWidth: CGFloat = SeatMapLayout.seatWidth + SeatMapLayout.colSpacing
+    // Không cần tính thêm — SeatMapLayout.calculateLayout() đã set frame couple = seatWidth*2 + seatSpacing
 
     var body: some View {
         GeometryReader { geo in
@@ -158,99 +158,131 @@ struct SeatMapCanvas: View {
     // MARK: - Drawing: Seats
 
     private func drawSeats(context: GraphicsContext) {
-        // Tách ghế đơn và ghế couple để vẽ đúng thứ tự (couple sau cùng tránh bị che)
         let regularSeats = layout.seats.filter { $0.type != .couple }
         let coupleSeats  = layout.seats.filter { $0.type == .couple }
 
         for seat in regularSeats {
             drawSingleSeat(context: context, seat: seat)
         }
+
+        // Vẽ couple theo cặp — mỗi cặp chỉ vẽ connector 1 lần
+        var drawnPairs = Set<String>()
         for seat in coupleSeats {
-            drawCoupleSeat(context: context, seat: seat)
+            drawSingleSeat(context: context, seat: seat) // vẽ ghế như bình thường
+
+            // Vẽ connector ♥ giữa 2 ghế — chỉ 1 lần cho mỗi cặp
+            guard !drawnPairs.contains(seat.id) else { continue }
+            if let partner = coupleSeats.first(where: {
+                $0.id != seat.id
+                && $0.row == seat.row
+                && abs($0.number - seat.number) == 1
+            }) {
+                // Đánh dấu cả 2 đã xử lý
+                drawnPairs.insert(seat.id)
+                drawnPairs.insert(partner.id)
+
+                let leftSeat  = seat.number < partner.number ? seat : partner
+                let rightSeat = seat.number < partner.number ? partner : seat
+
+                drawCoupleBracket(context: context, leftSeat: leftSeat, rightSeat: rightSeat)
+            }
         }
     }
 
-    /// Vẽ ghế đơn (standard, VIP, wheelchair)
+    /// Vẽ ghế đơn — dùng chung cho tất cả loại ghế kể cả couple (mỗi ghế là 1 ô riêng)
     private func drawSingleSeat(context: GraphicsContext, seat: Seat) {
         guard let frame = layout.seatFrames[seat.id] else { return }
         let isSelected = selectedSeatIds.contains(seat.id)
-        renderSeatShape(context: context, frame: frame, seat: seat, isSelected: isSelected, isCouple: false)
+        renderSeatShape(context: context, frame: frame, seat: seat, isSelected: isSelected)
     }
 
-    /// Vẽ ghế couple — frame rộng gấp đôi, bo tròn đặc biệt, icon trái tim
-    private func drawCoupleSeat(context: GraphicsContext, seat: Seat) {
-        guard let baseFrame = layout.seatFrames[seat.id] else { return }
+    /// Vẽ dấu nối giữa 2 ghế couple: đường bracket phía dưới + icon ♥ ở giữa
+    private func drawCoupleBracket(context: GraphicsContext, leftSeat: Seat, rightSeat: Seat) {
+        guard
+            let leftFrame  = layout.seatFrames[leftSeat.id],
+            let rightFrame = layout.seatFrames[rightSeat.id]
+        else { return }
 
-        // Mở rộng frame sang phải để bao phủ 2 vị trí ghế
-        let coupleFrame = CGRect(
-            x: baseFrame.minX,
-            y: baseFrame.minY,
-            width: baseFrame.width + coupleExtraWidth,
-            height: baseFrame.height
-        )
+        let isEitherSelected = selectedSeatIds.contains(leftSeat.id) || selectedSeatIds.contains(rightSeat.id)
+        let isBooked = leftSeat.status == .booked || leftSeat.status == .held
 
-        let isSelected = selectedSeatIds.contains(seat.id)
-        renderSeatShape(context: context, frame: coupleFrame, seat: seat, isSelected: isSelected, isCouple: true)
+        let accentColor: Color = isEitherSelected
+            ? Color(hex: "#39D98A")
+            : isBooked
+                ? Color(hex: "#FF6B9D").opacity(0.2)
+                : Color(hex: "#FF6B9D").opacity(0.7)
+
+        // Khoảng giữa 2 ghế
+        let gapMinX = leftFrame.maxX
+        let gapMaxX = rightFrame.minX
+        let midX    = (gapMinX + gapMaxX) / 2
+        let midY    = leftFrame.midY
+
+        // Bracket phía dưới nối 2 ghế
+        if scale > 0.7 {
+            let bracketY = leftFrame.maxY + 3
+            var bracketPath = Path()
+            bracketPath.move(to: CGPoint(x: leftFrame.midX, y: bracketY))
+            bracketPath.addLine(to: CGPoint(x: leftFrame.midX, y: bracketY + 4))
+            bracketPath.addLine(to: CGPoint(x: rightFrame.midX, y: bracketY + 4))
+            bracketPath.addLine(to: CGPoint(x: rightFrame.midX, y: bracketY))
+            context.stroke(bracketPath, with: .color(accentColor.opacity(0.6)),
+                           style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
+        }
+
+        // Icon ♥ ở giữa khoảng gap
+        guard scale > 0.65 else { return }
+        let heartSize: CGFloat = isEitherSelected ? 12 : 10
+        let heartText = Text("♥")
+            .font(.system(size: heartSize, weight: .bold))
+            .foregroundColor(accentColor)
+        context.draw(context.resolve(heartText),
+                     at: CGPoint(x: midX, y: midY),
+                     anchor: .center)
     }
 
     /// Render shape + màu + viền + số ghế cho 1 ô ghế
-    private func renderSeatShape(context: GraphicsContext, frame: CGRect, seat: Seat, isSelected: Bool, isCouple: Bool) {
+    private func renderSeatShape(context: GraphicsContext, frame: CGRect, seat: Seat, isSelected: Bool) {
         let isUnavailable = seat.status == .unavailable || seat.type == .unavailable
         guard !isUnavailable else { return }
 
-        let cornerRadius: CGFloat = isCouple ? 10 : 6
+        let cornerRadius: CGFloat = 6
         let path = Path(roundedRect: frame, cornerRadius: cornerRadius)
 
         // --- Fill ---
         let fillColor = seatFillColor(for: seat, isSelected: isSelected)
         context.fill(path, with: .color(fillColor))
 
-        // --- Top highlight (glassmorphism feel) ---
+        // --- Top highlight ---
         if seat.status == .available || isSelected {
             let highlightRect = CGRect(x: frame.minX + 2, y: frame.minY + 1,
                                        width: frame.width - 4, height: frame.height * 0.4)
-            let highlightPath = Path(roundedRect: highlightRect, cornerRadius: cornerRadius - 1)
+            let highlightPath = Path(roundedRect: highlightRect, cornerRadius: 5)
             context.fill(highlightPath, with: .color(Color.white.opacity(0.12)))
         }
 
         // --- Border ---
         if isSelected {
             context.stroke(path, with: .color(Color(hex: "#39D98A")), lineWidth: 2)
-        } else if isCouple && seat.status == .available {
-            context.stroke(path, with: .color(Color(hex: "#FF6B9D").opacity(0.6)), lineWidth: 1)
+        } else if seat.type == .couple && seat.status == .available {
+            context.stroke(path, with: .color(Color(hex: "#FF6B9D").opacity(0.5)), lineWidth: 1)
         } else if seat.type == .vip && seat.status == .available {
             context.stroke(path, with: .color(Color(hex: "#FF9F43").opacity(0.5)), lineWidth: 1)
         }
 
-        // --- Nội dung bên trong ---
+        // --- Số ghế bên trong ---
         guard scale > 0.65 else { return }
 
-        if isCouple {
-            // Ghế couple: icon ♥ + tên ghế
-            let heartText = Text("♥")
-                .font(.system(size: isSelected ? 14 : 11))
-                .foregroundColor(isSelected ? .white : Color(hex: "#FF6B9D").opacity(0.9))
-            context.draw(context.resolve(heartText),
-                         at: CGPoint(x: frame.midX, y: frame.midY - (scale > 1.2 ? 6 : 0)),
-                         anchor: .center)
-
-            if scale > 1.2 {
-                let label = Text("\(seat.number)")
-                    .font(.system(size: 9, weight: .bold, design: .rounded))
-                    .foregroundColor(.white.opacity(0.7))
-                context.draw(context.resolve(label),
-                             at: CGPoint(x: frame.midX, y: frame.midY + 8),
-                             anchor: .center)
-            }
-        } else {
-            // Ghế thường/VIP: số ghế
-            let numberText = Text("\(seat.number)")
-                .font(.system(size: 10, weight: .bold, design: .rounded))
-                .foregroundColor(seat.status == .booked || seat.status == .held ? Color.white.opacity(0.3) : .white)
-            context.draw(context.resolve(numberText),
-                         at: CGPoint(x: frame.midX, y: frame.midY),
-                         anchor: .center)
-        }
+        let numberText = Text("\(seat.number)")
+            .font(.system(size: 10, weight: .bold, design: .rounded))
+            .foregroundColor(
+                seat.status == .booked || seat.status == .held
+                    ? Color.white.opacity(0.25)
+                    : .white
+            )
+        context.draw(context.resolve(numberText),
+                     at: CGPoint(x: frame.midX, y: frame.midY),
+                     anchor: .center)
     }
 
     // MARK: - Color Logic

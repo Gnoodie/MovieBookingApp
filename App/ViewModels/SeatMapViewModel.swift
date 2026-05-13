@@ -49,7 +49,7 @@ final class SeatMapViewModel: ObservableObject {
 
     /// Task quản lý hold timer AsyncStream
     private var timerTask: Task<Void, Never>? = nil
-    
+
     /// Lưu thời điểm hết hạn để tính đúng giờ khi app bị suspend
     private var expirationDate: Date? = nil
 
@@ -118,7 +118,6 @@ final class SeatMapViewModel: ObservableObject {
     }
 
     func onDisappear() {
-        // Huỷ SSE khi rời màn hình
         cancelSSE()
     }
 
@@ -132,18 +131,22 @@ final class SeatMapViewModel: ObservableObject {
         sseTask = Task {
             for await seats in seatRepository.listenToSeats(showtimeId: showtime.id) {
                 let rows = Array(Set(seats.map { $0.row })).sorted()
-                
+
                 // Cập nhật lại danh sách đang chọn nếu có người khác lấy mất
                 var updatedSelectedIds = self.selectedSeatIds
                 for seat in seats {
                     if self.selectedSeatIds.contains(seat.id) {
                         if (seat.status == .held || seat.status == .booked) && !self.isHoldActive {
+                            // Nếu là couple thì bỏ cả partner
+                            if seat.type == .couple, let partner = self.partnerSeat(of: seat, in: seats) {
+                                updatedSelectedIds.remove(partner.id)
+                            }
                             updatedSelectedIds.remove(seat.id)
                         }
                     }
                 }
                 self.selectedSeatIds = updatedSelectedIds
-                
+
                 self.seatMap = SeatMap(
                     showtimeId: self.showtime.id,
                     rows: rows,
@@ -157,22 +160,78 @@ final class SeatMapViewModel: ObservableObject {
 
     // MARK: - Seat Selection
 
-    /// Tap vào một ghế — toggle select nếu available/mine, bỏ qua nếu held/booked
+    /// Tap vào một ghế — toggle select.
+    /// Nếu là ghế couple: tự động chọn/bỏ cả 2 ghế trong cặp.
     func seatTapped(_ seat: Seat) {
         guard seat.status == .available || seat.status == .mine else { return }
 
-        if selectedSeatIds.contains(seat.id) {
-            // Bỏ chọn ghế
-            selectedSeatIds.remove(seat.id)
+        if seat.type == .couple {
+            handleCoupleSeatTapped(seat)
+        } else {
+            handleSingleSeatTapped(seat)
+        }
+    }
 
-            // Nếu không còn ghế nào được chọn → huỷ hold
+    // MARK: - Private: Single Seat
+
+    private func handleSingleSeatTapped(_ seat: Seat) {
+        if selectedSeatIds.contains(seat.id) {
+            selectedSeatIds.remove(seat.id)
             if selectedSeatIds.isEmpty && isHoldActive {
                 Task { await releaseCurrentHold() }
             }
         } else {
-            // Kiểm tra giới hạn 6 ghế
             guard canSelectMoreSeats else { return }
             selectedSeatIds.insert(seat.id)
+        }
+    }
+
+    // MARK: - Private: Couple Seat
+
+    private func handleCoupleSeatTapped(_ seat: Seat) {
+        guard let seats = seatMap?.seats else { return }
+        guard let partner = partnerSeat(of: seat, in: seats) else {
+            // Không tìm được partner → treat như ghế đơn
+            handleSingleSeatTapped(seat)
+            return
+        }
+
+        let isCurrentlySelected = selectedSeatIds.contains(seat.id)
+
+        if isCurrentlySelected {
+            // Bỏ chọn cả 2
+            selectedSeatIds.remove(seat.id)
+            selectedSeatIds.remove(partner.id)
+
+            if selectedSeatIds.isEmpty && isHoldActive {
+                Task { await releaseCurrentHold() }
+            }
+        } else {
+            // Kiểm tra partner có available không
+            guard partner.status == .available || partner.status == .mine else {
+                // Partner đã bị đặt → không cho chọn, hiện thông báo
+                conflictSeatName = partner.displayName
+                showConflictAlert = true
+                return
+            }
+
+            // Kiểm tra còn đủ slot không (cần 2 slot)
+            let slotsNeeded = 2
+            guard selectedSeatIds.count + slotsNeeded <= Self.maxSeatSelection else { return }
+
+            selectedSeatIds.insert(seat.id)
+            selectedSeatIds.insert(partner.id)
+        }
+    }
+
+    /// Tìm ghế partner của một ghế couple:
+    /// Cùng hàng (row), cùng type = couple, số ghế kề nhau (±1), khác id.
+    private func partnerSeat(of seat: Seat, in seats: [Seat]) -> Seat? {
+        seats.first {
+            $0.id != seat.id
+            && $0.type == .couple
+            && $0.row == seat.row
+            && abs($0.number - seat.number) == 1
         }
     }
 
@@ -192,25 +251,19 @@ final class SeatMapViewModel: ObservableObject {
                     seatIds: seatIds
                 )
 
-                // Hold thành công
                 self.currentHoldId = response.holdId
                 self.isHoldActive = true
                 self.isHoldingSeats = false
 
-                // Cập nhật status ghế → .mine
                 self.updateSeatStatuses(ids: Set(response.seatIds), newStatus: .mine)
-
-                // Bắt đầu hold timer
                 self.startHoldTimer()
 
             } catch let error as SeatHoldError {
                 self.isHoldingSeats = false
                 switch error {
                 case .conflict(let seatName):
-                    // 409 — ghế bị người khác chọn trước
                     self.conflictSeatName = seatName
                     self.showConflictAlert = true
-                    // Bỏ ghế conflict khỏi selection
                     self.removeConflictSeat(named: seatName)
                 case .networkError(let msg):
                     self.errorMessage = msg
@@ -229,11 +282,9 @@ final class SeatMapViewModel: ObservableObject {
         do {
             try await seatRepository.releaseSeats(holdId: holdId)
         } catch {
-            // Bỏ qua lỗi unhold — server sẽ tự timeout sau 10 phút
             print("⚠️ Unhold failed (server will auto-expire): \(error)")
         }
 
-        // Reset trạng thái dù có lỗi hay không
         resetHoldState()
     }
 
@@ -252,10 +303,8 @@ final class SeatMapViewModel: ObservableObject {
                     break
                 }
 
-                guard let expire = self.expirationDate else {
-                    continue
-                }
-                
+                guard let expire = self.expirationDate else { continue }
+
                 let remaining = Int(expire.timeIntervalSinceNow)
 
                 if remaining <= 0 {
@@ -282,16 +331,22 @@ final class SeatMapViewModel: ObservableObject {
 
     // MARK: - SSE Integration
 
-    /// Nhận event từ SSE stream và cập nhật trạng thái ghế
-    /// Được gọi bởi SSEClient khi có event mới
     func handleSeatUpdateEvent(_ event: SeatUpdateEvent) {
+        guard let seats = seatMap?.seats else { return }
+
         updateSeatStatuses(ids: [event.seatId], newStatus: event.newStatus)
 
-        // Nếu ghế mình đang chọn bị người khác hold → conflict
         if selectedSeatIds.contains(event.seatId),
            event.newStatus == .held || event.newStatus == .booked,
            !isHoldActive {
             selectedSeatIds.remove(event.seatId)
+
+            // Nếu là couple, bỏ chọn luôn partner
+            if let seat = seats.first(where: { $0.id == event.seatId }),
+               seat.type == .couple,
+               let partner = partnerSeat(of: seat, in: seats) {
+                selectedSeatIds.remove(partner.id)
+            }
         }
     }
 
@@ -320,7 +375,21 @@ final class SeatMapViewModel: ObservableObject {
     }
 
     private func removeConflictSeat(named seatName: String) {
-        selectedSeatIds.remove(seatName)
+        guard let seats = seatMap?.seats else { return }
+
+        // Tìm ghế bị conflict theo displayName
+        guard let conflictSeat = seats.first(where: { $0.displayName == seatName }) else {
+            selectedSeatIds.remove(seatName) // fallback
+            return
+        }
+
+        selectedSeatIds.remove(conflictSeat.id)
+
+        // Nếu là couple, bỏ partner luôn
+        if conflictSeat.type == .couple,
+           let partner = partnerSeat(of: conflictSeat, in: seats) {
+            selectedSeatIds.remove(partner.id)
+        }
     }
 
     private func resetHoldState() {
@@ -331,11 +400,7 @@ final class SeatMapViewModel: ObservableObject {
         timerTask?.cancel()
         timerTask = nil
 
-        // Ghế trạng thái .mine → trở về .available
-        updateSeatStatuses(
-            ids: selectedSeatIds,
-            newStatus: .available
-        )
+        updateSeatStatuses(ids: selectedSeatIds, newStatus: .available)
     }
 }
 
@@ -348,7 +413,6 @@ enum SeatHoldError: Error {
 
 // MARK: - SeatUpdateEvent (SSE Payload)
 
-/// Model nhận từ SSE stream: { seatId, newStatus }
 struct SeatUpdateEvent {
     let seatId: String
     let newStatus: Seat.SeatStatus
