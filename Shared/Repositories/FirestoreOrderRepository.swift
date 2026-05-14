@@ -158,7 +158,7 @@ final class FirestoreOrderRepository: OrderRepositoryProtocol {
             ]
             transaction.setData(ticketData, forDocument: ticketsRef)
 
-            return nil
+            return true
         }
 
         // Build local objects để trả về ngay (không cần round-trip fetch)
