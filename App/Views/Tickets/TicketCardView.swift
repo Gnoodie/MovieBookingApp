@@ -97,6 +97,9 @@ struct TicketCardView: View {
         case .cancelled:
             text = "Đã hủy"
             color = .statusError
+        case .expired:
+            text = "Đã hết hạn"
+            color = .textSecondary
         }
         
         return Text(text)

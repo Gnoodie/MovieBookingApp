@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import CoreImage.CIFilterBuiltins
 import Combine
+import SwiftUI
 
 // MARK: - ETicketViewModel
 

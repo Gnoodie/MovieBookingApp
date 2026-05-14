@@ -24,9 +24,8 @@ struct ETicketView: View {
                         
                         // Action buttons
                         CinematicButton(
-                            "Thêm vào Apple Wallet",
-                            variant: .secondary,
-                            icon: "applelogo"
+                            " Thêm vào Apple Wallet",
+                            variant: .secondary
                         ) {}
                         .disabled(true) // Phase 4: Mock
                         .overlay(
