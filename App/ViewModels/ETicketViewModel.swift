@@ -18,39 +18,38 @@ final class ETicketViewModel: ObservableObject {
     
     init(ticket: Ticket) {
         self.ticket = ticket
-        generateQRCode()
         setupScreenshotObserver()
     }
     
     // MARK: - Core Logic
     
     private func generateQRCode() {
-        let context = CIContext()
-        let filter = CIFilter.qrCodeGenerator()
+        let qrString = ticket.bookingId.isEmpty ? "MBK-TICKET" : ticket.bookingId
+        guard let data = qrString.data(using: .ascii) else { return }
         
-        // CoreImage QR Code Generator rất kén với Unicode (Tiếng Việt). 
-        // Thay vì nhúng tên phim, ta chỉ nên nhúng mã bookingId (ASCII) vào QR Code.
-        // Nhân viên soát vé sẽ dùng máy quét mã này để đối chiếu trên hệ thống.
-        let qrString = ticket.bookingId
-        let data = qrString.data(using: .ascii) ?? Data(qrString.utf8)
-        
-        filter.message = data
-        filter.correctionLevel = "M"
+        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return }
+        filter.setValue(data, forKey: "inputMessage")
+        filter.setValue("M", forKey: "inputCorrectionLevel")
         
         guard let outputImage = filter.outputImage else { return }
         
-        // Phóng to QR Code (scale x10)
         let transform = CGAffineTransform(scaleX: 10, y: 10)
         let scaledImage = outputImage.transformed(by: transform)
         
+        let context = CIContext()
         if let cgImage = context.createCGImage(scaledImage, from: scaledImage.extent) {
             self.qrImage = UIImage(cgImage: cgImage)
+        } else {
+            self.qrImage = UIImage(ciImage: scaledImage)
         }
     }
     
     // MARK: - UX Logic
     
     func viewDidAppear() {
+        if qrImage == nil {
+            generateQRCode()
+        }
         // Lưu độ sáng hiện tại
         originalBrightness = UIScreen.main.brightness
         // Tăng độ sáng lên 1.0 (Tối đa) để quét QR dễ hơn
