@@ -20,29 +20,53 @@ final class ETicketViewModel: ObservableObject {
     init(ticket: Ticket) {
         self.ticket = ticket
         setupScreenshotObserver()
-        generateQRCode()
+        
+        Task {
+            await generateQRCode()
+        }
     }
     
     // MARK: - Core Logic
     
-    private func generateQRCode() {
+    private func generateQRCode() async {
         let qrString = ticket.bookingId.isEmpty ? "MBK-TICKET" : ticket.bookingId
-        guard let data = qrString.data(using: .utf8) else { return }
         
-        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return }
-        filter.setValue(data, forKey: "inputMessage")
-        filter.setValue("M", forKey: "inputCorrectionLevel")
+        let image = await Task.detached(priority: .userInitiated) { [weak self] () -> UIImage? in
+            guard let self = self else { return nil }
+            guard let data = qrString.data(using: .utf8) else {
+                print("❌ Failed to encode string")
+                return nil
+            }
+            
+            guard let filter = CIFilter(name: "CIQRCodeGenerator") else {
+                print("❌ Failed to create CIFilter")
+                return nil
+            }
+            
+            filter.setValue(data, forKey: "inputMessage")
+            filter.setValue("M", forKey: "inputCorrectionLevel")
+            
+            guard let outputImage = filter.outputImage else {
+                print("❌ No output image from filter")
+                return nil
+            }
+            
+            let transform = CGAffineTransform(scaleX: 10, y: 10)
+            let scaledImage = outputImage.transformed(by: transform)
+            
+            guard let cgImage = self.ciContext.createCGImage(scaledImage, from: scaledImage.extent) else {
+                print("❌ Failed to create CGImage from CIImage")
+                return nil
+            }
+            
+            return UIImage(cgImage: cgImage)
+        }.value
         
-        guard let outputImage = filter.outputImage else { return }
-        
-        let transform = CGAffineTransform(scaleX: 10, y: 10)
-        let scaledImage = outputImage.transformed(by: transform)
-        
-        guard let cgImage = ciContext.createCGImage(scaledImage, from: scaledImage.extent) else {
-            print("Failed to create CGImage from CIImage")
-            return
+        // Gán lại trên MainActor (vì class được đánh dấu @MainActor)
+        if let image = image {
+            self.qrImage = image
+            print("✅ QR generated successfully!")
         }
-        self.qrImage = UIImage(cgImage: cgImage)
     }
     
     // MARK: - UX Logic
