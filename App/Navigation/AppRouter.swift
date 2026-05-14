@@ -51,15 +51,17 @@ final class AppRouter: ObservableObject {
         case "movie":
             if let movieId = components.first {
                 // Sẽ load movie rồi navigate — xử lý ở HomeView
-                print("🔗 Deep link to movie: \(movieId)")
+                // Deep link: cinematicket://movie/{movieId}
+                break
             }
         case "ticket":
             if let _ = components.first {
-                // Phase 5 sẽ xử lý — fetch ticket rồi navigate
-                print("🔗 Deep link to ticket")
+                // Deep link: cinematicket://ticket/{ticketId}
+                break
             }
         case "payment":
             // MoMo/VNPay callback — delegate cho PaymentService
+            // Deep link: cinematicket://payment/callback?resultCode=0&...
             PaymentService.shared.handleCallback(url: url)
         default:
             break

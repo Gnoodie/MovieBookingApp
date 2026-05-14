@@ -44,6 +44,11 @@ struct MovieBookingAppApp: App {
                     showPrivacyOverlay = (newPhase == .inactive || newPhase == .background)
                 }
             }
+            // MARK: - URL Scheme Handler (Phase 6.2)
+            // Xử lý callback từ MoMo/VNPay: cinematicket://payment/callback?...
+            .onOpenURL { url in
+                router.handleDeepLink(url)
+            }
         }
     }
 }
