@@ -56,7 +56,12 @@ enum OrderStatus: String, Codable {
 // MARK: - Order
 
 /// Đơn hàng đã được xác nhận thanh toán
-struct Order: Identifiable, Codable {
+struct Order: Identifiable, Codable, Hashable {
+
+    static func == (lhs: Order, rhs: Order) -> Bool { lhs.id == rhs.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
+
     let id: String
     let userId: String
     // Snapshot thông tin phim / suất (không bị ảnh hưởng khi data gốc thay đổi)

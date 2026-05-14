@@ -48,7 +48,14 @@ struct FnBItem: Identifiable, Codable, Equatable {
 // MARK: - FnBOrderItem
 
 /// Item đã được thêm vào giỏ hàng (có quantity)
-struct FnBOrderItem: Codable, Equatable {
+struct FnBOrderItem: Codable, Equatable, Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(itemId)
+        hasher.combine(quantity)
+    }
+
+
     let itemId: String
     let name: String
     let quantity: Int

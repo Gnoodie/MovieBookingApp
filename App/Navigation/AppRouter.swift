@@ -8,9 +8,11 @@ enum AppRoute: Hashable {
     case home
     case movieDetail(Movie)
     case showtimePicker(movie: Movie)
-    case seatMap(showtime: Showtime, movie: Movie)   // Sprint 3
-    case checkout                                     // Sprint 4
-    case eTicket(ticketId: String)                   // Sprint 4
+    case seatMap(showtime: Showtime, movie: Movie)                                          // Sprint 3
+    case fnbMenu(seats: [Seat], showtime: Showtime, movie: Movie)                           // Sprint 4
+    case checkout(seats: [Seat], showtime: Showtime, movie: Movie, fnbItems: [FnBOrderItem]) // Sprint 4
+    case bookingSuccess(order: Order, ticket: Ticket)                                        // Sprint 4
+    case eTicket(ticket: Ticket)                                                             // Sprint 4
 }
 
 // MARK: - AppRouter
@@ -40,6 +42,7 @@ final class AppRouter: ObservableObject {
     func handleDeepLink(_ url: URL) {
         // cinematicket://movie/{id}
         // cinematicket://ticket/{id}
+        // cinematicket://payment/callback?... (MoMo/VNPay)
         guard url.scheme == "cinematicket" else { return }
         let host = url.host ?? ""
         let components = url.pathComponents.filter { $0 != "/" }
@@ -51,9 +54,13 @@ final class AppRouter: ObservableObject {
                 print("🔗 Deep link to movie: \(movieId)")
             }
         case "ticket":
-            if let ticketId = components.first {
-                path = [.eTicket(ticketId: ticketId)]
+            if let _ = components.first {
+                // Phase 5 sẽ xử lý — fetch ticket rồi navigate
+                print("🔗 Deep link to ticket")
             }
+        case "payment":
+            // MoMo/VNPay callback — delegate cho PaymentService
+            PaymentService.shared.handleCallback(url: url)
         default:
             break
         }

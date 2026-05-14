@@ -3,7 +3,11 @@ import Foundation
 // MARK: - Ticket
 
 /// Entity đại diện cho một vé đã mua thành công
-public struct Ticket: Identifiable, Equatable, Codable {
+public struct Ticket: Identifiable, Equatable, Codable, Hashable {
+
+    public func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
+
     public let id: String                  // UUID của vé
     public let bookingId: String           // Mã đặt chỗ (hiển thị cho người dùng)
     public let movieTitle: String          // Snapshot — không thay đổi dù movie data thay đổi
