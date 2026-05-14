@@ -73,7 +73,7 @@ final class ETicketViewModel: ObservableObject {
         }
         
         // Gỡ mờ sau 3 giây
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
             withAnimation {
                 self?.isQRBlurred = false
             }
