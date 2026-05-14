@@ -125,7 +125,9 @@ final class PaymentService: ObservableObject {
             }
         } else {
             // Fallback: mở trang web sandbox MoMo
-            let webURL = URL(string: "https://test-payment.momo.vn/pay?orderId=\(order.orderId)&amount=\(amount)")!
+            guard let webURL = URL(string: "https://test-payment.momo.vn/pay?orderId=\(order.orderId)&amount=\(amount)") else {
+                return .failure(message: "Không thể tạo URL thanh toán fallback.")
+            }
             return await withCheckedContinuation { continuation in
                 self.pendingPaymentCompletion = { result in
                     continuation.resume(returning: result)
@@ -142,7 +144,9 @@ final class PaymentService: ObservableObject {
         let amount = NSDecimalNumber(decimal: order.totalAmount).intValue * 100 // VNPay nhân 100
 
         // Build sandbox URL (thay bằng production URL và merchant hash khi có)
-        var components = URLComponents(string: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html")!
+        guard var components = URLComponents(string: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html") else {
+            return .failure(message: "Lỗi cấu hình URL VNPay.")
+        }
         components.queryItems = [
             URLQueryItem(name: "vnp_Version", value: "2.1.0"),
             URLQueryItem(name: "vnp_Command", value: "pay"),
