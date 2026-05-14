@@ -7,6 +7,7 @@ struct MyTicketsView: View {
     @EnvironmentObject var router: AppRouter
     
     @State private var selectedSegment = 0 // 0: Sắp xem, 1: Lịch sử
+    @State private var selectedTicket: Ticket? = nil
     
     var body: some View {
         NavigationView {
@@ -56,10 +57,9 @@ struct MyTicketsView: View {
                                     emptyStateView
                                 } else {
                                     ForEach(currentTickets) { ticket in
-                                        NavigationLink(destination: ETicketView(ticket: ticket)) {
-                                            TicketCardView(ticket: ticket) {}
+                                        TicketCardView(ticket: ticket) {
+                                            selectedTicket = ticket
                                         }
-                                        .buttonStyle(PlainButtonStyle())
                                     }
                                 }
                             }
@@ -73,6 +73,20 @@ struct MyTicketsView: View {
                 }
             }
             .navigationBarHidden(true)
+            .background(
+                Group {
+                    if let ticket = selectedTicket {
+                        NavigationLink(
+                            destination: ETicketView(ticket: ticket),
+                            isActive: Binding(
+                                get: { selectedTicket != nil },
+                                set: { if !$0 { selectedTicket = nil } }
+                            )
+                        ) { EmptyView() }
+                        .isDetailLink(false)
+                    }
+                }
+            )
             .task {
                 await viewModel.fetchTickets()
             }
