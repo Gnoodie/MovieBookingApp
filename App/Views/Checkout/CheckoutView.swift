@@ -60,11 +60,15 @@ struct CheckoutView: View {
                 paymentLoadingOverlay
             }
 
-            // Hidden NavigationLink → Placeholder success (Phase 4)
-            NavigationLink(
-                destination: PlaceholderView(title: "🎉 Đặt vé thành công! — Phase 4"),
-                isActive: $navigateToSuccess
-            ) { EmptyView() }
+            // Hidden NavigationLink → Success View
+            if let order = viewModel.completedOrder, let ticket = viewModel.completedTicket {
+                NavigationLink(
+                    destination: BookingSuccessView(order: order, ticket: ticket)
+                        .environmentObject(router),
+                    isActive: $navigateToSuccess
+                ) { EmptyView() }
+                .isDetailLink(false)
+            }
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.paymentSuccess) { success in
