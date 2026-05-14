@@ -12,6 +12,10 @@ struct FnBMenuView: View {
     /// Callback khi user bấm "Tiếp tục" (có hoặc không có F&B)
     let onContinue: ([FnBOrderItem]) -> Void
 
+    // Navigation trực tiếp sang CheckoutView (iOS 15 safe)
+    @State private var navigateToCheckout: Bool = false
+    @State private var cartItemsForCheckout: [FnBOrderItem] = []
+
     init(
         selectedSeats: [Seat],
         showtime: Showtime,
@@ -51,6 +55,19 @@ struct FnBMenuView: View {
 
             // MARK: Bottom Cart Bar
             bottomCartBar
+
+            // NavigationLink ẩn — Checkout (push từ FnB, tránh conflict iOS 15)
+            NavigationLink(
+                destination: CheckoutView(
+                    selectedSeats: viewModel.selectedSeats,
+                    showtime: viewModel.showtime,
+                    movie: viewModel.movie,
+                    fnbItems: cartItemsForCheckout
+                )
+                .environmentObject(router),
+                isActive: $navigateToCheckout
+            ) { EmptyView() }
+            .isDetailLink(false)
         }
         .navigationBarHidden(true)
         .onAppear { viewModel.onAppear() }
@@ -86,7 +103,8 @@ struct FnBMenuView: View {
 
             // Nút Bỏ qua
             Button {
-                onContinue([]) // Bỏ qua F&B — truyền giỏ rỗng
+                cartItemsForCheckout = []
+                navigateToCheckout = true
             } label: {
                 Text("Bỏ qua")
                     .font(.system(size: 14, weight: .medium))
@@ -198,7 +216,8 @@ struct FnBMenuView: View {
 
                 // CTA Button
                 Button {
-                    onContinue(viewModel.cartItems)
+                    cartItemsForCheckout = viewModel.cartItems
+                    navigateToCheckout = true
                 } label: {
                     HStack(spacing: 6) {
                         Text("Tiếp tục")

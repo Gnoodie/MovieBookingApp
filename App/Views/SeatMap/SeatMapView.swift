@@ -10,7 +10,6 @@ struct SeatMapView: View {
     @EnvironmentObject var router: AppRouter
 
     @State private var navigateToFnB: Bool = false
-    @State private var navigateToCheckout: Bool = false
     @State private var selectedFnBItems: [FnBOrderItem] = []
 
     init(showtime: Showtime, movie: Movie) {
@@ -34,7 +33,7 @@ struct SeatMapView: View {
                 mainContent(layout: layout)
             }
 
-            // NavigationLink ẩn — FnB
+            // NavigationLink ẩn — FnB (Checkout sẽ push từ FnBMenuView)
             NavigationLink(
                 destination: FnBMenuView(
                     selectedSeats: viewModel.selectedSeats,
@@ -42,27 +41,11 @@ struct SeatMapView: View {
                     movie: viewModel.movie
                 ) { fnbItems in
                     self.selectedFnBItems = fnbItems
-                    // Đóng FnB → mở Checkout sau 0.3s (iOS 15 NavigationLink chain)
-                    self.navigateToFnB = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        self.navigateToCheckout = true
-                    }
                 }
                 .environmentObject(router),
                 isActive: $navigateToFnB
             ) { EmptyView() }
-
-            // NavigationLink ẩn — Checkout
-            NavigationLink(
-                destination: CheckoutView(
-                    selectedSeats: viewModel.selectedSeats,
-                    showtime: viewModel.showtime,
-                    movie: viewModel.movie,
-                    fnbItems: selectedFnBItems
-                )
-                .environmentObject(router),
-                isActive: $navigateToCheckout
-            ) { EmptyView() }
+            .isDetailLink(false)
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.isHoldActive) { isActive in
