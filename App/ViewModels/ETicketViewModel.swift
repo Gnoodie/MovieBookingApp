@@ -15,17 +15,19 @@ final class ETicketViewModel: ObservableObject {
     
     private var originalBrightness: CGFloat = 0.5
     private var cancellables = Set<AnyCancellable>()
+    private let ciContext = CIContext(options: [.useSoftwareRenderer: false])
     
     init(ticket: Ticket) {
         self.ticket = ticket
         setupScreenshotObserver()
+        generateQRCode()
     }
     
     // MARK: - Core Logic
     
     private func generateQRCode() {
         let qrString = ticket.bookingId.isEmpty ? "MBK-TICKET" : ticket.bookingId
-        guard let data = qrString.data(using: .ascii) else { return }
+        guard let data = qrString.data(using: .utf8) else { return }
         
         guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return }
         filter.setValue(data, forKey: "inputMessage")
@@ -36,35 +38,55 @@ final class ETicketViewModel: ObservableObject {
         let transform = CGAffineTransform(scaleX: 10, y: 10)
         let scaledImage = outputImage.transformed(by: transform)
         
-        let context = CIContext()
-        if let cgImage = context.createCGImage(scaledImage, from: scaledImage.extent) {
-            self.qrImage = UIImage(cgImage: cgImage)
-        } else {
-            self.qrImage = UIImage(ciImage: scaledImage)
+        guard let cgImage = ciContext.createCGImage(scaledImage, from: scaledImage.extent) else {
+            print("Failed to create CGImage from CIImage")
+            return
         }
+        self.qrImage = UIImage(cgImage: cgImage)
     }
     
     // MARK: - UX Logic
     
     func viewDidAppear() {
-        if qrImage == nil {
-            generateQRCode()
-        }
         // Lưu độ sáng hiện tại
         originalBrightness = UIScreen.main.brightness
         // Tăng độ sáng lên 1.0 (Tối đa) để quét QR dễ hơn
-        UIScreen.main.brightness = 1.0
+        setScreenBrightness(1.0)
     }
     
     func viewDidDisappear() {
         // Khôi phục độ sáng
-        UIScreen.main.brightness = originalBrightness
+        setScreenBrightness(originalBrightness)
+    }
+    
+    private func setScreenBrightness(_ value: CGFloat) {
+        // Fix warning deprecation từ iOS 16
+        if #available(iOS 16.0, *) {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                windowScene.screen.brightness = value
+            } else {
+                UIScreen.main.brightness = value
+            }
+        } else {
+            UIScreen.main.brightness = value
+        }
     }
     
     private func setupScreenshotObserver() {
         NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)
             .sink { [weak self] _ in
                 self?.handleScreenshotTaken()
+            }
+            .store(in: &cancellables)
+            
+        // Chống quay màn hình (Screen recording)
+        NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)
+            .sink { [weak self] _ in
+                let isCaptured = UIScreen.main.isCaptured
+                withAnimation { 
+                    self?.isQRBlurred = isCaptured 
+                }
             }
             .store(in: &cancellables)
     }
