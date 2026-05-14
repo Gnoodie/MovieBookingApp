@@ -101,6 +101,11 @@ struct BookingSuccessView: View {
         }
         .onAppear {
             HapticManager.shared.notification(type: .success)
+            
+            // Phase 5: Thông báo Local
+            NotificationManager.shared.requestPermission()
+            NotificationManager.shared.scheduleMovieReminder(for: ticket)
+            NotificationManager.shared.cancelHoldReminder()
         }
     }
     

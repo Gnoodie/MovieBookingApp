@@ -42,6 +42,7 @@ struct SeatMapCanvas: View {
                     drawRowLabels(context: context)
                     drawSeats(context: context)
                 }
+                .accessibilityHidden(true) // Ẩn Canvas khỏi VoiceOver
                 .frame(width: geo.size.width, height: geo.size.height)
                 .gesture(
                     MagnificationGesture()
@@ -73,6 +74,50 @@ struct SeatMapCanvas: View {
                 .offset(x: xOffset, y: yOffset)
             }
             .clipped()
+            // Phase 5: Thêm khả năng đọc VoiceOver cho bản đồ ghế vẽ bằng Canvas
+            .accessibilityElement(children: .contain)
+            .accessibilityChildren {
+                ForEach(layout.seats) { seat in
+                    if seat.status != .unavailable && seat.type != .unavailable {
+                        Rectangle()
+                            .frame(
+                                width: (layout.seatFrames[seat.id]?.width ?? 0) * scale,
+                                height: (layout.seatFrames[seat.id]?.height ?? 0) * scale
+                            )
+                            .position(
+                                x: ((layout.seatFrames[seat.id]?.midX ?? 0) * scale) + offset.width + xOffset,
+                                y: ((layout.seatFrames[seat.id]?.midY ?? 0) * scale) + offset.height + yOffset
+                            )
+                            .accessibilityLabel("Ghế \(seat.row)\(seat.number), Loại \(accessibilitySeatType(seat.type))")
+                            .accessibilityValue(accessibilitySeatStatus(seat.status))
+                            .accessibilityAddTraits(selectedSeatIds.contains(seat.id) ? .isSelected : [])
+                            .accessibilityAction {
+                                onSeatTapped(seat)
+                            }
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Accessibility Helpers
+    private func accessibilitySeatType(_ type: SeatType) -> String {
+        switch type {
+        case .standard: return "Thường"
+        case .vip: return "VIP"
+        case .couple: return "Đôi"
+        case .wheelchair: return "Dành cho xe lăn"
+        case .unavailable: return "Không khả dụng"
+        }
+    }
+    
+    private func accessibilitySeatStatus(_ status: SeatStatus) -> String {
+        switch status {
+        case .available: return "Còn trống. Chạm đúp để chọn."
+        case .booked: return "Đã bán."
+        case .held: return "Đang được người khác giữ."
+        case .mine: return "Bạn đang chọn."
+        case .unavailable: return "Không thể chọn."
         }
     }
 

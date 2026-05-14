@@ -5,6 +5,7 @@ import SwiftUI
 struct ETicketView: View {
     @StateObject private var viewModel: ETicketViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var showingWalletAlert = false
     
     init(ticket: Ticket) {
         _viewModel = StateObject(wrappedValue: ETicketViewModel(ticket: ticket))
@@ -26,19 +27,22 @@ struct ETicketView: View {
                         CinematicButton(
                             " Thêm vào Apple Wallet",
                             variant: .secondary
-                        ) {}
-                        .disabled(true) // Phase 4: Mock
-                        .overlay(
-                            Text("Sắp ra mắt")
-                                .font(.system(size: 10, weight: .bold))
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.accentGold)
-                                .foregroundColor(.black)
-                                .cornerRadius(4)
-                                .offset(x: 100, y: -16)
-                        )
+                        ) {
+                            PassKitManager.shared.addPass(for: viewModel.ticket) { vc in
+                                if let vc = vc {
+                                    // Present PKAddPassesViewController
+                                    // Normally done via UIViewControllerRepresentable or root view controller
+                                } else {
+                                    showingWalletAlert = true
+                                }
+                            }
+                        }
                         .padding(.horizontal, 24)
+                        .alert("Tính năng chưa khả dụng", isPresented: $showingWalletAlert) {
+                            Button("Đóng", role: .cancel) { }
+                        } message: {
+                            Text("Để tích hợp Apple Wallet, ứng dụng cần Apple PassKit Certificate từ tài khoản Apple Developer ($99/năm).")
+                        }
                     }
                     .padding(.top, 24)
                     .padding(.bottom, 40)

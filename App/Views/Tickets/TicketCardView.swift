@@ -34,6 +34,7 @@ struct TicketCardView: View {
                                 .font(.headingSmall)
                                 .foregroundColor(.textPrimary)
                                 .lineLimit(2)
+                                .minimumScaleFactor(0.8)
                                 .multilineTextAlignment(.leading)
                             
                             Spacer()
@@ -49,6 +50,7 @@ struct TicketCardView: View {
                                 Text("\(ticket.cinemaName) - \(ticket.hallName)")
                                     .font(.bodySmall)
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
                             }
                             .foregroundColor(.textSecondary)
                             
@@ -68,6 +70,7 @@ struct TicketCardView: View {
                                 Text(seatLabels)
                                     .font(.bodySmall)
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
                             }
                             .foregroundColor(.accentTeal)
                         }
