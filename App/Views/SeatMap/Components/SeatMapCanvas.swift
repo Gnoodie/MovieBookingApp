@@ -78,30 +78,35 @@ struct SeatMapCanvas: View {
             .accessibilityElement(children: .contain)
             .accessibilityChildren {
                 ForEach(layout.seats) { seat in
-                    if seat.status != .unavailable && seat.type != .unavailable {
-                        Rectangle()
-                            .frame(
-                                width: (layout.seatFrames[seat.id]?.width ?? 0) * scale,
-                                height: (layout.seatFrames[seat.id]?.height ?? 0) * scale
-                            )
-                            .position(
-                                x: ((layout.seatFrames[seat.id]?.midX ?? 0) * scale) + offset.width + xOffset,
-                                y: ((layout.seatFrames[seat.id]?.midY ?? 0) * scale) + offset.height + yOffset
-                            )
-                            .accessibilityLabel("Ghế \(seat.row)\(seat.number), Loại \(accessibilitySeatType(seat.type))")
-                            .accessibilityValue(accessibilitySeatStatus(seat.status))
-                            .accessibilityAddTraits(selectedSeatIds.contains(seat.id) ? .isSelected : [])
-                            .accessibilityAction {
-                                onSeatTapped(seat)
-                            }
-                    }
+                    accessibleSeatView(for: seat, scale: scale, offset: offset, xOffset: xOffset, yOffset: yOffset)
                 }
             }
         }
     }
     
     // MARK: - Accessibility Helpers
-    private func accessibilitySeatType(_ type: SeatType) -> String {
+    
+    @ViewBuilder
+    private func accessibleSeatView(for seat: Seat, scale: CGFloat, offset: CGSize, xOffset: CGFloat, yOffset: CGFloat) -> some View {
+        if let frame = layout.seatFrames[seat.id], seat.status != .unavailable, seat.type != .unavailable {
+            let width = frame.width * scale
+            let height = frame.height * scale
+            let xPos = (frame.midX * scale) + offset.width + xOffset
+            let yPos = (frame.midY * scale) + offset.height + yOffset
+            
+            Rectangle()
+                .frame(width: width, height: height)
+                .position(x: xPos, y: yPos)
+                .accessibilityLabel("Ghế \(seat.row)\(seat.number), Loại \(accessibilitySeatType(seat.type))")
+                .accessibilityValue(accessibilitySeatStatus(seat.status))
+                .accessibilityAddTraits(selectedSeatIds.contains(seat.id) ? .isSelected : [])
+                .accessibilityAction {
+                    onSeatTapped(seat)
+                }
+        }
+    }
+    
+    private func accessibilitySeatType(_ type: Seat.SeatType) -> String {
         switch type {
         case .standard: return "Thường"
         case .vip: return "VIP"
@@ -111,7 +116,7 @@ struct SeatMapCanvas: View {
         }
     }
     
-    private func accessibilitySeatStatus(_ status: SeatStatus) -> String {
+    private func accessibilitySeatStatus(_ status: Seat.SeatStatus) -> String {
         switch status {
         case .available: return "Còn trống. Chạm đúp để chọn."
         case .booked: return "Đã bán."
