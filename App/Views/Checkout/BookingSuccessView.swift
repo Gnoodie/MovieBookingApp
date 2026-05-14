@@ -8,6 +8,7 @@ struct BookingSuccessView: View {
     
     @State private var timeRemaining = 10
     @State private var navigateToHome = false
+    @State private var navigateToTicket = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -55,6 +56,24 @@ struct BookingSuccessView: View {
                         .font(.system(size: 14))
                         .foregroundColor(Color(hex: "#888888"))
                     
+                    NavigationLink(destination: ETicketView(ticket: ticket), isActive: $navigateToTicket) {
+                        EmptyView()
+                    }
+                    .isDetailLink(false)
+
+                    Button {
+                        navigateToTicket = true
+                    } label: {
+                        Text("Xem vé điện tử")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 54)
+                            .background(Color.accentTeal)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal, 24)
+
                     Button {
                         popToRoot()
                     } label: {
@@ -73,6 +92,7 @@ struct BookingSuccessView: View {
         }
         .navigationBarHidden(true)
         .onReceive(timer) { _ in
+            guard !navigateToTicket else { return }
             if timeRemaining > 0 {
                 timeRemaining -= 1
             } else {

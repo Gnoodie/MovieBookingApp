@@ -71,7 +71,8 @@ struct MainTabView: View {
                 .tag(1)
 
             // Tab 3: Vé của tôi
-            PlaceholderView(title: "Vé của tôi — Sprint 4")
+            MyTicketsView()
+                .environmentObject(router)
                 .tabItem {
                     Label("Vé", systemImage: "ticket.fill")
                 }
