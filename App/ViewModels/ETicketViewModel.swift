@@ -28,10 +28,14 @@ final class ETicketViewModel: ObservableObject {
         let context = CIContext()
         let filter = CIFilter.qrCodeGenerator()
         
-        let data = Data(ticket.qrCodeData.utf8)
-        filter.setValue(data, forKey: "inputMessage")
-        // M = Medium error correction
-        filter.setValue("M", forKey: "inputCorrectionLevel")
+        // CoreImage QR Code Generator rất kén với Unicode (Tiếng Việt). 
+        // Thay vì nhúng tên phim, ta chỉ nên nhúng mã bookingId (ASCII) vào QR Code.
+        // Nhân viên soát vé sẽ dùng máy quét mã này để đối chiếu trên hệ thống.
+        let qrString = ticket.bookingId
+        let data = qrString.data(using: .ascii) ?? Data(qrString.utf8)
+        
+        filter.message = data
+        filter.correctionLevel = "M"
         
         guard let outputImage = filter.outputImage else { return }
         
