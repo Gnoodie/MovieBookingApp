@@ -207,13 +207,18 @@ final class CheckoutViewModel: ObservableObject {
 
     // MARK: - Static Helpers
 
-    /// Format số tiền theo VND: "150.000đ"
-    static func formatVND(_ amount: Decimal) -> String {
+    /// NumberFormatter được cache — không tạo mới mỗi lần gọi
+    private static let vndFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
         formatter.maximumFractionDigits = 0
+        return formatter
+    }()
+
+    /// Format số tiền theo VND: "150.000đ"
+    static func formatVND(_ amount: Decimal) -> String {
         let number = NSDecimalNumber(decimal: amount)
-        return (formatter.string(from: number) ?? "\(amount)") + "đ"
+        return (vndFormatter.string(from: number) ?? "\(amount)") + "đ"
     }
 }

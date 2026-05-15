@@ -3,6 +3,7 @@ import UIKit
 import CoreImage.CIFilterBuiltins
 import Combine
 import SwiftUI
+import os.log
 
 // MARK: - ETicketViewModel
 
@@ -16,6 +17,7 @@ final class ETicketViewModel: ObservableObject {
     private var originalBrightness: CGFloat = 0.5
     private var cancellables = Set<AnyCancellable>()
     private let ciContext = CIContext(options: [.useSoftwareRenderer: false])
+    private static let logger = Logger(subsystem: "com.cinematicket", category: "ETicket")
     
     init(ticket: Ticket) {
         self.ticket = ticket
@@ -34,12 +36,12 @@ final class ETicketViewModel: ObservableObject {
         let image = await Task.detached(priority: .userInitiated) { [weak self] () -> UIImage? in
             guard let self = self else { return nil }
             guard let data = qrString.data(using: .utf8) else {
-                print("❌ Failed to encode string")
+                Self.logger.error("QR: Failed to encode string as UTF-8")
                 return nil
             }
             
             guard let filter = CIFilter(name: "CIQRCodeGenerator") else {
-                print("❌ Failed to create CIFilter")
+                Self.logger.error("QR: CIQRCodeGenerator not available")
                 return nil
             }
             
@@ -47,7 +49,7 @@ final class ETicketViewModel: ObservableObject {
             filter.setValue("M", forKey: "inputCorrectionLevel")
             
             guard let outputImage = filter.outputImage else {
-                print("❌ No output image from filter")
+                Self.logger.error("QR: No output image from CIFilter")
                 return nil
             }
             
@@ -55,17 +57,16 @@ final class ETicketViewModel: ObservableObject {
             let scaledImage = outputImage.transformed(by: transform)
             
             guard let cgImage = self.ciContext.createCGImage(scaledImage, from: scaledImage.extent) else {
-                print("❌ Failed to create CGImage from CIImage")
+                Self.logger.error("QR: Failed to create CGImage from CIImage")
                 return nil
             }
             
             return UIImage(cgImage: cgImage)
         }.value
         
-        // Gán lại trên MainActor (vì class được đánh dấu @MainActor)
         if let image = image {
             self.qrImage = image
-            print("✅ QR generated successfully!")
+            Self.logger.info("QR generated successfully for booking: \(qrString)")
         }
     }
     

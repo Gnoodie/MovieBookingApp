@@ -1,0 +1,81 @@
+# ─────────────────────────────────────────────
+# Xcode
+# ─────────────────────────────────────────────
+build/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/contents.xcworkspacedata
+xcuserdata/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+DerivedData/
+*.hmap
+*.ipa
+*.xcarchive
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+
+# CocoaPods (nếu dùng sau này)
+Pods/
+*.podfile.lock
+
+# ─────────────────────────────────────────────
+# 🔴 BẢO MẬT — KHÔNG ĐƯỢC COMMIT
+# ─────────────────────────────────────────────
+# Firebase Service Account Key (credentials backend)
+scripts/serviceAccountKey.json
+**/serviceAccountKey.json
+*serviceAccountKey*
+
+# Google Service Info (đã có trong .xcodeproj — KHÔNG commit bản local override)
+# GoogleService-Info.plist  ← GIỮ comment này: file này CẦN commit để Firebase chạy
+
+# API keys, env files
+.env
+.env.local
+.env.production
+*.secrets
+Secrets.swift
+APIKeys.swift
+
+# ─────────────────────────────────────────────
+# macOS
+# ─────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# ─────────────────────────────────────────────
+# Node.js (scripts/)
+# ─────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─────────────────────────────────────────────
+# Misc
+# ─────────────────────────────────────────────
+*.log
+*.tmp
+*.orig

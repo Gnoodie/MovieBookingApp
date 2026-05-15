@@ -1,10 +1,98 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────
+    // Helper functions
+    // ─────────────────────────────────────────
+
+    /// Kiểm tra request có JWT hợp lệ không
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /// Kiểm tra user đang thao tác chính là owner của document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ─────────────────────────────────────────
+    // Movies — chỉ đọc, không ghi từ client
+    // ─────────────────────────────────────────
+    match /movies/{movieId} {
+      allow read: if true;          // Public: ai cũng xem được danh sách phim
+      allow write: if false;        // Chỉ seed script / admin ghi
+    }
+
+    // ─────────────────────────────────────────
+    // Cinemas — public read
+    // ─────────────────────────────────────────
+    match /cinemas/{cinemaId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ─────────────────────────────────────────
+    // Showtimes — public read
+    // ─────────────────────────────────────────
+    match /showtimes/{showtimeId} {
+      allow read: if true;
+      allow write: if false;
+
+      // Sub-collection seats — đọc public, ghi qua server-side transaction
+      match /seats/{seatId} {
+        allow read: if true;
+        // Ghi ghế chỉ được phép qua Firestore Transaction từ backend
+        // Client không được tự ghi thẳng vào seats
+        allow write: if false;
+      }
+    }
+
+    // ─────────────────────────────────────────
+    // FnB Items — public read (menu không cần đăng nhập)
+    // ─────────────────────────────────────────
+    match /fnb_items/{itemId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ─────────────────────────────────────────
+    // Orders — chỉ chủ sở hữu được đọc/tạo
+    // ─────────────────────────────────────────
+    match /orders/{orderId} {
+      // Đọc: chỉ user sở hữu order mới xem được
+      allow read: if isOwner(resource.data.userId);
+
+      // Tạo: user tạo order cho chính mình, không tự sửa/xóa
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'pending';
+
+      // Update/Delete: không cho phép từ client (chỉ qua Transaction)
+      allow update, delete: if false;
+    }
+
+    // ─────────────────────────────────────────
+    // Tickets — chỉ chủ sở hữu được đọc
+    // ─────────────────────────────────────────
+    match /tickets/{ticketId} {
+      // Đọc: chỉ user sở hữu vé
+      allow read: if isOwner(resource.data.userId);
+
+      // Tạo: chỉ được tạo cho chính mình, trạng thái phải là 'active'
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'active';
+
+      // Update/Delete: không cho phép từ client
+      allow update, delete: if false;
+    }
+
+    // ─────────────────────────────────────────
+    // Catch-all: chặn mọi thứ còn lại
+    // ─────────────────────────────────────────
     match /{document=**} {
-      // Cho phép đọc/ghi toàn bộ database để thuận tiện test
-      // Trước khi release lên Production thì sẽ phải khóa lại
-      allow read, write: if true;
+      allow read, write: if false;
     }
   }
 }
