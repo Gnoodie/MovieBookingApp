@@ -59,9 +59,10 @@ service cloud.firestore {
     // ─────────────────────────────────────────
     // Orders — chỉ chủ sở hữu được đọc/tạo
     // ─────────────────────────────────────────
-    match /orders/{orderId} {
-      // Đọc: chỉ user sở hữu order mới xem được
-      allow read: if isOwner(resource.data.userId);
+    match /orders/{document=**} {
+      // Đọc: chỉ user sở hữu order mới xem được (hỗ trợ cả direct read và collection queries)
+      allow read: if isAuthenticated()
+                  && resource.data.userId == request.auth.uid;
 
       // Tạo: user tạo order cho chính mình, không tự sửa/xóa
       allow create: if isAuthenticated()
@@ -75,9 +76,10 @@ service cloud.firestore {
     // ─────────────────────────────────────────
     // Tickets — chỉ chủ sở hữu được đọc
     // ─────────────────────────────────────────
-    match /tickets/{ticketId} {
-      // Đọc: chỉ user sở hữu vé
-      allow read: if isOwner(resource.data.userId);
+    match /tickets/{document=**} {
+      // Đọc: chỉ user sở hữu vé (hỗ trợ cả direct read và collection queries)
+      allow read: if isAuthenticated() 
+                  && resource.data.userId == request.auth.uid;
 
       // Tạo: chỉ được tạo cho chính mình, trạng thái phải là 'active'
       allow create: if isAuthenticated()

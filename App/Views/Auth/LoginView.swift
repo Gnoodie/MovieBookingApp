@@ -67,7 +67,7 @@ public struct LoginView: View {
                                 .foregroundColor(.white)
                         }
                         .padding()
-                        .background(Color.white.opacity(0.08))
+                        .background(Color(hex: "#1a1a2e").opacity(0.6))
                         .cornerRadius(12)
                         
                         // Password Field
@@ -79,7 +79,7 @@ public struct LoginView: View {
                                 .foregroundColor(.white)
                         }
                         .padding()
-                        .background(Color.white.opacity(0.08))
+                        .background(Color(hex: "#1a1a2e").opacity(0.6))
                         .cornerRadius(12)
                         
                         // Confirm Password Field (Chỉ hiện khi Đăng ký)
@@ -93,7 +93,7 @@ public struct LoginView: View {
                                     .foregroundColor(.white)
                             }
                             .padding()
-                            .background(Color.white.opacity(0.08))
+                            .background(Color(hex: "#1a1a2e").opacity(0.6))
                             .cornerRadius(12)
                             .transition(.asymmetric(
                                 insertion: .opacity.combined(with: .scale(scale: 0.9, anchor: .top)).combined(with: .offset(y: -20)),
