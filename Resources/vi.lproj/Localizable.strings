@@ -1,0 +1,39 @@
+/* Vietnamese (Default) */
+
+/* Tabs */
+"tab.home" = "Khám phá";
+"tab.search" = "Tìm kiếm";
+"tab.tickets" = "Vé của tôi";
+"tab.profile" = "Hồ sơ";
+
+/* Booking */
+"booking.buyticket" = "Mua Vé Ngay";
+"booking.select_seat" = "Chọn ghế";
+"booking.continue" = "Tiếp tục";
+"booking.success" = "Đặt vé thành công!";
+
+/* Checkout */
+"checkout.total" = "Tổng cộng";
+"checkout.voucher.placeholder" = "Nhập mã khuyến mãi";
+"checkout.pay_mock" = "Thanh toán (Giả lập)";
+"checkout.pay_momo" = "Thanh toán MoMo";
+"checkout.pay_vnpay" = "Thanh toán VNPay";
+
+/* Ticket */
+"eticket.qr.hint" = "Xuất trình QR code tại quầy soát vé";
+"eticket.booking_id" = "Mã vé";
+"eticket.showtime" = "Suất chiếu";
+"eticket.cinema" = "Rạp";
+"eticket.seats" = "Ghế";
+
+/* Profile */
+"profile.signout" = "Đăng xuất";
+"profile.edit" = "Chỉnh sửa hồ sơ";
+"profile.total_bookings" = "Vé đã mua";
+"profile.favorites" = "Phim yêu thích";
+"profile.joined" = "Thành viên từ %@";
+
+/* Errors */
+"error.network" = "Không thể kết nối mạng. Vui lòng thử lại.";
+"error.auth" = "Đăng nhập thất bại.";
+"error.general" = "Đã có lỗi xảy ra.";

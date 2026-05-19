@@ -29,6 +29,7 @@ struct MovieBookingAppApp: App {
                 if appViewModel.isAuthenticated {
                     MainTabView()
                         .environmentObject(router)
+                        .environmentObject(appViewModel)
                 } else {
                     LoginView(appViewModel: appViewModel)
                 }
@@ -48,6 +49,7 @@ struct MovieBookingAppApp: App {
             // Xử lý callback từ MoMo/VNPay: cinematicket://payment/callback?...
             .onOpenURL { url in
                 router.handleDeepLink(url)
+                router.handleIntentURL(url, appViewModel: appViewModel)
             }
         }
     }
@@ -57,23 +59,23 @@ struct MovieBookingAppApp: App {
 
 struct MainTabView: View {
     @EnvironmentObject var router: AppRouter
-    @State private var selectedTab: Int = 0
+    @EnvironmentObject var appViewModel: AppViewModel
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $appViewModel.selectedTab) {
             // Tab 1: Phim (Home)
             HomeView()
             .environmentObject(router)
             .tabItem {
                 Label("Phim", systemImage: "film")
             }
-            .tag(0)
+            .tag(AppViewModel.Tab.home)
 
             SearchView()
                 .tabItem {
                     Label("Khám phá", systemImage: "magnifyingglass")
                 }
-                .tag(1)
+                .tag(AppViewModel.Tab.search)
 
             // Tab 3: Vé của tôi
             MyTicketsView()
@@ -81,14 +83,15 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Vé", systemImage: "ticket.fill")
                 }
-                .tag(2)
+                .tag(AppViewModel.Tab.tickets)
 
             // Tab 4: Hồ sơ
-            PlaceholderView(title: "Hồ sơ — Sprint 5")
+            ProfileView()
+                .environmentObject(appViewModel)
                 .tabItem {
                     Label("Tôi", systemImage: "person.circle")
                 }
-                .tag(3)
+                .tag(AppViewModel.Tab.profile)
         }
         .tint(Color(hex: "#D4AF37"))
         .onAppear {

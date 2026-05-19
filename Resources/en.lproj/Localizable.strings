@@ -1,0 +1,39 @@
+/* English */
+
+/* Tabs */
+"tab.home" = "Explore";
+"tab.search" = "Search";
+"tab.tickets" = "My Tickets";
+"tab.profile" = "Profile";
+
+/* Booking */
+"booking.buyticket" = "Buy Ticket";
+"booking.select_seat" = "Select Seat";
+"booking.continue" = "Continue";
+"booking.success" = "Booking Successful!";
+
+/* Checkout */
+"checkout.total" = "Total";
+"checkout.voucher.placeholder" = "Enter promo code";
+"checkout.pay_mock" = "Mock Payment";
+"checkout.pay_momo" = "Pay with MoMo";
+"checkout.pay_vnpay" = "Pay with VNPay";
+
+/* Ticket */
+"eticket.qr.hint" = "Present this QR code at the entrance";
+"eticket.booking_id" = "Booking ID";
+"eticket.showtime" = "Showtime";
+"eticket.cinema" = "Cinema";
+"eticket.seats" = "Seats";
+
+/* Profile */
+"profile.signout" = "Sign Out";
+"profile.edit" = "Edit Profile";
+"profile.total_bookings" = "Total Tickets";
+"profile.favorites" = "Favorite Movies";
+"profile.joined" = "Member since %@";
+
+/* Errors */
+"error.network" = "Network connection failed. Please try again.";
+"error.auth" = "Authentication failed.";
+"error.general" = "An error occurred.";

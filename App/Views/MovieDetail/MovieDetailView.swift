@@ -124,8 +124,8 @@ private struct HeroSection: View {
 
     var body: some View {
         ZStack {
-            if isTrailerPlaying, let trailerURL = movie.trailerURL {
-                TrailerPlayerView(url: trailerURL)
+            if let trailerURL = movie.trailerURL {
+                TrailerPlayerView(url: trailerURL, isMuted: !isTrailerPlaying, showsPlaybackControls: isTrailerPlaying)
             } else {
                 // Backdrop image
                 AsyncImage(url: movie.backdropURL) { phase in
@@ -140,13 +140,16 @@ private struct HeroSection: View {
                 }
                 .frame(maxWidth: .infinity)
                 .clipped()
+            }
 
+            if !isTrailerPlaying {
                 // Gradient to black at bottom
                 LinearGradient(
                     colors: [Color.clear, Color.clear, Color(hex: "#000000")],
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                .allowsHitTesting(false)
 
                 // Trailer play button
                 if movie.trailerURL != nil {
@@ -172,20 +175,89 @@ private struct HeroSection: View {
 
 private struct TrailerPlayerView: View {
     let url: URL
-    @State private var player: AVPlayer?
-
+    let isMuted: Bool
+    let showsPlaybackControls: Bool
+    
+    @StateObject private var playerManager = PlayerManager()
+    
     var body: some View {
-        VideoPlayer(player: player)
-            .onAppear {
-                let avPlayer = AVPlayer(url: url)
-                avPlayer.isMuted = true
-                avPlayer.play()
-                self.player = avPlayer
+        ZStack {
+            AVPlayerControllerRepresentable(player: playerManager.player, showsPlaybackControls: showsPlaybackControls)
+                .onAppear {
+                    playerManager.setup(url: url)
+                    playerManager.player?.isMuted = isMuted
+                    playerManager.player?.play()
+                }
+                .onChange(of: isMuted) { muted in
+                    playerManager.player?.isMuted = muted
+                }
+                .onDisappear {
+                    playerManager.cleanup()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+            if playerManager.isBuffering {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .scaleEffect(1.5)
             }
-            .onDisappear {
-                player?.pause()
+        }
+    }
+}
+
+class PlayerManager: ObservableObject {
+    @Published var player: AVPlayer?
+    @Published var isBuffering: Bool = true
+    private var timeObserver: Any?
+    private var statusObserver: NSKeyValueObservation?
+    
+    func setup(url: URL) {
+        let newPlayer = AVPlayer(url: url)
+        self.player = newPlayer
+        
+        statusObserver = newPlayer.observe(\.timeControlStatus, options: [.new, .initial]) { [weak self] player, _ in
+            DispatchQueue.main.async {
+                self?.isBuffering = player.timeControlStatus == .waitingToPlayAtSpecifiedRate
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: newPlayer.currentItem,
+            queue: .main
+        ) { [weak newPlayer] _ in
+            newPlayer?.seek(to: .zero)
+            newPlayer?.play()
+        }
+    }
+    
+    func cleanup() {
+        player?.pause()
+        if let observer = statusObserver {
+            observer.invalidate()
+        }
+        statusObserver = nil
+        NotificationCenter.default.removeObserver(self)
+        player = nil
+    }
+}
+
+struct AVPlayerControllerRepresentable: UIViewControllerRepresentable {
+    var player: AVPlayer?
+    var showsPlaybackControls: Bool
+    
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.player = player
+        controller.showsPlaybackControls = showsPlaybackControls
+        controller.allowsPictureInPicturePlayback = true
+        controller.videoGravity = .resizeAspectFill
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        uiViewController.player = player
+        uiViewController.showsPlaybackControls = showsPlaybackControls
     }
 }
 

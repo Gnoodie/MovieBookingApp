@@ -1,10 +1,12 @@
 import SwiftUI
 import Combine
+import os.log
 
 /// Quản lý trạng thái tổng của toàn bộ ứng dụng (thay thế AppStore TCA)
 public class AppViewModel: ObservableObject {
     @Published public var isAuthenticated: Bool = false
     @Published public var selectedTab: Tab = .home
+    private static let logger = Logger(subsystem: "com.cinematicket", category: "AppLifecycle")
     
     public enum Tab: Hashable {
         case home, search, tickets, profile
@@ -26,7 +28,7 @@ public class AppViewModel: ObservableObject {
             do {
                 try await FirebaseAuthManager.shared.signOut()
             } catch {
-                print("⚠️ Lỗi đăng xuất Firebase: \(error)")
+                Self.logger.error("⚠️ Lỗi đăng xuất Firebase: \(error.localizedDescription)")
             }
         }
         

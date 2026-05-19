@@ -106,6 +106,14 @@ struct BookingSuccessView: View {
             NotificationManager.shared.requestPermission()
             NotificationManager.shared.scheduleMovieReminder(for: ticket)
             NotificationManager.shared.cancelHoldReminder()
+            
+#if canImport(ActivityKit)
+            if #available(iOS 16.2, *) {
+                Task {
+                    await LiveActivityManager.shared.startActivity(for: ticket)
+                }
+            }
+#endif
         }
     }
     

@@ -1,9 +1,11 @@
 import Foundation
 import UserNotifications
+import os.log
 
 /// Manager xử lý hệ thống Push Notification cục bộ (Local Notifications) cho iOS 15+
 final class NotificationManager {
     static let shared = NotificationManager()
+    private static let logger = Logger(subsystem: "com.cinematicket", category: "Notifications")
     
     private init() {}
     
@@ -11,9 +13,9 @@ final class NotificationManager {
     func requestPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted {
-                print("✅ Notification permission granted.")
+                Self.logger.info("✅ Notification permission granted.")
             } else if let error = error {
-                print("❌ Notification permission error: \(error.localizedDescription)")
+                Self.logger.error("❌ Notification permission error: \(error.localizedDescription)")
             }
         }
     }
@@ -41,6 +43,20 @@ final class NotificationManager {
                 date: fifteenMinsBefore
             )
         }
+        
+#if canImport(ActivityKit)
+        if #available(iOS 16.2, *) {
+            // Auto-end Live Activity sau showtime + 15 phút (chỉ khi app còn sống)
+            let endTime = ticket.showtime.addingTimeInterval(15 * 60)
+            let delay = endTime.timeIntervalSinceNow
+            if delay > 0 {
+                Task {
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    await LiveActivityManager.shared.endActivity()
+                }
+            }
+        }
+#endif
     }
     
     /// Lên lịch nhắc nhở giữ ghế nếu đưa app xuống background
@@ -73,7 +89,7 @@ final class NotificationManager {
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("❌ Error scheduling notification: \(error.localizedDescription)")
+                Self.logger.error("❌ Error scheduling notification: \(error.localizedDescription)")
             }
         }
     }

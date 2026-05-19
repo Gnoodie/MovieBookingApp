@@ -67,4 +67,20 @@ final class AppRouter: ObservableObject {
             break
         }
     }
+    
+    /// Deep link handler cho App Intents (Siri / Spotlight)
+    func handleIntentURL(_ url: URL, appViewModel: AppViewModel) {
+        guard url.scheme == "cinematicket" else { return }
+        
+        if url.host == "tickets" {
+            appViewModel.selectedTab = .tickets
+        } else if url.host == "search" {
+            appViewModel.selectedTab = .search
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+               let queryItem = components.queryItems?.first(where: { $0.name == "q" }),
+               let query = queryItem.value {
+                NotificationCenter.default.post(name: NSNotification.Name("SearchIntent"), object: query)
+            }
+        }
+    }
 }

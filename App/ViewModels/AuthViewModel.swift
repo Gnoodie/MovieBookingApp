@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import os.log
 
 /// Quản lý trạng thái và logic của giao diện Đăng nhập / Đăng ký
 public class AuthViewModel: ObservableObject {
@@ -12,6 +13,7 @@ public class AuthViewModel: ObservableObject {
     @Published public var errorMessage: String? = nil
     
     private weak var appViewModel: AppViewModel?
+    private static let logger = Logger(subsystem: "com.cinematicket", category: "Auth")
     
     public init(appViewModel: AppViewModel? = nil) {
         self.appViewModel = appViewModel
@@ -56,10 +58,10 @@ public class AuthViewModel: ObservableObject {
                 let uid: String
                 if isLogin {
                     uid = try await FirebaseAuthManager.shared.signIn(email: currentEmail, password: currentPassword)
-                    print("Đăng nhập thành công với UID: \(uid)")
+                    Self.logger.info("Đăng nhập thành công với UID: \(uid)")
                 } else {
                     uid = try await FirebaseAuthManager.shared.signUp(email: currentEmail, password: currentPassword)
-                    print("Đăng ký thành công với UID: \(uid)")
+                    Self.logger.info("Đăng ký thành công với UID: \(uid)")
                 }
                 
                 // Lưu UID / Token vào Két sắt (Keychain) để ghi nhớ đăng nhập
