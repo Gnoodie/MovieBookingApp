@@ -16,7 +16,7 @@ let package = Package(
         // Firebase iOS SDK — dùng Firestore làm backend
         .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
-            .exact("8.15.0")
+            .upToNextMajor(from: "11.0.0")
         ),
     ],
     targets: [
