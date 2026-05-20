@@ -19,7 +19,7 @@ struct BookMovieIntent: AppIntent {
     var showtime: ShowtimeEntity
     
     // Không đặt default để Siri bắt buộc hỏi người dùng
-    @Parameter(title: "Số lượng vé", requestValueDialog: "Bạn muốn đặt bao nhiêu vé? (1 đến 8)", inclusiveRange: (1, 8))
+    @Parameter(title: "Số lượng vé", inclusiveRange: (1, 8), requestValueDialog: "Bạn muốn đặt bao nhiêu vé? (1 đến 8)")
     var ticketCount: Int
     
     @Parameter(title: "Loại ghế", requestValueDialog: "Bạn muốn ngồi ghế loại nào? Thường, VIP, hay Ghế đôi?")
