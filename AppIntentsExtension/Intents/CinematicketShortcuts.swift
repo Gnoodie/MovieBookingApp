@@ -1,6 +1,6 @@
 import AppIntents
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 struct CinematicketShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(

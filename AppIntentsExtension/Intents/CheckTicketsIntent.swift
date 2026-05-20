@@ -1,7 +1,7 @@
 import AppIntents
 import SwiftUI
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 struct CheckTicketsIntent: AppIntent {
     static let title: LocalizedStringResource = "Xem vé của tôi"
     static let description = IntentDescription("Mở danh sách vé đã mua")
@@ -12,7 +12,7 @@ struct CheckTicketsIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         if let url = URL(string: "cinematicket://tickets") {
-            UIApplication.shared.open(url)
+            _ = await UIApplication.shared.open(url)
         }
         return .result()
     }

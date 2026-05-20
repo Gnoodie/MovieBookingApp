@@ -33,7 +33,7 @@ struct ShowtimeEntityQuery: EntityStringQuery {
     }
     
     func entities(matching string: String) async throws -> [ShowtimeEntity] {
-        return suggestedEntities()
+        return try await suggestedEntities()
     }
     
     func suggestedEntities() async throws -> [ShowtimeEntity] {
