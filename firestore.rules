@@ -59,7 +59,7 @@ service cloud.firestore {
     // ─────────────────────────────────────────
     // Orders — chỉ chủ sở hữu được đọc/tạo
     // ─────────────────────────────────────────
-    match /orders/{document=**} {
+    match /orders/{orderId} {
       // Đọc: chỉ user sở hữu order mới xem được (hỗ trợ cả direct read và collection queries)
       allow read: if isAuthenticated()
                   && resource.data.userId == request.auth.uid;
@@ -74,20 +74,23 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────
-    // Tickets — chỉ chủ sở hữu được đọc
+    // Tickets — chỉ chủ sở hữu được đọc/cập nhật
     // ─────────────────────────────────────────
-    match /tickets/{document=**} {
-      // Đọc: chỉ user sở hữu vé (hỗ trợ cả direct read và collection queries)
+    match /tickets/{ticketId} {
+      // Đọc: chỉ user sở hữu vé
       allow read: if isAuthenticated() 
                   && resource.data.userId == request.auth.uid;
 
-      // Tạo: chỉ được tạo cho chính mình, trạng thái phải là 'active'
+      // Tạo: chỉ được tạo cho chính mình
       allow create: if isAuthenticated()
                     && request.resource.data.userId == request.auth.uid
                     && request.resource.data.status == 'active';
 
-      // Update/Delete: không cho phép từ client
-      allow update, delete: if false;
+      // Update: Cho phép owner cập nhật (ví dụ: huỷ vé - cancelTicket)
+      allow update: if isAuthenticated() 
+                    && resource.data.userId == request.auth.uid;
+                    
+      allow delete: if false;
     }
 
     // ─────────────────────────────────────────
