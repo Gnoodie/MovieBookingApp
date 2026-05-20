@@ -51,4 +51,19 @@ extension Color {
                   blue:  Double(b) / 255,
                   opacity: Double(a) / 255)
     }
+    
+    // MARK: - From Name Helper
+    static func fromName(_ name: String) -> Color {
+        switch name {
+        case "backgroundPrimary":   return .backgroundPrimary
+        case "backgroundSecondary": return .backgroundSecondary
+        case "backgroundTertiary":  return .backgroundTertiary
+        case "accentGold":          return .accentGold
+        case "accentTeal":          return .accentTeal
+        case "statusSuccess":       return .statusSuccess
+        case "statusError":         return .statusError
+        case "statusWarning":       return .statusWarning
+        default:                    return Color(name)
+        }
+    }
 }

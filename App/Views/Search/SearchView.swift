@@ -215,7 +215,7 @@ private struct SearchResultRow: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color(movie.ageRating.colorName).opacity(0.85))
+                        .background(Color.fromName(movie.ageRating.colorName).opacity(0.85))
                         .cornerRadius(10)
 
                     Text("\(movie.duration) phút")
