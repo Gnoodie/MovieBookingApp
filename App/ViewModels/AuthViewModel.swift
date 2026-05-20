@@ -67,6 +67,9 @@ public class AuthViewModel: ObservableObject {
                 // Lưu UID / Token vào Két sắt (Keychain) để ghi nhớ đăng nhập
                 KeychainWrapper.shared.save(uid, forKey: "access_token")
                 
+                // Chia sẻ UID với Siri Extension
+                SharedUserSession.saveUserUid(uid)
+                
                 self.isLoading = false
                 
                 // Đổi trạng thái toàn App để chuyển vào màn hình Home

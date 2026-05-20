@@ -9,7 +9,8 @@ final class FirestoreTicketRepository: TicketRepositoryProtocol {
     private let collection = "tickets"
 
     func fetchMyTickets() async throws -> [Ticket] {
-        let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
+        // "access_token" là key AuthViewModel dùng để lưu Firebase UID
+        let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
         let snapshot = try await db.collection(collection)
             .whereField("userId", isEqualTo: userId)
             .order(by: "showtime", descending: true)

@@ -84,7 +84,8 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
             }
             
             // 3. GHI SAU: Tất cả an toàn -> Tiến hành khoá ghế
-            let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
+            // "access_token" là key AuthViewModel dùng để lưu Firebase UID
+            let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
             let holdId = UUID().uuidString
             // Giữ ghế trong 10 phút
             let expiresAt = Calendar.current.date(byAdding: .minute, value: 10, to: Date()) ?? Date()
@@ -136,7 +137,8 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
                 status = .available
             } else {
                 // Hold còn hiệu lực — kiểm tra có phải mình đang hold không
-                let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
+                // "access_token" là key AuthViewModel dùng để lưu Firebase UID
+                let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
                 let heldBy = data["heldBy"] as? String
                 if heldBy == userId {
                     status = .mine

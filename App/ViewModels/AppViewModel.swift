@@ -15,8 +15,10 @@ public class AppViewModel: ObservableObject {
     public init() {
         // Kiểm tra xem Két sắt Keychain đã có token chưa
         // Nếu có thì đổi trạng thái sang đã đăng nhập để bỏ qua màn Login
-        if let _ = KeychainWrapper.shared.get(forKey: "access_token") {
+        if let token = KeychainWrapper.shared.get(forKey: "access_token") {
             self.isAuthenticated = true
+            // Chia sẻ lại UID sang Siri Extension
+            SharedUserSession.saveUserUid(token)
         }
     }
     
@@ -34,6 +36,9 @@ public class AppViewModel: ObservableObject {
         
         // Xoá token khỏi Két sắt
         KeychainWrapper.shared.delete(forKey: "access_token")
+        
+        // Xoá UID khỏi kênh chia sẻ
+        SharedUserSession.clearUserUid()
         
         // Xoá dữ liệu cache (UserDefaults)
         UserDefaults.standard.removeObject(forKey: "cached_movies")

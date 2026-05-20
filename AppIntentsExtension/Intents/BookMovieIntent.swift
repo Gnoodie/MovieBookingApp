@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftUI
 import FirebaseFirestore
+import SharedKit
 
 @available(iOS 18.0, *)
 struct BookMovieIntent: AppIntent {
@@ -111,11 +112,10 @@ struct BookMovieIntent: AppIntent {
         let db = Firestore.firestore()
         let now = Timestamp(date: Date())
         
-        // Cố gắng lấy userId từ FirebaseAuth (nếu đã đăng nhập), fallback về "siri-guest"
-        var userId = "siri-guest"
-        if let currentUser = try? await fetchCurrentUserId() {
-            userId = currentUser
-        }
+        // Lấy userId từ SharedUserSession (được ghi khi user đăng nhập từ Main App)
+        // Nếu không tìm thấy (chưa từng mở app) thì dùng fallback "siri-guest"
+        let userId = SharedUserSession.getUserUid() ?? "siri-guest"
+        print("📋 [BookMovieIntent] Using userId: \(userId)")
         
         let ticketData: [String: Any] = [
             "bookingId": "SIRI-\(ticketId.uppercased())",
@@ -142,11 +142,6 @@ struct BookMovieIntent: AppIntent {
         }
     }
     
-    private func fetchCurrentUserId() async throws -> String? {
-        // Vì AppIntentsExtension chạy độc lập, không có Firebase Auth context đầy đủ
-        // Trả về nil để dùng fallback "siri-guest" – user vẫn thấy vé trong app sau khi đăng nhập
-        return nil
-    }
     
     private func formatVND(_ amount: Int) -> String {
         let formatter = NumberFormatter()

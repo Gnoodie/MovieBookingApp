@@ -37,7 +37,8 @@ final class FirestoreOrderRepository: OrderRepositoryProtocol {
         paymentReference: String?
     ) async throws -> (order: Order, ticket: Ticket) {
 
-        let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
+        // "access_token" là key AuthViewModel dùng để lưu Firebase UID
+        let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
         let orderId = UUID().uuidString
         let ticketId = UUID().uuidString
         let bookingCode = String(orderId.prefix(9).uppercased())
@@ -227,7 +228,8 @@ final class FirestoreOrderRepository: OrderRepositoryProtocol {
     // MARK: - fetchMyOrders
 
     func fetchMyOrders() async throws -> [Order] {
-        let userId = KeychainWrapper.shared.get(forKey: "user_id") ?? "guest"
+        // "access_token" là key AuthViewModel dùng để lưu Firebase UID
+        let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
         let snapshot = try await db.collection("orders")
             .whereField("userId", isEqualTo: userId)
             .order(by: "createdAt", descending: true)
