@@ -134,7 +134,12 @@ struct BookMovieIntent: AppIntent {
             "createdViaSiri": true
         ]
         
-        try? await db.collection("tickets").document(ticketId).setData(ticketData)
+        do {
+            try await db.collection("tickets").document(ticketId).setData(ticketData)
+            print("✅ Ticket saved to Firestore successfully: \(ticketId)")
+        } catch {
+            print("❌ Failed to save ticket to Firestore: \(error.localizedDescription)")
+        }
     }
     
     private func fetchCurrentUserId() async throws -> String? {
