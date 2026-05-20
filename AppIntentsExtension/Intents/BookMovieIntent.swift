@@ -1,7 +1,6 @@
 import AppIntents
 import SwiftUI
 import FirebaseFirestore
-import SharedKit
 
 @available(iOS 18.0, *)
 struct BookMovieIntent: AppIntent {
