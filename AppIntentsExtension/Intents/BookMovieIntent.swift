@@ -18,14 +18,16 @@ struct BookMovieIntent: AppIntent {
     @Parameter(title: "Suất chiếu", requestValueDialog: "Bạn chọn suất chiếu nào?")
     var showtime: ShowtimeEntity
     
-    @Parameter(title: "Số lượng vé", requestValueDialog: "Bạn muốn đặt bao nhiêu vé?", default: 1, inclusiveRange: (1, 8))
+    // Không đặt default để Siri bắt buộc hỏi người dùng
+    @Parameter(title: "Số lượng vé", requestValueDialog: "Bạn muốn đặt bao nhiêu vé? (1 đến 8)", inclusiveRange: (1, 8))
     var ticketCount: Int
     
     @Parameter(title: "Loại ghế", requestValueDialog: "Bạn muốn ngồi ghế loại nào? Thường, VIP, hay Ghế đôi?")
     var seatType: SeatTypeEntity
     
-    @Parameter(title: "Dịch vụ F&B", requestValueDialog: "Bạn có muốn thêm đồ ăn uống không? Không cần, Combo Couple, hay Combo Gia đình?", default: false)
-    var wantsFnB: Bool
+    // Dùng enum thay vì Bool để Siri hiển thị menu lựa chọn đẹp hơn
+    @Parameter(title: "Combo đồ ăn", requestValueDialog: "Bạn có muốn thêm combo đồ ăn không?")
+    var fnbOption: FnBOptionEntity
     
     // MARK: - Perform
     @MainActor
@@ -46,8 +48,7 @@ struct BookMovieIntent: AppIntent {
         case .couple:  pricePerSeat = 250000
         default:       pricePerSeat = 150000
         }
-        let fnbAmount = wantsFnB ? 150000 : 0
-        let totalAmount = pricePerSeat * ticketCount + fnbAmount
+        let totalAmount = pricePerSeat * ticketCount + fnbOption.amount
         
         // 3. Tạo QR code ảo
         let qrData = "MBK|\(showtime.id)|\(selectedSeats.joined(separator: ","))|\(Int.random(in: 1000000...9999999))"
