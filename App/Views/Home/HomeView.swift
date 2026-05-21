@@ -5,6 +5,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel(movieRepository: FirestoreMovieRepository())
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var appViewModel: AppViewModel
 
     var body: some View {
         NavigationView {
@@ -35,7 +36,18 @@ struct HomeView: View {
                                     .frame(height: UIScreen.main.bounds.height * 0.55)
                             }
 
-                            Spacer().frame(height: 24)
+                            Spacer().frame(height: 16)
+
+                            // MARK: Filters
+                            FilterChipView(
+                                selectedFilter: viewModel.selectedFilter,
+                                onFilterSelected: { filter in
+                                    viewModel.selectedFilter = filter
+                                }
+                            )
+                            .padding(.horizontal, 16)
+
+                            Spacer().frame(height: 8)
 
                             // MARK: Now Playing
                             if !viewModel.nowPlayingMovies.isEmpty {
@@ -76,10 +88,22 @@ struct HomeView: View {
 }
 
 
+// MARK: - Scale Button Style
+
+struct ScaleButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
+    }
+}
+
+
 // MARK: - Movie Section (Horizontal Scroll)
 
 private struct MovieSectionView: View {
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var appViewModel: AppViewModel
     let title: String
     let movies: [Movie]
 
@@ -90,9 +114,13 @@ private struct MovieSectionView: View {
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .foregroundColor(.white)
                 Spacer()
-                Button("Xem tất cả") {}
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(Color(hex: "#D4AF37"))
+                Button(action: {
+                    appViewModel.selectedTab = .search
+                }) {
+                    Text("Xem tất cả")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(Color(hex: "#D4AF37"))
+                }
             }
             .padding(.horizontal, 16)
 
@@ -104,7 +132,7 @@ private struct MovieSectionView: View {
                         ) {
                             MovieCardView(movie: movie)
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        .buttonStyle(ScaleButtonStyle())
                     }
                 }
                 .padding(.horizontal, 16)

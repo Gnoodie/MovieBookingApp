@@ -41,6 +41,11 @@ struct BookMovieIntent: AppIntent {
             count: ticketCount
         )
         
+        // Kiểm tra số lượng ghế trống thực tế so với số lượng yêu cầu
+        guard selectedSeats.count == ticketCount else {
+            throw BookMovieError.insufficientSeats(requested: ticketCount, available: selectedSeats.count)
+        }
+        
         // 2. Tính tiền
         let pricePerSeat: Int
         switch seatType {
@@ -147,5 +152,23 @@ struct BookMovieIntent: AppIntent {
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
         return "\(formatter.string(from: NSNumber(value: amount)) ?? "\(amount)")đ"
+    }
+}
+
+// MARK: - BookMovieError
+
+@available(iOS 18.0, *)
+enum BookMovieError: Error, LocalizedError {
+    case insufficientSeats(requested: Int, available: Int)
+    
+    var errorDescription: String? {
+        switch self {
+        case .insufficientSeats(let requested, let available):
+            if available == 0 {
+                return "Rất tiếc, loại ghế bạn chọn cho suất chiếu này đã hoàn toàn hết vé."
+            } else {
+                return "Rất tiếc, suất chiếu này hiện không đủ số lượng ghế trống theo yêu cầu. Bạn cần đặt \(requested) ghế nhưng chỉ còn \(available) ghế trống."
+            }
+        }
     }
 }

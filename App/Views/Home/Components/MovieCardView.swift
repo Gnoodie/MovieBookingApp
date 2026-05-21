@@ -7,8 +7,6 @@ import SwiftUI
 struct MovieCardView: View {
     let movie: Movie
 
-    @State private var isPressed = false
-
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // MARK: Poster
@@ -82,11 +80,6 @@ struct MovieCardView: View {
                 .frame(maxWidth: 130)
             }
         }
-        .scaleEffect(isPressed ? 0.96 : 1.0)
-        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressed)
-        .onLongPressGesture(minimumDuration: 0.01,
-                            pressing: { pressing in isPressed = pressing },
-                            perform: {})
     }
 }
 
