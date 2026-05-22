@@ -34,31 +34,64 @@ struct BookMovieIntent: AppIntent {
     func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
         FirebaseIntentSetup.configureIfNeeded()
         
-        // 1. Chọn ghế ngẫu nhiên theo loại & số lượng từ Firestore
+        // MARK: Bước 1 — Kiểm tra số ghế khả dụng trước khi đặt
+        let availableCount = await countAvailableSeats(
+            showtimeId: showtime.id,
+            seatType: seatType.rawValue
+        )
+        
+        if availableCount == 0 {
+            // Hết ghế loại này → bắt buộc chọn suất chiếu khác
+            showtime = try await $showtime.requestValue(
+                "Rất tiếc, suất chiếu \(showtime.timeString) đã hết ghế \(seatType.displayName). Bạn muốn chọn suất chiếu nào khác?"
+            )
+        } else if availableCount < ticketCount {
+            // Không đủ số ghế → hỏi người dùng muốn giảm số vé hay đổi suất chiếu
+            do {
+                // Hỏi xác nhận: Yes → giảm số vé, No (catch) → hỏi suất khác
+                try await requestConfirmation(
+                    result: .result(
+                        dialog: IntentDialog(
+                            "Suất chiếu \(showtime.timeString) chỉ còn \(availableCount) ghế \(seatType.displayName), không đủ \(ticketCount) vé bạn yêu cầu. Bạn có muốn đặt \(availableCount) vé không?"
+                        )
+                    )
+                )
+                // Người dùng đồng ý → giảm số vé xuống mức tối đa còn lại
+                ticketCount = availableCount
+            } catch {
+                // Người dùng không muốn giảm → đề nghị chọn suất chiếu khác
+                showtime = try await $showtime.requestValue(
+                    "Bạn muốn chọn suất chiếu nào khác?"
+                )
+            }
+        }
+        // Nếu availableCount >= ticketCount: đủ ghế, tiếp tục bình thường
+        
+        // MARK: Bước 2 — Chọn ghế ngẫu nhiên theo loại & số lượng
         let selectedSeats = await pickRandomSeats(
             showtimeId: showtime.id,
             seatType: seatType.rawValue,
             count: ticketCount
         )
         
-        // Kiểm tra số lượng ghế trống thực tế so với số lượng yêu cầu
-        guard selectedSeats.count == ticketCount else {
-            throw BookMovieError.insufficientSeats(requested: ticketCount, available: selectedSeats.count)
+        // Safety net: kiểm tra lần cuối sau khi đã hỏi lại người dùng
+        guard !selectedSeats.isEmpty else {
+            throw BookMovieError.insufficientSeats(requested: ticketCount, available: 0)
         }
         
-        // 2. Tính tiền
+        // MARK: Bước 3 — Tính tiền
         let pricePerSeat: Int
         switch seatType {
-        case .vip:     pricePerSeat = 195000
-        case .couple:  pricePerSeat = 250000
-        default:       pricePerSeat = 150000
+        case .vip:    pricePerSeat = 195_000
+        case .couple: pricePerSeat = 250_000
+        default:      pricePerSeat = 150_000
         }
         let totalAmount = pricePerSeat * ticketCount + fnbOption.amount
         
-        // 3. Tạo QR code ảo
-        let qrData = "MBK|\(showtime.id)|\(selectedSeats.joined(separator: ","))|\(Int.random(in: 1000000...9999999))"
+        // MARK: Bước 4 — Tạo QR code
+        let qrData = "MBK|\(showtime.id)|\(selectedSeats.joined(separator: ","))|\(Int.random(in: 1_000_000...9_999_999))"
         
-        // 4. Tạo ticket document trên Firestore (trạng thái paid ngay)
+        // MARK: Bước 5 — Lưu ticket lên Firestore
         let ticketId = "siri-ticket-\(UUID().uuidString.prefix(8))"
         await createFirestoreTicket(
             ticketId: ticketId,
@@ -70,8 +103,10 @@ struct BookMovieIntent: AppIntent {
             qrData: qrData
         )
         
-        let seatNames = selectedSeats.isEmpty ? "ghế ngẫu nhiên" : selectedSeats.joined(separator: ", ")
-        let dialog = IntentDialog("Đã đặt \(ticketCount) vé phim \(movie.title) tại \(cinema.name), ghế \(seatNames). Tổng cộng \(formatVND(totalAmount)). Quét mã QR để thanh toán.")
+        let seatNames = selectedSeats.joined(separator: ", ")
+        let dialog = IntentDialog(
+            "Đã đặt \(ticketCount) vé phim \(movie.title) tại \(cinema.name), ghế \(seatNames). Tổng cộng \(formatVND(totalAmount)). Quét mã QR để thanh toán."
+        )
         
         return .result(
             dialog: dialog,
@@ -88,6 +123,20 @@ struct BookMovieIntent: AppIntent {
     
     // MARK: - Private Helpers
     
+    /// Đếm tổng số ghế còn trống theo loại, dùng để kiểm tra trước khi đặt
+    private func countAvailableSeats(showtimeId: String, seatType: String) async -> Int {
+        let db = Firestore.firestore()
+        guard let snapshot = try? await db.collection("showtimes")
+            .document(showtimeId)
+            .collection("seats")
+            .whereField("type", isEqualTo: seatType)
+            .whereField("status", isEqualTo: "available")
+            .getDocuments()
+        else { return 0 }
+        return snapshot.documents.count
+    }
+    
+    /// Chọn ngẫu nhiên `count` ghế từ danh sách ghế trống
     private func pickRandomSeats(showtimeId: String, seatType: String, count: Int) async -> [String] {
         let db = Firestore.firestore()
         guard let snapshot = try? await db.collection("showtimes")
@@ -95,13 +144,12 @@ struct BookMovieIntent: AppIntent {
             .collection("seats")
             .whereField("type", isEqualTo: seatType)
             .whereField("status", isEqualTo: "available")
-            .limit(to: count * 3) // lấy thêm dư để random
+            .limit(to: count * 3) // lấy dư để random tự nhiên hơn
             .getDocuments()
         else { return [] }
         
         let allLabels = snapshot.documents.compactMap { $0.data()["label"] as? String }
-        let shuffled = allLabels.shuffled()
-        return Array(shuffled.prefix(count))
+        return Array(allLabels.shuffled().prefix(count))
     }
     
     private func createFirestoreTicket(
@@ -160,14 +208,17 @@ struct BookMovieIntent: AppIntent {
 @available(iOS 18.0, *)
 enum BookMovieError: Error, LocalizedError {
     case insufficientSeats(requested: Int, available: Int)
+    case noSeatsAvailable
     
     var errorDescription: String? {
         switch self {
+        case .noSeatsAvailable:
+            return "Suất chiếu này đã hết toàn bộ ghế. Vui lòng thử lại với suất chiếu khác."
         case .insufficientSeats(let requested, let available):
             if available == 0 {
-                return "Rất tiếc, loại ghế bạn chọn cho suất chiếu này đã hoàn toàn hết vé."
+                return "Rất tiếc, suất chiếu đã hết ghế loại bạn chọn."
             } else {
-                return "Rất tiếc, suất chiếu này hiện không đủ số lượng ghế trống theo yêu cầu. Bạn cần đặt \(requested) ghế nhưng chỉ còn \(available) ghế trống."
+                return "Suất chiếu chỉ còn \(available) ghế trống, không đủ \(requested) vé bạn yêu cầu."
             }
         }
     }

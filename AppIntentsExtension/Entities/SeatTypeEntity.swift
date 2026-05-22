@@ -13,4 +13,13 @@ enum SeatTypeEntity: String, AppEnum {
         .vip: "VIP",
         .couple: "Ghế đôi"
     ]
+    
+    /// Tên hiển thị tiếng Việt dùng trong dialog Siri
+    var displayName: String {
+        switch self {
+        case .standard: return "Thường"
+        case .vip:      return "VIP"
+        case .couple:   return "Ghế đôi"
+        }
+    }
 }

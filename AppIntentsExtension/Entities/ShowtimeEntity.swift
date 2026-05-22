@@ -54,7 +54,13 @@ struct ShowtimeEntityQuery: EntityStringQuery {
     func suggestedEntities() async throws -> [ShowtimeEntity] {
         FirebaseIntentSetup.configureIfNeeded()
         let db = Firestore.firestore()
-        let snapshot = try? await db.collection("showtimes").limit(to: 20).getDocuments()
+        // Chỉ lấy những suất chiếu chưa bắt đầu (startTime > hiện tại), sắp xếp gần nhất trước
+        let now = Timestamp(date: Date())
+        let snapshot = try? await db.collection("showtimes")
+            .whereField("startTime", isGreaterThan: now)
+            .order(by: "startTime", descending: false)
+            .limit(to: 20)
+            .getDocuments()
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm dd/MM"
         return (snapshot?.documents ?? []).compactMap { doc in
