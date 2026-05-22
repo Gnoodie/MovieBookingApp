@@ -6,7 +6,7 @@ struct BookingSuccessView: View {
     let order: Order
     let ticket: Ticket
     
-    @State private var timeRemaining = 10
+    @State private var timeRemaining = 30
     @State private var navigateToHome = false
     @State private var navigateToTicket = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -46,6 +46,28 @@ struct BookingSuccessView: View {
                         .foregroundColor(Color(hex: "#888888"))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
+                    
+                    // NOTE: Siri & Apple Intelligence lồng ghép khéo léo
+                    VStack(spacing: 6) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 14))
+                                .foregroundColor(Color(hex: "#D4AF37"))
+                            Text("MẸO ĐẶT VÉ NHANH")
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .foregroundColor(Color(hex: "#D4AF37"))
+                        }
+                        Text("Bạn có biết: đặt vé dễ dàng qua siri và apple intelligent bằng cách nói \"Hey Siri, Đặt vé phim\"!")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color(hex: "#888888"))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 16)
+                    }
+                    .padding(.vertical, 10)
+                    .background(Color.white.opacity(0.05))
+                    .cornerRadius(12)
+                    .padding(.top, 16)
+                    .padding(.horizontal, 24)
                 }
                 
                 Spacer()

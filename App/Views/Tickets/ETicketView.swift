@@ -23,6 +23,28 @@ struct ETicketView: View {
                     VStack(spacing: 24) {
                         ticketCard
                         
+                        // NOTE: Siri & Apple Intelligence lồng ghép khéo léo
+                        VStack(spacing: 6) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(Color(hex: "#D4AF37"))
+                                Text("NOTE")
+                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .foregroundColor(Color(hex: "#D4AF37"))
+                            }
+                            Text("Đặt vé dễ dàng qua siri và apple intelligent")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(Color(hex: "#888888"))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 16)
+                        }
+                        .padding(.vertical, 10)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white.opacity(0.05))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 24)
+                        
                         // Action buttons
                         CinematicButton(
                             " Thêm vào Apple Wallet",

@@ -10,7 +10,8 @@ struct PaymentQRSnippetView: View {
     var totalAmount: Int
     var qrData: String
     
-    @State private var secondsLeft = 10
+    @State private var secondsLeft = 30
+    private let totalSeconds = 30.0
     @State private var isPaid = false
     @State private var timer: Timer? = nil
     
@@ -46,7 +47,7 @@ struct PaymentQRSnippetView: View {
             
             // ── QR Code hoặc Success ──────────────────
             if isPaid {
-                // Màn hình thành công sau 10 giây
+                // Màn hình thành công sau 30 giây
                 VStack(spacing: 8) {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.system(size: 48))
@@ -59,6 +60,22 @@ struct PaymentQRSnippetView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
+                    
+                    // NOTE: Siri & Apple Intelligence lồng ghép khéo léo
+                    VStack(spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(Color(red: 0.83, green: 0.69, blue: 0.22))
+                                .font(.system(size: 12))
+                            Text("NOTE")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(Color(red: 0.83, green: 0.69, blue: 0.22))
+                        }
+                        Text("Đặt vé dễ dàng qua siri và apple intelligent")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 12)
                 }
                 .padding()
                 .animation(.spring(), value: isPaid)
@@ -92,7 +109,7 @@ struct PaymentQRSnippetView: View {
                                 .frame(height: 4)
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(Color.orange)
-                                .frame(width: geo.size.width * (CGFloat(secondsLeft) / 10.0), height: 4)
+                                .frame(width: geo.size.width * (CGFloat(secondsLeft) / totalSeconds), height: 4)
                                 .animation(.linear(duration: 1), value: secondsLeft)
                         }
                     }
