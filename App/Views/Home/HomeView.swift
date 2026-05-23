@@ -4,7 +4,6 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel(movieRepository: FirestoreMovieRepository())
-    @EnvironmentObject var router: AppRouter
     @EnvironmentObject var appViewModel: AppViewModel
 
     var body: some View {
@@ -78,7 +77,7 @@ struct HomeView: View {
                         }
                     }
                     .refreshable {
-                        viewModel.pullToRefresh()
+                        await viewModel.pullToRefresh()
                     }
                 }
 

@@ -87,20 +87,26 @@ final class HomeViewModel: ObservableObject {
                 let np = try await nowPlaying
                 let cs = try await comingSoon
                 
-                self.trendingMovies = t
-                self.nowPlayingMovies = np
-                self.comingSoonMovies = cs
-                self.filteredMovies = np
-                self.isLoading = false
-                self.applyFilter()
+                // Đảm bảo cập nhật các thuộc tính @Published tuyệt đối trên Main Thread
+                await MainActor.run {
+                    self.trendingMovies = t
+                    self.nowPlayingMovies = np
+                    self.comingSoonMovies = cs
+                    self.filteredMovies = np
+                    self.isLoading = false
+                    self.applyFilter()
+                }
             } catch {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
+                let localError = error
+                await MainActor.run {
+                    self.errorMessage = localError.localizedDescription
+                    self.isLoading = false
+                }
             }
         }
     }
     
-    func pullToRefresh() {
+    func pullToRefresh() async {
         loadMovies()
     }
     
