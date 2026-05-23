@@ -53,7 +53,10 @@ struct HomeView: View {
                             if !viewModel.nowPlayingMovies.isEmpty {
                                 MovieSectionView(
                                     title: "Đang Chiếu",
-                                    movies: viewModel.displayMovies
+                                    movies: viewModel.displayMovies,
+                                    onSeeAll: {
+                                        appViewModel.selectedTab = .search
+                                    }
                                 )
                                 .padding(.top, 24)
                             }
@@ -62,7 +65,10 @@ struct HomeView: View {
                             if !viewModel.comingSoonMovies.isEmpty {
                                 MovieSectionView(
                                     title: "Sắp Chiếu",
-                                    movies: viewModel.comingSoonMovies
+                                    movies: viewModel.comingSoonMovies,
+                                    onSeeAll: {
+                                        appViewModel.selectedTab = .search
+                                    }
                                 )
                                 .padding(.top, 8)
                             }
@@ -91,15 +97,9 @@ struct HomeView: View {
 // MARK: - Movie Section (Horizontal Scroll)
 
 private struct MovieSectionView: View {
-    @EnvironmentObject var router: AppRouter
-    @EnvironmentObject var appViewModel: AppViewModel
     let title: String
     let movies: [Movie]
-
-    init(title: String, movies: [Movie]) {
-        self.title = title
-        self.movies = movies
-    }
+    let onSeeAll: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -108,9 +108,7 @@ private struct MovieSectionView: View {
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .foregroundColor(.white)
                 Spacer()
-                Button(action: {
-                    appViewModel.selectedTab = .search
-                }) {
+                Button(action: onSeeAll) {
                     Text("Xem tất cả")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(Color(hex: "#D4AF37"))
@@ -121,9 +119,7 @@ private struct MovieSectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(movies) { movie in
-                        NavigationLink(destination: MovieDetailView(movie: movie)
-                            .environmentObject(router)
-                        ) {
+                        NavigationLink(destination: MovieDetailView(movie: movie)) {
                             MovieCardView(movie: movie)
                         }
                         .buttonStyle(ScaleButtonStyle())
