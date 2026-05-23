@@ -6,12 +6,10 @@ import FirebaseFirestore
 /// Repository đọc dữ liệu phim từ Firebase Firestore
 /// Collection: "movies"
 /// Document fields phải map với Movie struct (dùng Codable + @DocumentID)
-final class FirestoreMovieRepository: MovieRepositoryProtocol {
+ffinal class FirestoreMovieRepository: MovieRepositoryProtocol {
 
     private let db = Firestore.firestore()
     private let collection = "movies"
-
-    // MARK: - MovieRepositoryProtocol
 
     func fetchNowPlaying() async throws -> [Movie] {
         let snapshot = try await db.collection(collection)

@@ -61,27 +61,28 @@ final class HomeViewModel: ObservableObject {
     }
 
     func loadMovies() {
-        isLoading     = true
-        errorMessage  = nil
+    isLoading    = true
+    errorMessage = nil
 
-        Task {
-            do {
-                let (nowPlaying, comingSoon) = try await (
-                    movieRepository.fetchNowPlaying(),
-                    movieRepository.fetchComingSoon()
-                )
-                self.trendingMovies   = nowPlaying
-                self.nowPlayingMovies = nowPlaying
-                self.comingSoonMovies = comingSoon
-                self.filteredMovies   = nowPlaying
-                self.isLoading        = false
-                self.applyFilter()
-            } catch {
-                self.errorMessage = error.localizedDescription
-                self.isLoading    = false
-            }
+    Task { @MainActor in          // ← Thêm @MainActor vào Task
+        do {
+            let (nowPlaying, comingSoon) = try await (
+                movieRepository.fetchNowPlaying(),
+                movieRepository.fetchComingSoon()
+            )
+            // Tất cả code bên dưới chạy trên Main Thread ✅
+            self.trendingMovies   = nowPlaying
+            self.nowPlayingMovies = nowPlaying
+            self.comingSoonMovies = comingSoon
+            self.filteredMovies   = nowPlaying
+            self.isLoading        = false
+            self.applyFilter()
+        } catch {
+            self.errorMessage = error.localizedDescription
+            self.isLoading    = false
         }
     }
+}
 
     func pullToRefresh() async {
         trendingMovies   = []
