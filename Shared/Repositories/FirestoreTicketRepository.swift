@@ -11,21 +11,44 @@ final class FirestoreTicketRepository: TicketRepositoryProtocol {
     func fetchMyTickets() async throws -> [Ticket] {
         // "access_token" là key AuthViewModel dùng để lưu Firebase UID
         let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
-        let snapshot = try await db.collection(collection)
-            .whereField("userId", isEqualTo: userId)
-            .order(by: "showtime", descending: true)
-            .limit(to: 100)
-            .getDocuments()
-
-        return snapshot.documents.compactMap { mapTicket($0) }
+        do {
+            // Thử tải từ server trước (online)
+            let snapshot = try await db.collection(collection)
+                .whereField("userId", isEqualTo: userId)
+                .order(by: "showtime", descending: true)
+                .limit(to: 100)
+                .getDocuments(source: .default)
+            return snapshot.documents.compactMap { mapTicket($0) }
+        } catch {
+            // Mất mạng -> tải trực tiếp từ local offline cache của Firestore
+            print("🌐 [Offline Mode] Network failed. Fetching tickets from local Firestore cache.")
+            if let snapshot = try? await db.collection(collection)
+                .whereField("userId", isEqualTo: userId)
+                .order(by: "showtime", descending: true)
+                .limit(to: 100)
+                .getDocuments(source: .cache) {
+                return snapshot.documents.compactMap { mapTicket($0) }
+            }
+            throw error
+        }
     }
 
     func fetchTicketDetail(id: String) async throws -> Ticket {
-        let doc = try await db.collection(collection).document(id).getDocument()
-        guard doc.exists, let ticket = mapTicket(doc) else {
-            throw FirestoreRepositoryError.documentNotFound(id: id)
+        do {
+            let doc = try await db.collection(collection).document(id).getDocument(source: .default)
+            guard doc.exists, let ticket = mapTicket(doc) else {
+                throw FirestoreRepositoryError.documentNotFound(id: id)
+            }
+            return ticket
+        } catch {
+            // Mất mạng -> tải chi tiết từ local cache
+            print("🌐 [Offline Mode] Fetching single ticket from local Firestore cache.")
+            if let doc = try? await db.collection(collection).document(id).getDocument(source: .cache),
+               doc.exists, let ticket = mapTicket(doc) {
+                return ticket
+            }
+            throw error
         }
-        return ticket
     }
 
     func cancelTicket(id: String) async throws {

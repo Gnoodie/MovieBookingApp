@@ -183,12 +183,17 @@ final class SeatMapViewModel: ObservableObject {
     private func handleSingleSeatTapped(_ seat: Seat) {
         if selectedSeatIds.contains(seat.id) {
             selectedSeatIds.remove(seat.id)
+            HapticManager.shared.selection()
             if selectedSeatIds.isEmpty && isHoldActive {
                 Task { await releaseCurrentHold() }
             }
         } else {
-            guard canSelectMoreSeats else { return }
+            guard canSelectMoreSeats else {
+                HapticManager.shared.notification(type: .error)
+                return
+            }
             selectedSeatIds.insert(seat.id)
+            HapticManager.shared.selection()
         }
     }
 
@@ -209,6 +214,7 @@ final class SeatMapViewModel: ObservableObject {
             // Alert riêng: partner đã bị đặt → cả cặp không thể chọn
             partnerUnavailableSeatName = "\(seat.displayName) & \(partner.displayName)"
             showPartnerUnavailableAlert = true
+            HapticManager.shared.notification(type: .error)
             return
         }
 
@@ -218,16 +224,21 @@ final class SeatMapViewModel: ObservableObject {
             // Bỏ chọn cả 2
             selectedSeatIds.remove(seat.id)
             selectedSeatIds.remove(partner.id)
+            HapticManager.shared.selection()
 
             if selectedSeatIds.isEmpty && isHoldActive {
                 Task { await releaseCurrentHold() }
             }
         } else {
             // Cần đủ 2 slot trống
-            guard selectedSeatIds.count + 2 <= Self.maxSeatSelection else { return }
+            guard selectedSeatIds.count + 2 <= Self.maxSeatSelection else {
+                HapticManager.shared.notification(type: .error)
+                return
+            }
 
             selectedSeatIds.insert(seat.id)
             selectedSeatIds.insert(partner.id)
+            HapticManager.shared.selection()
         }
     }
 
@@ -258,12 +269,14 @@ final class SeatMapViewModel: ObservableObject {
                 self.currentHoldId = response.holdId
                 self.isHoldActive = true
                 self.isHoldingSeats = false
+                HapticManager.shared.notification(type: .success)
 
                 self.updateSeatStatuses(ids: Set(response.seatIds), newStatus: .mine)
                 self.startHoldTimer()
 
             } catch let error as SeatHoldError {
                 self.isHoldingSeats = false
+                HapticManager.shared.notification(type: .error)
                 switch error {
                 case .conflict(let seatName):
                     self.conflictSeatName = seatName
@@ -274,6 +287,7 @@ final class SeatMapViewModel: ObservableObject {
                 }
             } catch {
                 self.isHoldingSeats = false
+                HapticManager.shared.notification(type: .error)
                 self.errorMessage = error.localizedDescription
             }
         }

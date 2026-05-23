@@ -77,22 +77,7 @@ struct SeatMapView: View {
     // MARK: - Loading View
 
     private var loadingView: some View {
-        VStack(spacing: 20) {
-            ZStack {
-                Circle()
-                    .stroke(Color(hex: "#1C1C2E"), lineWidth: 4)
-                    .frame(width: 56, height: 56)
-                Circle()
-                    .trim(from: 0, to: 0.7)
-                    .stroke(Color(hex: "#D4AF37"), style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                    .frame(width: 56, height: 56)
-                    .rotationEffect(.degrees(-90))
-                    .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: UUID())
-            }
-            Text("Đang tải sơ đồ rạp...")
-                .font(.system(size: 14, weight: .medium, design: .rounded))
-                .foregroundColor(Color(hex: "#888888"))
-        }
+        SeatMapSkeletonView()
     }
 
     // MARK: - Error View
