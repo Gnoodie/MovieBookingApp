@@ -11,7 +11,7 @@ struct PaymentQRSnippetView: View {
     var qrData: String
     
     @State private var secondsLeft = 30
-    private let totalSeconds = 30.0
+    private let totalSeconds: CGFloat = 30.0
     @State private var isPaid = false
     @State private var timer: Timer? = nil
     
