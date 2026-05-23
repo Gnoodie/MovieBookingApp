@@ -6,7 +6,7 @@ import FirebaseFirestore
 /// Repository đọc dữ liệu phim từ Firebase Firestore
 /// Collection: "movies"
 /// Document fields phải map với Movie struct (dùng Codable + @DocumentID)
-ffinal class FirestoreMovieRepository: MovieRepositoryProtocol {
+final class FirestoreMovieRepository: MovieRepositoryProtocol {
 
     private let db = Firestore.firestore()
     private let collection = "movies"
