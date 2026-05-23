@@ -96,6 +96,11 @@ private struct MovieSectionView: View {
     let title: String
     let movies: [Movie]
 
+    init(title: String, movies: [Movie]) {
+        self.title = title
+        self.movies = movies
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
