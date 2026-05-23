@@ -23,10 +23,12 @@ struct HomeView: View {
                 if viewModel.isLoading && viewModel.trendingMovies.isEmpty {
                     HomeLoadingView()
                 } else if let errorMsg = viewModel.errorMessage, viewModel.trendingMovies.isEmpty {
-                    HomeErrorView(message: errorMsg) {
-                        viewModel.pullToRefresh()
-                    }
-                } else {
+    HomeErrorView(message: errorMsg) {
+        Task {                              // ← thêm Task
+            await viewModel.pullToRefresh() // ← thêm await
+        }
+    }
+} else {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(spacing: 0) {
                             // MARK: Hero Carousel
