@@ -2,6 +2,15 @@ import AppIntents
 import SwiftUI
 import FirebaseFirestore
 
+// MARK: - SelectedSeat
+struct SelectedSeat {
+    let label: String
+    let row: String
+    let number: Int
+    let type: String
+    let price: Double
+}
+
 @available(iOS 18.0, *)
 struct BookMovieIntent: AppIntent {
     static let title: LocalizedStringResource = "Đặt vé phim"
@@ -79,31 +88,28 @@ struct BookMovieIntent: AppIntent {
             throw BookMovieError.insufficientSeats(requested: ticketCount, available: 0)
         }
         
-        // MARK: Bước 3 — Tính tiền
-        let pricePerSeat: Int
-        switch seatType {
-        case .vip:    pricePerSeat = 195_000
-        case .couple: pricePerSeat = 250_000
-        default:      pricePerSeat = 150_000
-        }
-        let totalAmount = pricePerSeat * ticketCount + fnbOption.amount
+        // MARK: Bước 3 — Tính tiền từ giá thực tế của ghế lấy từ database
+        let seatPriceTotal = selectedSeats.reduce(0) { $0 + Int($1.price) }
+        let totalAmount = seatPriceTotal + fnbOption.amount
         
         // MARK: Bước 4 — Tạo QR code
-        let qrData = "MBK|\(showtime.id)|\(selectedSeats.joined(separator: ","))|\(Int.random(in: 1_000_000...9_999_999))"
+        let seatLabels = selectedSeats.map { $0.label }
+        let qrData = "MBK|\(showtime.id)|\(seatLabels.joined(separator: ","))|\(Int.random(in: 1_000_000...9_999_999))"
         
-        // MARK: Bước 5 — Lưu ticket lên Firestore
+        // MARK: Bước 5 — Lưu ticket lên Firestore & Cập nhật trạng thái ghế
         let ticketId = "siri-ticket-\(UUID().uuidString.prefix(8))"
         await createFirestoreTicket(
             ticketId: ticketId,
             showtimeId: showtime.id,
+            movieId: movie.id,
             movieTitle: movie.title,
-            cinemaName: cinema.name,
-            seatLabels: selectedSeats,
+            cinema: cinema,
+            seats: selectedSeats,
             totalAmount: totalAmount,
             qrData: qrData
         )
         
-        let seatNames = selectedSeats.joined(separator: ", ")
+        let seatNames = seatLabels.joined(separator: ", ")
         let dialog = IntentDialog(
             "Đã đặt \(ticketCount) vé phim \(movie.title) tại \(cinema.name), ghế \(seatNames). Tổng cộng \(formatVND(totalAmount)). Quét mã QR để thanh toán."
         )
@@ -114,7 +120,7 @@ struct BookMovieIntent: AppIntent {
                 movie: movie,
                 cinema: cinema,
                 showtime: showtime,
-                seatLabels: selectedSeats,
+                seatLabels: seatLabels,
                 totalAmount: totalAmount,
                 qrData: qrData
             )
@@ -136,8 +142,8 @@ struct BookMovieIntent: AppIntent {
         return snapshot.documents.count
     }
     
-    /// Chọn ngẫu nhiên `count` ghế từ danh sách ghế trống
-    private func pickRandomSeats(showtimeId: String, seatType: String, count: Int) async -> [String] {
+    /// Chọn ngẫu nhiên `count` ghế từ danh sách ghế trống và lấy thông tin chi tiết ghế
+    private func pickRandomSeats(showtimeId: String, seatType: String, count: Int) async -> [SelectedSeat] {
         let db = Firestore.firestore()
         guard let snapshot = try? await db.collection("showtimes")
             .document(showtimeId)
@@ -148,37 +154,82 @@ struct BookMovieIntent: AppIntent {
             .getDocuments()
         else { return [] }
         
-        let allLabels = snapshot.documents.compactMap { $0.data()["label"] as? String }
-        return Array(allLabels.shuffled().prefix(count))
+        let selectedDocs = snapshot.documents.shuffled().prefix(count)
+        return selectedDocs.compactMap { doc in
+            let data = doc.data()
+            guard let label = data["label"] as? String,
+                  let row = data["row"] as? String,
+                  let number = data["number"] as? Int,
+                  let type = data["type"] as? String else { return nil }
+            
+            let price: Double
+            if let priceDouble = data["price"] as? Double {
+                price = priceDouble
+            } else if let priceInt = data["price"] as? Int {
+                price = Double(priceInt)
+            } else {
+                return nil
+            }
+            
+            return SelectedSeat(label: label, row: row, number: number, type: type, price: price)
+        }
     }
     
     private func createFirestoreTicket(
         ticketId: String,
         showtimeId: String,
+        movieId: String,
         movieTitle: String,
-        cinemaName: String,
-        seatLabels: [String],
+        cinema: CinemaEntity,
+        seats: [SelectedSeat],
         totalAmount: Int,
         qrData: String
     ) async {
         let db = Firestore.firestore()
         let now = Timestamp(date: Date())
         
-        // Lấy userId từ SharedUserSession (được ghi khi user đăng nhập từ Main App)
+        // 1. Lấy startTime thực tế của showtime từ Firestore để làm ngày/giờ chiếu chính xác
+        var showtimeTimestamp = now
+        if let showtimeDoc = try? await db.collection("showtimes").document(showtimeId).getDocument(),
+           let showtimeData = showtimeDoc.data(),
+           let startTime = showtimeData["startTime"] as? Timestamp {
+            showtimeTimestamp = startTime
+        }
+        
+        // 2. Lấy posterURL của phim từ Firestore
+        var posterURL: String? = nil
+        if let movieDoc = try? await db.collection("movies").document(movieId).getDocument(),
+           let movieData = movieDoc.data() {
+            posterURL = movieData["posterURL"] as? String
+        }
+        
+        // 3. Lấy userId từ SharedUserSession (được ghi khi user đăng nhập từ Main App)
         // Nếu không tìm thấy (chưa từng mở app) thì dùng fallback "siri-guest"
         let userId = SharedUserSession.getUserUid() ?? "siri-guest"
         print("📋 [BookMovieIntent] Using userId: \(userId)")
+        
+        // 4. Map thông tin ghế đúng format mà app chính mong đợi [row, number, type, price]
+        let seatsData = seats.map { seat in
+            return [
+                "row": seat.row,
+                "number": seat.number,
+                "type": seat.type,
+                "price": seat.price
+            ] as [String: Any]
+        }
         
         let ticketData: [String: Any] = [
             "bookingId": "SIRI-\(ticketId.uppercased())",
             "orderId": ticketId,
             "userId": userId,
             "movieTitle": movieTitle,
-            "cinemaName": cinemaName,
+            "moviePosterURL": posterURL as Any,
+            "cinemaName": cinema.name,
+            "cinemaAddress": cinema.location, // Địa chỉ rạp lấy từ cinema.location
             "hallName": "Phòng chiếu",
-            "showtime": now,
+            "showtime": showtimeTimestamp, // Ngày giờ chiếu chuẩn
             "format": showtime.format,
-            "seats": seatLabels.map { ["label": $0] },
+            "seats": seatsData, // Có đầy đủ row, number, type, price
             "totalAmount": totalAmount,
             "status": "active",
             "purchasedAt": now,
@@ -187,10 +238,32 @@ struct BookMovieIntent: AppIntent {
         ]
         
         do {
-            try await db.collection("tickets").document(ticketId).setData(ticketData)
-            print("✅ Ticket saved to Firestore successfully: \(ticketId)")
+            // Dùng Write Batch để cập nhật đồng thời vé và trạng thái ghế
+            let batch = db.batch()
+            
+            // a. Lưu ticket
+            let ticketRef = db.collection("tickets").document(ticketId)
+            batch.setData(ticketData, forDocument: ticketRef)
+            
+            // b. Cập nhật status từng ghế sang "booked"
+            for seat in seats {
+                let seatRef = db.collection("showtimes")
+                    .document(showtimeId)
+                    .collection("seats")
+                    .document("\(showtimeId)_\(seat.label)")
+                batch.updateData(["status": "booked"], forDocument: seatRef)
+            }
+            
+            // c. Trừ số lượng ghế trống khả dụng của showtime
+            let showtimeRef = db.collection("showtimes").document(showtimeId)
+            batch.updateData([
+                "availableSeats": FieldValue.increment(Int64(-seats.count))
+            ], forDocument: showtimeRef)
+            
+            try await batch.commit()
+            print("✅ Ticket saved and seats updated successfully: \(ticketId)")
         } catch {
-            print("❌ Failed to save ticket to Firestore: \(error.localizedDescription)")
+            print("❌ Failed to create ticket or update seats: \(error.localizedDescription)")
         }
     }
     
