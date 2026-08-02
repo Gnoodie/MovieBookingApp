@@ -1,0 +1,51 @@
+name: Build and Upload to App Store Connect
+
+on:
+  push:
+    branches: [ develop, main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Select Latest Xcode Version
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Setup App Store Connect API Key (Decode Base64)
+        env:
+          P8_KEY_BASE64: ${{ secrets.APP_STORE_P8_KEY }}
+          KEY_ID: ${{ secrets.APP_STORE_KEY_ID }}
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$P8_KEY_BASE64" | base64 --decode > ~/.appstoreconnect/private_keys/AuthKey_${KEY_ID}.p8
+
+      - name: Build Archive & Auto Upload to App Store Connect
+        env:
+          KEY_ID: ${{ secrets.APP_STORE_KEY_ID }}
+          ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+        run: |
+          xcodebuild archive \
+            -project "MovieBookingApp.xcodeproj" \
+            -scheme "MovieBookingApp" \
+            -destination "generic/platform=iOS" \
+            -archivePath "build/MovieBookingApp.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${KEY_ID}.p8 \
+            -authenticationKeyID "${KEY_ID}" \
+            -authenticationKeyIssuerID "${ISSUER_ID}"
+
+          xcodebuild -exportArchive \
+            -archivePath "build/MovieBookingApp.xcarchive" \
+            -exportOptionsPlist "ExportOptions.plist" \
+            -exportPath "build/output" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${KEY_ID}.p8 \
+            -authenticationKeyID "${KEY_ID}" \
+            -authenticationKeyIssuerID "${ISSUER_ID}"
