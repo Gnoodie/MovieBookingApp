@@ -7,66 +7,106 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1E1ADE552FB1D8E800A9DA6C /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE252FB1D8E800A9DA6C /* MovieDetailViewModel.swift */; };
-		1E1ADE562FB1D8E800A9DA6C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE262FB1D8E800A9DA6C /* HomeViewModel.swift */; };
-		1E1ADE572FB1D8E800A9DA6C /* ShowtimeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE272FB1D8E800A9DA6C /* ShowtimeViewModel.swift */; };
-		1E1ADE582FB1D8E800A9DA6C /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE282FB1D8E800A9DA6C /* AuthViewModel.swift */; };
-		1E1ADE592FB1D8E800A9DA6C /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE292FB1D8E800A9DA6C /* AppViewModel.swift */; };
-		1E1ADE5A2FB1D8E800A9DA6C /* SeatMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE2A2FB1D8E800A9DA6C /* SeatMapViewModel.swift */; };
-		1E1ADE5B2FB1D8E800A9DA6C /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE2C2FB1D8E800A9DA6C /* Typography.swift */; };
-		1E1ADE5C2FB1D8E800A9DA6C /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE2D2FB1D8E800A9DA6C /* HapticManager.swift */; };
-		1E1ADE5D2FB1D8E800A9DA6C /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE2E2FB1D8E800A9DA6C /* Animations.swift */; };
-		1E1ADE5E2FB1D8E800A9DA6C /* GlassCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE302FB1D8E800A9DA6C /* GlassCardView.swift */; };
-		1E1ADE5F2FB1D8E900A9DA6C /* CinematicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE312FB1D8E800A9DA6C /* CinematicButton.swift */; };
-		1E1ADE602FB1D8E900A9DA6C /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE322FB1D8E800A9DA6C /* Colors.swift */; };
-		1E1ADE612FB1D8E900A9DA6C /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE342FB1D8E800A9DA6C /* AppRouter.swift */; };
-		1E1ADE622FB1D8E900A9DA6C /* MovieBookingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE352FB1D8E800A9DA6C /* MovieBookingAppApp.swift */; };
-		1E1ADE632FB1D8E900A9DA6C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE382FB1D8E800A9DA6C /* HomeView.swift */; };
-		1E1ADE642FB1D8E900A9DA6C /* FilterChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE3A2FB1D8E800A9DA6C /* FilterChipView.swift */; };
-		1E1ADE652FB1D8E900A9DA6C /* MovieCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE3B2FB1D8E800A9DA6C /* MovieCardView.swift */; };
-		1E1ADE662FB1D8E900A9DA6C /* HeroCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE3C2FB1D8E800A9DA6C /* HeroCarouselView.swift */; };
-		1E1ADE672FB1D8E900A9DA6C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE3E2FB1D8E800A9DA6C /* LoginView.swift */; };
-		1E1ADE682FB1D8E900A9DA6C /* ShowtimeBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE412FB1D8E800A9DA6C /* ShowtimeBadgeView.swift */; };
-		1E1ADE692FB1D8E900A9DA6C /* CinemaAccordionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE422FB1D8E800A9DA6C /* CinemaAccordionView.swift */; };
-		1E1ADE6A2FB1D8E900A9DA6C /* DatePickerStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE432FB1D8E800A9DA6C /* DatePickerStrip.swift */; };
-		1E1ADE6B2FB1D8E900A9DA6C /* ShowtimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE442FB1D8E800A9DA6C /* ShowtimePickerView.swift */; };
-		1E1ADE6C2FB1D8E900A9DA6C /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE462FB1D8E800A9DA6C /* SearchView.swift */; };
-		1E1ADE6D2FB1D8E900A9DA6C /* SeatLegendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE492FB1D8E800A9DA6C /* SeatLegendView.swift */; };
-		1E1ADE6E2FB1D8E900A9DA6C /* MiniCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE4A2FB1D8E800A9DA6C /* MiniCartView.swift */; };
-		1E1ADE6F2FB1D8E900A9DA6C /* SeatMapCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE4B2FB1D8E800A9DA6C /* SeatMapCanvas.swift */; };
-		1E1ADE702FB1D8E900A9DA6C /* FloatingHoldTimerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE4C2FB1D8E800A9DA6C /* FloatingHoldTimerBar.swift */; };
-		1E1ADE712FB1D8E900A9DA6C /* SeatMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE4D2FB1D8E800A9DA6C /* SeatMapView.swift */; };
-		1E1ADE722FB1D8E900A9DA6C /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE4F2FB1D8E800A9DA6C /* MovieDetailView.swift */; };
-		1E1ADE732FB1D8E900A9DA6C /* CastRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE512FB1D8E800A9DA6C /* CastRowView.swift */; };
-		1E1ADE742FB1D8E900A9DA6C /* RatingBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE522FB1D8E800A9DA6C /* RatingBadgeView.swift */; };
-		1E1ADE752FB1D8E900A9DA6C /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE542FB1D8E800A9DA6C /* ImageCacheService.swift */; };
-		1E1ADE922FB1D8F900A9DA6C /* CacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE782FB1D8F900A9DA6C /* CacheRepository.swift */; };
-		1E1ADE932FB1D8F900A9DA6C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE792FB1D8F900A9DA6C /* CoreDataStack.swift */; };
-		1E1ADE942FB1D8F900A9DA6C /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE7B2FB1D8F900A9DA6C /* KeychainWrapper.swift */; };
-		1E1ADE952FB1D8F900A9DA6C /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE7C2FB1D8F900A9DA6C /* FirebaseAuthManager.swift */; };
-		1E1ADE962FB1D8F900A9DA6C /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE7E2FB1D8F900A9DA6C /* NetworkClient.swift */; };
-		1E1ADE972FB1D8F900A9DA6C /* ShowtimeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE7F2FB1D8F900A9DA6C /* ShowtimeAPI.swift */; };
-		1E1ADE982FB1D8F900A9DA6C /* MovieAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE802FB1D8F900A9DA6C /* MovieAPI.swift */; };
-		1E1ADE992FB1D8F900A9DA6C /* SSEClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE812FB1D8F900A9DA6C /* SSEClient.swift */; };
-		1E1ADE9A2FB1D8F900A9DA6C /* CinemaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE822FB1D8F900A9DA6C /* CinemaAPI.swift */; };
-		1E1ADE9B2FB1D8F900A9DA6C /* ShowtimeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE842FB1D8F900A9DA6C /* ShowtimeRepository.swift */; };
-		1E1ADE9C2FB1D8F900A9DA6C /* TicketRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE852FB1D8F900A9DA6C /* TicketRepository.swift */; };
-		1E1ADE9D2FB1D8F900A9DA6C /* FirestoreCinemaRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE862FB1D8F900A9DA6C /* FirestoreCinemaRepository.swift */; };
-		1E1ADE9E2FB1D8F900A9DA6C /* MovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE872FB1D8F900A9DA6C /* MovieRepository.swift */; };
-		1E1ADE9F2FB1D8F900A9DA6C /* FirestoreMovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE882FB1D8F900A9DA6C /* FirestoreMovieRepository.swift */; };
-		1E1ADEA02FB1D8F900A9DA6C /* SeatRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE892FB1D8F900A9DA6C /* SeatRepository.swift */; };
-		1E1ADEA12FB1D8F900A9DA6C /* FirestoreSeatRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE8A2FB1D8F900A9DA6C /* FirestoreSeatRepository.swift */; };
-		1E1ADEA22FB1D8F900A9DA6C /* Seat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE8C2FB1D8F900A9DA6C /* Seat.swift */; };
-		1E1ADEA32FB1D8F900A9DA6C /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE8D2FB1D8F900A9DA6C /* Movie.swift */; };
-		1E1ADEA42FB1D8F900A9DA6C /* Showtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE8E2FB1D8F900A9DA6C /* Showtime.swift */; };
-		1E1ADEA52FB1D8F900A9DA6C /* Cinema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE8F2FB1D8F900A9DA6C /* Cinema.swift */; };
-		1E1ADEA62FB1D8F900A9DA6C /* SeatMapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE902FB1D8F900A9DA6C /* SeatMapLayout.swift */; };
-		1E1ADEA72FB1D8F900A9DA6C /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1ADE912FB1D8F900A9DA6C /* Ticket.swift */; };
 		1E1ADEAA2FB1D9CA00A9DA6C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E1ADEA92FB1D9CA00A9DA6C /* GoogleService-Info.plist */; };
 		1E1ADEAD2FB1DA8600A9DA6C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1E1ADEAC2FB1DA8600A9DA6C /* FirebaseAuth */; };
 		1E1ADEAF2FB1DA9100A9DA6C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1E1ADEAE2FB1DA9100A9DA6C /* FirebaseFirestore */; };
-		1E1ADEB12FB1DA9800A9DA6C /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 1E1ADEB02FB1DA9800A9DA6C /* FirebaseFirestoreSwift-Beta */; };
 		1E30E2B12FA1C48800F3A28C /* Configurations in Resources */ = {isa = PBXBuildFile; fileRef = 1E30E2B02FA1C48800F3A28C /* Configurations */; };
+		6D2565D42FC14004000C4FAC /* SeatMapSkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2565D32FC14004000C4FAC /* SeatMapSkeletonView.swift */; };
+		6D4CB989301BBBA900639732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D4CB988301BBBA900639732 /* Assets.xcassets */; };
+		6D78D3992FBD8C8400539410 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D31D2FBD8C8400539410 /* Animations.swift */; };
+		6D78D39A2FBD8C8400539410 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D37F2FBD8C8400539410 /* NetworkClient.swift */; };
+		6D78D39B2FBD8C8400539410 /* DatePickerStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3552FBD8C8400539410 /* DatePickerStrip.swift */; };
+		6D78D39C2FBD8C8400539410 /* SeatTypeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3642FBD8C8400539410 /* SeatTypeEntity.swift */; };
+		6D78D39D2FBD8C8400539410 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3382FBD8C8400539410 /* CheckoutView.swift */; };
+		6D78D39E2FBD8C8400539410 /* ShowtimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3582FBD8C8400539410 /* ShowtimePickerView.swift */; };
+		6D78D39F2FBD8C8400539410 /* CheckTicketsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3682FBD8C8400539410 /* CheckTicketsIntent.swift */; };
+		6D78D3A02FBD8C8400539410 /* FloatingHoldTimerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D34D2FBD8C8400539410 /* FloatingHoldTimerBar.swift */; };
+		6D78D3A12FBD8C8400539410 /* TicketRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D38D2FBD8C8400539410 /* TicketRepository.swift */; };
+		6D78D3A22FBD8C8400539410 /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3902FBD8C8400539410 /* KeychainWrapper.swift */; };
+		6D78D3A32FBD8C8400539410 /* TicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D35C2FBD8C8400539410 /* TicketCardView.swift */; };
+		6D78D3A42FBD8C8400539410 /* FnBMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D33B2FBD8C8400539410 /* FnBMenuView.swift */; };
+		6D78D3A52FBD8C8400539410 /* PaymentMethodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3392FBD8C8400539410 /* PaymentMethodCard.swift */; };
+		6D78D3A62FBD8C8400539410 /* PassKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3932FBD8C8400539410 /* PassKitManager.swift */; };
+		6D78D3A72FBD8C8400539410 /* MovieBookingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D35F2FBD8C8400539410 /* MovieBookingAppApp.swift */; };
+		6D78D3A82FBD8C8400539410 /* FirestoreOrderRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3862FBD8C8400539410 /* FirestoreOrderRepository.swift */; };
+		6D78D3A92FBD8C8400539410 /* FnBOptionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3622FBD8C8400539410 /* FnBOptionEntity.swift */; };
+		6D78D3AA2FBD8C8400539410 /* Cinema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3732FBD8C8400539410 /* Cinema.swift */; };
+		6D78D3AB2FBD8C8400539410 /* SSEClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3812FBD8C8400539410 /* SSEClient.swift */; };
+		6D78D3AC2FBD8C8400539410 /* ShowtimeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3332FBD8C8400539410 /* ShowtimeViewModel.swift */; };
+		6D78D3AD2FBD8C8400539410 /* FilterChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D33D2FBD8C8400539410 /* FilterChipView.swift */; };
+		6D78D3AE2FBD8C8400539410 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3922FBD8C8400539410 /* NotificationManager.swift */; };
+		6D78D3AF2FBD8C8400539410 /* FirebaseIntentSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D36E2FBD8C8400539410 /* FirebaseIntentSetup.swift */; };
+		6D78D3B02FBD8C8400539410 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D37B2FBD8C8400539410 /* UserProfile.swift */; };
+		6D78D3B12FBD8C8400539410 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3752FBD8C8400539410 /* Movie.swift */; };
+		6D78D3B22FBD8C8400539410 /* SeatMapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3782FBD8C8400539410 /* SeatMapLayout.swift */; };
+		6D78D3B32FBD8C8400539410 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3352FBD8C8400539410 /* LoginView.swift */; };
+		6D78D3B42FBD8C8400539410 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3492FBD8C8400539410 /* ProfileView.swift */; };
+		6D78D3B52FBD8C8400539410 /* FirestoreSeatRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3872FBD8C8400539410 /* FirestoreSeatRepository.swift */; };
+		6D78D3B62FBD8C8400539410 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3292FBD8C8400539410 /* AppViewModel.swift */; };
+		6D78D3B72FBD8C8400539410 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D34B2FBD8C8400539410 /* SearchView.swift */; };
+		6D78D3B82FBD8C8400539410 /* CastRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3432FBD8C8400539410 /* CastRowView.swift */; };
+		6D78D3B92FBD8C8400539410 /* FirestoreUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3892FBD8C8400539410 /* FirestoreUserRepository.swift */; };
+		6D78D3BA2FBD8C8400539410 /* BookingUseCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3962FBD8C8400539410 /* BookingUseCases.swift */; };
+		6D78D3BB2FBD8C8400539410 /* MyTicketsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3302FBD8C8400539410 /* MyTicketsViewModel.swift */; };
+		6D78D3BC2FBD8C8400539410 /* FirestoreCinemaRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3832FBD8C8400539410 /* FirestoreCinemaRepository.swift */; };
+		6D78D3BD2FBD8C8400539410 /* BookingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3372FBD8C8400539410 /* BookingSuccessView.swift */; };
+		6D78D3BE2FBD8C8400539410 /* ETicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D35A2FBD8C8400539410 /* ETicketView.swift */; };
+		6D78D3BF2FBD8C8400539410 /* SeatMapCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3502FBD8C8400539410 /* SeatMapCanvas.swift */; };
+		6D78D3C02FBD8C8400539410 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D31F2FBD8C8400539410 /* HapticManager.swift */; };
+		6D78D3C12FBD8C8400539410 /* Seat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3772FBD8C8400539410 /* Seat.swift */; };
+		6D78D3C22FBD8C8400539410 /* MyTicketsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D35B2FBD8C8400539410 /* MyTicketsView.swift */; };
+		6D78D3C32FBD8C8400539410 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3712FBD8C8400539410 /* CoreDataStack.swift */; };
+		6D78D3C42FBD8C8400539410 /* ETicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D32C2FBD8C8400539410 /* ETicketViewModel.swift */; };
+		6D78D3C52FBD8C8400539410 /* FirestoreMovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3852FBD8C8400539410 /* FirestoreMovieRepository.swift */; };
+		6D78D3C62FBD8C8400539410 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D32A2FBD8C8400539410 /* AuthViewModel.swift */; };
+		6D78D3C72FBD8C8400539410 /* SeatMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3322FBD8C8400539410 /* SeatMapViewModel.swift */; };
+		6D78D3C82FBD8C8400539410 /* CacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3702FBD8C8400539410 /* CacheRepository.swift */; };
+		6D78D3C92FBD8C8400539410 /* PaymentQRSnippetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D36C2FBD8C8400539410 /* PaymentQRSnippetView.swift */; };
+		6D78D3CA2FBD8C8400539410 /* MovieCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D33F2FBD8C8400539410 /* MovieCardView.swift */; };
+		6D78D3CB2FBD8C8400539410 /* ShowtimeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D38C2FBD8C8400539410 /* ShowtimeRepository.swift */; };
+		6D78D3CC2FBD8C8400539410 /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3272FBD8C8400539410 /* ImageCacheService.swift */; };
+		6D78D3CD2FBD8C8400539410 /* BookingSnippetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D36B2FBD8C8400539410 /* BookingSnippetView.swift */; };
+		6D78D3CE2FBD8C8400539410 /* CinemaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D37D2FBD8C8400539410 /* CinemaAPI.swift */; };
+		6D78D3CF2FBD8C8400539410 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D37A2FBD8C8400539410 /* Ticket.swift */; };
+		6D78D3D02FBD8C8400539410 /* CinematicketShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3692FBD8C8400539410 /* CinematicketShortcuts.swift */; };
+		6D78D3D12FBD8C8400539410 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3412FBD8C8400539410 /* HomeView.swift */; };
+		6D78D3D22FBD8C8400539410 /* SeatMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3522FBD8C8400539410 /* SeatMapView.swift */; };
+		6D78D3D32FBD8C8400539410 /* ShowtimeBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3562FBD8C8400539410 /* ShowtimeBadgeView.swift */; };
+		6D78D3D42FBD8C8400539410 /* MovieEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3632FBD8C8400539410 /* MovieEntity.swift */; };
+		6D78D3D52FBD8C8400539410 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3222FBD8C8400539410 /* LiveActivityManager.swift */; };
+		6D78D3D62FBD8C8400539410 /* FnBViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D32D2FBD8C8400539410 /* FnBViewModel.swift */; };
+		6D78D3D72FBD8C8400539410 /* RatingBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3442FBD8C8400539410 /* RatingBadgeView.swift */; };
+		6D78D3D82FBD8C8400539410 /* Showtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3792FBD8C8400539410 /* Showtime.swift */; };
+		6D78D3D92FBD8C8400539410 /* CinemaAccordionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3542FBD8C8400539410 /* CinemaAccordionView.swift */; };
+		6D78D3DA2FBD8C8400539410 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3942FBD8C8400539410 /* PaymentService.swift */; };
+		6D78D3DB2FBD8C8400539410 /* FirestoreFnBRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3842FBD8C8400539410 /* FirestoreFnBRepository.swift */; };
+		6D78D3DC2FBD8C8400539410 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3482FBD8C8400539410 /* EditProfileView.swift */; };
+		6D78D3DD2FBD8C8400539410 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D31E2FBD8C8400539410 /* Colors.swift */; };
+		6D78D3DE2FBD8C8400539410 /* SeatLegendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D34F2FBD8C8400539410 /* SeatLegendView.swift */; };
+		6D78D3DF2FBD8C8400539410 /* MovieAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D37E2FBD8C8400539410 /* MovieAPI.swift */; };
+		6D78D3E02FBD8C8400539410 /* CheckoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D32B2FBD8C8400539410 /* CheckoutViewModel.swift */; };
+		6D78D3E12FBD8C8400539410 /* ShowtimeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3652FBD8C8400539410 /* ShowtimeEntity.swift */; };
+		6D78D3E22FBD8C8400539410 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D32F2FBD8C8400539410 /* MovieDetailViewModel.swift */; };
+		6D78D3E32FBD8C8400539410 /* MiniCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D34E2FBD8C8400539410 /* MiniCartView.swift */; };
+		6D78D3E42FBD8C8400539410 /* GlassCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D31B2FBD8C8400539410 /* GlassCardView.swift */; };
+		6D78D3E52FBD8C8400539410 /* CinemaEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3612FBD8C8400539410 /* CinemaEntity.swift */; };
+		6D78D3E62FBD8C8400539410 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3312FBD8C8400539410 /* ProfileViewModel.swift */; };
+		6D78D3E72FBD8C8400539410 /* ShowtimeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3802FBD8C8400539410 /* ShowtimeAPI.swift */; };
+		6D78D3E82FBD8C8400539410 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D32E2FBD8C8400539410 /* HomeViewModel.swift */; };
+		6D78D3E92FBD8C8400539410 /* CinematicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D31A2FBD8C8400539410 /* CinematicButton.swift */; };
+		6D78D3EA2FBD8C8400539410 /* SeatRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D38B2FBD8C8400539410 /* SeatRepository.swift */; };
+		6D78D3EB2FBD8C8400539410 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3762FBD8C8400539410 /* Order.swift */; };
+		6D78D3EC2FBD8C8400539410 /* FnBItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3742FBD8C8400539410 /* FnBItem.swift */; };
+		6D78D3ED2FBD8C8400539410 /* FirestoreTicketRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3882FBD8C8400539410 /* FirestoreTicketRepository.swift */; };
+		6D78D3EE2FBD8C8400539410 /* ShowtimeActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3232FBD8C8400539410 /* ShowtimeActivityAttributes.swift */; };
+		6D78D3EF2FBD8C8400539410 /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3462FBD8C8400539410 /* MovieDetailView.swift */; };
+		6D78D3F02FBD8C8400539410 /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D38F2FBD8C8400539410 /* FirebaseAuthManager.swift */; };
+		6D78D3F12FBD8C8400539410 /* BookMovieIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3672FBD8C8400539410 /* BookMovieIntent.swift */; };
+		6D78D3F22FBD8C8400539410 /* MovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D38A2FBD8C8400539410 /* MovieRepository.swift */; };
+		6D78D3F32FBD8C8400539410 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3252FBD8C8400539410 /* AppRouter.swift */; };
+		6D78D3F42FBD8C8400539410 /* HeroCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D33E2FBD8C8400539410 /* HeroCarouselView.swift */; };
+		6D78D3F52FBD8C8400539410 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3202FBD8C8400539410 /* Typography.swift */; };
+		6D78D3F72FBD9E2600539410 /* SharedUserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3F62FBD9E2600539410 /* SharedUserSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,66 +127,107 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1E1ADE252FB1D8E800A9DA6C /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
-		1E1ADE262FB1D8E800A9DA6C /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		1E1ADE272FB1D8E800A9DA6C /* ShowtimeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowtimeViewModel.swift; sourceTree = "<group>"; };
-		1E1ADE282FB1D8E800A9DA6C /* AuthViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		1E1ADE292FB1D8E800A9DA6C /* AppViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
-		1E1ADE2A2FB1D8E800A9DA6C /* SeatMapViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeatMapViewModel.swift; sourceTree = "<group>"; };
-		1E1ADE2C2FB1D8E800A9DA6C /* Typography.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
-		1E1ADE2D2FB1D8E800A9DA6C /* HapticManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
-		1E1ADE2E2FB1D8E800A9DA6C /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
-		1E1ADE302FB1D8E800A9DA6C /* GlassCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlassCardView.swift; sourceTree = "<group>"; };
-		1E1ADE312FB1D8E800A9DA6C /* CinematicButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CinematicButton.swift; sourceTree = "<group>"; };
-		1E1ADE322FB1D8E800A9DA6C /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		1E1ADE342FB1D8E800A9DA6C /* AppRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
-		1E1ADE352FB1D8E800A9DA6C /* MovieBookingAppApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieBookingAppApp.swift; sourceTree = "<group>"; };
-		1E1ADE382FB1D8E800A9DA6C /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		1E1ADE3A2FB1D8E800A9DA6C /* FilterChipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterChipView.swift; sourceTree = "<group>"; };
-		1E1ADE3B2FB1D8E800A9DA6C /* MovieCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCardView.swift; sourceTree = "<group>"; };
-		1E1ADE3C2FB1D8E800A9DA6C /* HeroCarouselView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeroCarouselView.swift; sourceTree = "<group>"; };
-		1E1ADE3E2FB1D8E800A9DA6C /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		1E1ADE412FB1D8E800A9DA6C /* ShowtimeBadgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowtimeBadgeView.swift; sourceTree = "<group>"; };
-		1E1ADE422FB1D8E800A9DA6C /* CinemaAccordionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CinemaAccordionView.swift; sourceTree = "<group>"; };
-		1E1ADE432FB1D8E800A9DA6C /* DatePickerStrip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerStrip.swift; sourceTree = "<group>"; };
-		1E1ADE442FB1D8E800A9DA6C /* ShowtimePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowtimePickerView.swift; sourceTree = "<group>"; };
-		1E1ADE462FB1D8E800A9DA6C /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
-		1E1ADE492FB1D8E800A9DA6C /* SeatLegendView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeatLegendView.swift; sourceTree = "<group>"; };
-		1E1ADE4A2FB1D8E800A9DA6C /* MiniCartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniCartView.swift; sourceTree = "<group>"; };
-		1E1ADE4B2FB1D8E800A9DA6C /* SeatMapCanvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeatMapCanvas.swift; sourceTree = "<group>"; };
-		1E1ADE4C2FB1D8E800A9DA6C /* FloatingHoldTimerBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingHoldTimerBar.swift; sourceTree = "<group>"; };
-		1E1ADE4D2FB1D8E800A9DA6C /* SeatMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeatMapView.swift; sourceTree = "<group>"; };
-		1E1ADE4F2FB1D8E800A9DA6C /* MovieDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
-		1E1ADE512FB1D8E800A9DA6C /* CastRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastRowView.swift; sourceTree = "<group>"; };
-		1E1ADE522FB1D8E800A9DA6C /* RatingBadgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingBadgeView.swift; sourceTree = "<group>"; };
-		1E1ADE542FB1D8E800A9DA6C /* ImageCacheService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
-		1E1ADE782FB1D8F900A9DA6C /* CacheRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheRepository.swift; sourceTree = "<group>"; };
-		1E1ADE792FB1D8F900A9DA6C /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		1E1ADE7B2FB1D8F900A9DA6C /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
-		1E1ADE7C2FB1D8F900A9DA6C /* FirebaseAuthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAuthManager.swift; sourceTree = "<group>"; };
-		1E1ADE7E2FB1D8F900A9DA6C /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
-		1E1ADE7F2FB1D8F900A9DA6C /* ShowtimeAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowtimeAPI.swift; sourceTree = "<group>"; };
-		1E1ADE802FB1D8F900A9DA6C /* MovieAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieAPI.swift; sourceTree = "<group>"; };
-		1E1ADE812FB1D8F900A9DA6C /* SSEClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSEClient.swift; sourceTree = "<group>"; };
-		1E1ADE822FB1D8F900A9DA6C /* CinemaAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CinemaAPI.swift; sourceTree = "<group>"; };
-		1E1ADE842FB1D8F900A9DA6C /* ShowtimeRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowtimeRepository.swift; sourceTree = "<group>"; };
-		1E1ADE852FB1D8F900A9DA6C /* TicketRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketRepository.swift; sourceTree = "<group>"; };
-		1E1ADE862FB1D8F900A9DA6C /* FirestoreCinemaRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirestoreCinemaRepository.swift; sourceTree = "<group>"; };
-		1E1ADE872FB1D8F900A9DA6C /* MovieRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieRepository.swift; sourceTree = "<group>"; };
-		1E1ADE882FB1D8F900A9DA6C /* FirestoreMovieRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirestoreMovieRepository.swift; sourceTree = "<group>"; };
-		1E1ADE892FB1D8F900A9DA6C /* SeatRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeatRepository.swift; sourceTree = "<group>"; };
-		1E1ADE8A2FB1D8F900A9DA6C /* FirestoreSeatRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirestoreSeatRepository.swift; sourceTree = "<group>"; };
-		1E1ADE8C2FB1D8F900A9DA6C /* Seat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Seat.swift; sourceTree = "<group>"; };
-		1E1ADE8D2FB1D8F900A9DA6C /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
-		1E1ADE8E2FB1D8F900A9DA6C /* Showtime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Showtime.swift; sourceTree = "<group>"; };
-		1E1ADE8F2FB1D8F900A9DA6C /* Cinema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cinema.swift; sourceTree = "<group>"; };
-		1E1ADE902FB1D8F900A9DA6C /* SeatMapLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeatMapLayout.swift; sourceTree = "<group>"; };
-		1E1ADE912FB1D8F900A9DA6C /* Ticket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		1E1ADEA92FB1D9CA00A9DA6C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1E30E2B02FA1C48800F3A28C /* Configurations */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Configurations; sourceTree = "<group>"; };
 		1EE996792FA1C3DE0022705C /* MovieBookingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieBookingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE996892FA1C3DF0022705C /* MovieBookingAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieBookingAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE996932FA1C3DF0022705C /* MovieBookingAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieBookingAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D2565D32FC14004000C4FAC /* SeatMapSkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatMapSkeletonView.swift; sourceTree = "<group>"; };
+		6D4CB988301BBBA900639732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6D78D31A2FBD8C8400539410 /* CinematicButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinematicButton.swift; sourceTree = "<group>"; };
+		6D78D31B2FBD8C8400539410 /* GlassCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCardView.swift; sourceTree = "<group>"; };
+		6D78D31D2FBD8C8400539410 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		6D78D31E2FBD8C8400539410 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		6D78D31F2FBD8C8400539410 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		6D78D3202FBD8C8400539410 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		6D78D3222FBD8C8400539410 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		6D78D3232FBD8C8400539410 /* ShowtimeActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimeActivityAttributes.swift; sourceTree = "<group>"; };
+		6D78D3252FBD8C8400539410 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		6D78D3272FBD8C8400539410 /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
+		6D78D3292FBD8C8400539410 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		6D78D32A2FBD8C8400539410 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		6D78D32B2FBD8C8400539410 /* CheckoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewModel.swift; sourceTree = "<group>"; };
+		6D78D32C2FBD8C8400539410 /* ETicketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETicketViewModel.swift; sourceTree = "<group>"; };
+		6D78D32D2FBD8C8400539410 /* FnBViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FnBViewModel.swift; sourceTree = "<group>"; };
+		6D78D32E2FBD8C8400539410 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		6D78D32F2FBD8C8400539410 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
+		6D78D3302FBD8C8400539410 /* MyTicketsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsViewModel.swift; sourceTree = "<group>"; };
+		6D78D3312FBD8C8400539410 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		6D78D3322FBD8C8400539410 /* SeatMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatMapViewModel.swift; sourceTree = "<group>"; };
+		6D78D3332FBD8C8400539410 /* ShowtimeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimeViewModel.swift; sourceTree = "<group>"; };
+		6D78D3352FBD8C8400539410 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		6D78D3372FBD8C8400539410 /* BookingSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingSuccessView.swift; sourceTree = "<group>"; };
+		6D78D3382FBD8C8400539410 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
+		6D78D3392FBD8C8400539410 /* PaymentMethodCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodCard.swift; sourceTree = "<group>"; };
+		6D78D33B2FBD8C8400539410 /* FnBMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FnBMenuView.swift; sourceTree = "<group>"; };
+		6D78D33D2FBD8C8400539410 /* FilterChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterChipView.swift; sourceTree = "<group>"; };
+		6D78D33E2FBD8C8400539410 /* HeroCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCarouselView.swift; sourceTree = "<group>"; };
+		6D78D33F2FBD8C8400539410 /* MovieCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCardView.swift; sourceTree = "<group>"; };
+		6D78D3412FBD8C8400539410 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		6D78D3432FBD8C8400539410 /* CastRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastRowView.swift; sourceTree = "<group>"; };
+		6D78D3442FBD8C8400539410 /* RatingBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingBadgeView.swift; sourceTree = "<group>"; };
+		6D78D3462FBD8C8400539410 /* MovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
+		6D78D3482FBD8C8400539410 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		6D78D3492FBD8C8400539410 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		6D78D34B2FBD8C8400539410 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		6D78D34D2FBD8C8400539410 /* FloatingHoldTimerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingHoldTimerBar.swift; sourceTree = "<group>"; };
+		6D78D34E2FBD8C8400539410 /* MiniCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCartView.swift; sourceTree = "<group>"; };
+		6D78D34F2FBD8C8400539410 /* SeatLegendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatLegendView.swift; sourceTree = "<group>"; };
+		6D78D3502FBD8C8400539410 /* SeatMapCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatMapCanvas.swift; sourceTree = "<group>"; };
+		6D78D3522FBD8C8400539410 /* SeatMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatMapView.swift; sourceTree = "<group>"; };
+		6D78D3542FBD8C8400539410 /* CinemaAccordionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaAccordionView.swift; sourceTree = "<group>"; };
+		6D78D3552FBD8C8400539410 /* DatePickerStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerStrip.swift; sourceTree = "<group>"; };
+		6D78D3562FBD8C8400539410 /* ShowtimeBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimeBadgeView.swift; sourceTree = "<group>"; };
+		6D78D3582FBD8C8400539410 /* ShowtimePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimePickerView.swift; sourceTree = "<group>"; };
+		6D78D35A2FBD8C8400539410 /* ETicketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETicketView.swift; sourceTree = "<group>"; };
+		6D78D35B2FBD8C8400539410 /* MyTicketsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsView.swift; sourceTree = "<group>"; };
+		6D78D35C2FBD8C8400539410 /* TicketCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketCardView.swift; sourceTree = "<group>"; };
+		6D78D35F2FBD8C8400539410 /* MovieBookingAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieBookingAppApp.swift; sourceTree = "<group>"; };
+		6D78D3612FBD8C8400539410 /* CinemaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaEntity.swift; sourceTree = "<group>"; };
+		6D78D3622FBD8C8400539410 /* FnBOptionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FnBOptionEntity.swift; sourceTree = "<group>"; };
+		6D78D3632FBD8C8400539410 /* MovieEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieEntity.swift; sourceTree = "<group>"; };
+		6D78D3642FBD8C8400539410 /* SeatTypeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatTypeEntity.swift; sourceTree = "<group>"; };
+		6D78D3652FBD8C8400539410 /* ShowtimeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimeEntity.swift; sourceTree = "<group>"; };
+		6D78D3672FBD8C8400539410 /* BookMovieIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMovieIntent.swift; sourceTree = "<group>"; };
+		6D78D3682FBD8C8400539410 /* CheckTicketsIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckTicketsIntent.swift; sourceTree = "<group>"; };
+		6D78D3692FBD8C8400539410 /* CinematicketShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinematicketShortcuts.swift; sourceTree = "<group>"; };
+		6D78D36B2FBD8C8400539410 /* BookingSnippetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingSnippetView.swift; sourceTree = "<group>"; };
+		6D78D36C2FBD8C8400539410 /* PaymentQRSnippetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentQRSnippetView.swift; sourceTree = "<group>"; };
+		6D78D36E2FBD8C8400539410 /* FirebaseIntentSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseIntentSetup.swift; sourceTree = "<group>"; };
+		6D78D3702FBD8C8400539410 /* CacheRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheRepository.swift; sourceTree = "<group>"; };
+		6D78D3712FBD8C8400539410 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		6D78D3732FBD8C8400539410 /* Cinema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cinema.swift; sourceTree = "<group>"; };
+		6D78D3742FBD8C8400539410 /* FnBItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FnBItem.swift; sourceTree = "<group>"; };
+		6D78D3752FBD8C8400539410 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		6D78D3762FBD8C8400539410 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
+		6D78D3772FBD8C8400539410 /* Seat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seat.swift; sourceTree = "<group>"; };
+		6D78D3782FBD8C8400539410 /* SeatMapLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatMapLayout.swift; sourceTree = "<group>"; };
+		6D78D3792FBD8C8400539410 /* Showtime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Showtime.swift; sourceTree = "<group>"; };
+		6D78D37A2FBD8C8400539410 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
+		6D78D37B2FBD8C8400539410 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		6D78D37D2FBD8C8400539410 /* CinemaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaAPI.swift; sourceTree = "<group>"; };
+		6D78D37E2FBD8C8400539410 /* MovieAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAPI.swift; sourceTree = "<group>"; };
+		6D78D37F2FBD8C8400539410 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		6D78D3802FBD8C8400539410 /* ShowtimeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimeAPI.swift; sourceTree = "<group>"; };
+		6D78D3812FBD8C8400539410 /* SSEClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSEClient.swift; sourceTree = "<group>"; };
+		6D78D3832FBD8C8400539410 /* FirestoreCinemaRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreCinemaRepository.swift; sourceTree = "<group>"; };
+		6D78D3842FBD8C8400539410 /* FirestoreFnBRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreFnBRepository.swift; sourceTree = "<group>"; };
+		6D78D3852FBD8C8400539410 /* FirestoreMovieRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreMovieRepository.swift; sourceTree = "<group>"; };
+		6D78D3862FBD8C8400539410 /* FirestoreOrderRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreOrderRepository.swift; sourceTree = "<group>"; };
+		6D78D3872FBD8C8400539410 /* FirestoreSeatRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreSeatRepository.swift; sourceTree = "<group>"; };
+		6D78D3882FBD8C8400539410 /* FirestoreTicketRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreTicketRepository.swift; sourceTree = "<group>"; };
+		6D78D3892FBD8C8400539410 /* FirestoreUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreUserRepository.swift; sourceTree = "<group>"; };
+		6D78D38A2FBD8C8400539410 /* MovieRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRepository.swift; sourceTree = "<group>"; };
+		6D78D38B2FBD8C8400539410 /* SeatRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatRepository.swift; sourceTree = "<group>"; };
+		6D78D38C2FBD8C8400539410 /* ShowtimeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtimeRepository.swift; sourceTree = "<group>"; };
+		6D78D38D2FBD8C8400539410 /* TicketRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketRepository.swift; sourceTree = "<group>"; };
+		6D78D38F2FBD8C8400539410 /* FirebaseAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthManager.swift; sourceTree = "<group>"; };
+		6D78D3902FBD8C8400539410 /* KeychainWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
+		6D78D3922FBD8C8400539410 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		6D78D3932FBD8C8400539410 /* PassKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassKitManager.swift; sourceTree = "<group>"; };
+		6D78D3942FBD8C8400539410 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		6D78D3962FBD8C8400539410 /* BookingUseCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingUseCases.swift; sourceTree = "<group>"; };
+		6D78D3F62FBD9E2600539410 /* SharedUserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUserSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,7 +235,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E1ADEB12FB1DA9800A9DA6C /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				1E1ADEAD2FB1DA8600A9DA6C /* FirebaseAuth in Frameworks */,
 				1E1ADEAF2FB1DA9100A9DA6C /* FirebaseFirestore in Frameworks */,
 			);
@@ -177,243 +257,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1E1ADE232FB1D8E800A9DA6C /* App */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE242FB1D8E800A9DA6C /* ViewModels */,
-				1E1ADE2B2FB1D8E800A9DA6C /* DesignSystem */,
-				1E1ADE332FB1D8E800A9DA6C /* Navigation */,
-				1E1ADE352FB1D8E800A9DA6C /* MovieBookingAppApp.swift */,
-				1E1ADE362FB1D8E800A9DA6C /* Views */,
-				1E1ADE532FB1D8E800A9DA6C /* Services */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		1E1ADE242FB1D8E800A9DA6C /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE252FB1D8E800A9DA6C /* MovieDetailViewModel.swift */,
-				1E1ADE262FB1D8E800A9DA6C /* HomeViewModel.swift */,
-				1E1ADE272FB1D8E800A9DA6C /* ShowtimeViewModel.swift */,
-				1E1ADE282FB1D8E800A9DA6C /* AuthViewModel.swift */,
-				1E1ADE292FB1D8E800A9DA6C /* AppViewModel.swift */,
-				1E1ADE2A2FB1D8E800A9DA6C /* SeatMapViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		1E1ADE2B2FB1D8E800A9DA6C /* DesignSystem */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE2C2FB1D8E800A9DA6C /* Typography.swift */,
-				1E1ADE2D2FB1D8E800A9DA6C /* HapticManager.swift */,
-				1E1ADE2E2FB1D8E800A9DA6C /* Animations.swift */,
-				1E1ADE2F2FB1D8E800A9DA6C /* Components */,
-				1E1ADE322FB1D8E800A9DA6C /* Colors.swift */,
-			);
-			path = DesignSystem;
-			sourceTree = "<group>";
-		};
-		1E1ADE2F2FB1D8E800A9DA6C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE302FB1D8E800A9DA6C /* GlassCardView.swift */,
-				1E1ADE312FB1D8E800A9DA6C /* CinematicButton.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		1E1ADE332FB1D8E800A9DA6C /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE342FB1D8E800A9DA6C /* AppRouter.swift */,
-			);
-			path = Navigation;
-			sourceTree = "<group>";
-		};
-		1E1ADE362FB1D8E800A9DA6C /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE372FB1D8E800A9DA6C /* Home */,
-				1E1ADE3D2FB1D8E800A9DA6C /* Auth */,
-				1E1ADE3F2FB1D8E800A9DA6C /* Showtimes */,
-				1E1ADE452FB1D8E800A9DA6C /* Search */,
-				1E1ADE472FB1D8E800A9DA6C /* SeatMap */,
-				1E1ADE4E2FB1D8E800A9DA6C /* MovieDetail */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		1E1ADE372FB1D8E800A9DA6C /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE382FB1D8E800A9DA6C /* HomeView.swift */,
-				1E1ADE392FB1D8E800A9DA6C /* Components */,
-			);
-			path = Home;
-			sourceTree = "<group>";
-		};
-		1E1ADE392FB1D8E800A9DA6C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE3A2FB1D8E800A9DA6C /* FilterChipView.swift */,
-				1E1ADE3B2FB1D8E800A9DA6C /* MovieCardView.swift */,
-				1E1ADE3C2FB1D8E800A9DA6C /* HeroCarouselView.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		1E1ADE3D2FB1D8E800A9DA6C /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE3E2FB1D8E800A9DA6C /* LoginView.swift */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
-		1E1ADE3F2FB1D8E800A9DA6C /* Showtimes */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE402FB1D8E800A9DA6C /* Components */,
-				1E1ADE442FB1D8E800A9DA6C /* ShowtimePickerView.swift */,
-			);
-			path = Showtimes;
-			sourceTree = "<group>";
-		};
-		1E1ADE402FB1D8E800A9DA6C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE412FB1D8E800A9DA6C /* ShowtimeBadgeView.swift */,
-				1E1ADE422FB1D8E800A9DA6C /* CinemaAccordionView.swift */,
-				1E1ADE432FB1D8E800A9DA6C /* DatePickerStrip.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		1E1ADE452FB1D8E800A9DA6C /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE462FB1D8E800A9DA6C /* SearchView.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
-		1E1ADE472FB1D8E800A9DA6C /* SeatMap */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE482FB1D8E800A9DA6C /* Components */,
-				1E1ADE4D2FB1D8E800A9DA6C /* SeatMapView.swift */,
-			);
-			path = SeatMap;
-			sourceTree = "<group>";
-		};
-		1E1ADE482FB1D8E800A9DA6C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE492FB1D8E800A9DA6C /* SeatLegendView.swift */,
-				1E1ADE4A2FB1D8E800A9DA6C /* MiniCartView.swift */,
-				1E1ADE4B2FB1D8E800A9DA6C /* SeatMapCanvas.swift */,
-				1E1ADE4C2FB1D8E800A9DA6C /* FloatingHoldTimerBar.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		1E1ADE4E2FB1D8E800A9DA6C /* MovieDetail */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE4F2FB1D8E800A9DA6C /* MovieDetailView.swift */,
-				1E1ADE502FB1D8E800A9DA6C /* Components */,
-			);
-			path = MovieDetail;
-			sourceTree = "<group>";
-		};
-		1E1ADE502FB1D8E800A9DA6C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE512FB1D8E800A9DA6C /* CastRowView.swift */,
-				1E1ADE522FB1D8E800A9DA6C /* RatingBadgeView.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		1E1ADE532FB1D8E800A9DA6C /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE542FB1D8E800A9DA6C /* ImageCacheService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		1E1ADE762FB1D8F900A9DA6C /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE772FB1D8F900A9DA6C /* Cache */,
-				1E1ADE7A2FB1D8F900A9DA6C /* Security */,
-				1E1ADE7D2FB1D8F900A9DA6C /* Network */,
-				1E1ADE832FB1D8F900A9DA6C /* Repositories */,
-				1E1ADE8B2FB1D8F900A9DA6C /* Models */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		1E1ADE772FB1D8F900A9DA6C /* Cache */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE782FB1D8F900A9DA6C /* CacheRepository.swift */,
-				1E1ADE792FB1D8F900A9DA6C /* CoreDataStack.swift */,
-			);
-			path = Cache;
-			sourceTree = "<group>";
-		};
-		1E1ADE7A2FB1D8F900A9DA6C /* Security */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE7B2FB1D8F900A9DA6C /* KeychainWrapper.swift */,
-				1E1ADE7C2FB1D8F900A9DA6C /* FirebaseAuthManager.swift */,
-			);
-			path = Security;
-			sourceTree = "<group>";
-		};
-		1E1ADE7D2FB1D8F900A9DA6C /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE7E2FB1D8F900A9DA6C /* NetworkClient.swift */,
-				1E1ADE7F2FB1D8F900A9DA6C /* ShowtimeAPI.swift */,
-				1E1ADE802FB1D8F900A9DA6C /* MovieAPI.swift */,
-				1E1ADE812FB1D8F900A9DA6C /* SSEClient.swift */,
-				1E1ADE822FB1D8F900A9DA6C /* CinemaAPI.swift */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
-		1E1ADE832FB1D8F900A9DA6C /* Repositories */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE842FB1D8F900A9DA6C /* ShowtimeRepository.swift */,
-				1E1ADE852FB1D8F900A9DA6C /* TicketRepository.swift */,
-				1E1ADE862FB1D8F900A9DA6C /* FirestoreCinemaRepository.swift */,
-				1E1ADE872FB1D8F900A9DA6C /* MovieRepository.swift */,
-				1E1ADE882FB1D8F900A9DA6C /* FirestoreMovieRepository.swift */,
-				1E1ADE892FB1D8F900A9DA6C /* SeatRepository.swift */,
-				1E1ADE8A2FB1D8F900A9DA6C /* FirestoreSeatRepository.swift */,
-			);
-			path = Repositories;
-			sourceTree = "<group>";
-		};
-		1E1ADE8B2FB1D8F900A9DA6C /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				1E1ADE8C2FB1D8F900A9DA6C /* Seat.swift */,
-				1E1ADE8D2FB1D8F900A9DA6C /* Movie.swift */,
-				1E1ADE8E2FB1D8F900A9DA6C /* Showtime.swift */,
-				1E1ADE8F2FB1D8F900A9DA6C /* Cinema.swift */,
-				1E1ADE902FB1D8F900A9DA6C /* SeatMapLayout.swift */,
-				1E1ADE912FB1D8F900A9DA6C /* Ticket.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		1E1ADEAB2FB1DA8600A9DA6C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -424,9 +267,10 @@
 		1EE996702FA1C3DD0022705C = {
 			isa = PBXGroup;
 			children = (
+				6D78D3602FBD8C8400539410 /* App */,
+				6D78D36F2FBD8C8400539410 /* AppIntentsExtension */,
+				6D78D3982FBD8C8400539410 /* Shared */,
 				1E1ADEA92FB1D9CA00A9DA6C /* GoogleService-Info.plist */,
-				1E1ADE762FB1D8F900A9DA6C /* Shared */,
-				1E1ADE232FB1D8E800A9DA6C /* App */,
 				1E30E2B02FA1C48800F3A28C /* Configurations */,
 				1EE996962FA1C3DF0022705C /* MovieBookingAppUITests */,
 				1EE9967A2FA1C3DE0022705C /* Products */,
@@ -451,6 +295,371 @@
 			path = MovieBookingAppUITests;
 			sourceTree = "<group>";
 		};
+		6D78D31C2FBD8C8400539410 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D31A2FBD8C8400539410 /* CinematicButton.swift */,
+				6D78D31B2FBD8C8400539410 /* GlassCardView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		6D78D3212FBD8C8400539410 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D31C2FBD8C8400539410 /* Components */,
+				6D78D31D2FBD8C8400539410 /* Animations.swift */,
+				6D78D31E2FBD8C8400539410 /* Colors.swift */,
+				6D78D31F2FBD8C8400539410 /* HapticManager.swift */,
+				6D78D3202FBD8C8400539410 /* Typography.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		6D78D3242FBD8C8400539410 /* LiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3222FBD8C8400539410 /* LiveActivityManager.swift */,
+				6D78D3232FBD8C8400539410 /* ShowtimeActivityAttributes.swift */,
+			);
+			path = LiveActivity;
+			sourceTree = "<group>";
+		};
+		6D78D3262FBD8C8400539410 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3252FBD8C8400539410 /* AppRouter.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		6D78D3282FBD8C8400539410 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3272FBD8C8400539410 /* ImageCacheService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		6D78D3342FBD8C8400539410 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3292FBD8C8400539410 /* AppViewModel.swift */,
+				6D78D32A2FBD8C8400539410 /* AuthViewModel.swift */,
+				6D78D32B2FBD8C8400539410 /* CheckoutViewModel.swift */,
+				6D78D32C2FBD8C8400539410 /* ETicketViewModel.swift */,
+				6D78D32D2FBD8C8400539410 /* FnBViewModel.swift */,
+				6D78D32E2FBD8C8400539410 /* HomeViewModel.swift */,
+				6D78D32F2FBD8C8400539410 /* MovieDetailViewModel.swift */,
+				6D78D3302FBD8C8400539410 /* MyTicketsViewModel.swift */,
+				6D78D3312FBD8C8400539410 /* ProfileViewModel.swift */,
+				6D78D3322FBD8C8400539410 /* SeatMapViewModel.swift */,
+				6D78D3332FBD8C8400539410 /* ShowtimeViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6D78D3362FBD8C8400539410 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3352FBD8C8400539410 /* LoginView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		6D78D33A2FBD8C8400539410 /* Checkout */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3372FBD8C8400539410 /* BookingSuccessView.swift */,
+				6D78D3382FBD8C8400539410 /* CheckoutView.swift */,
+				6D78D3392FBD8C8400539410 /* PaymentMethodCard.swift */,
+			);
+			path = Checkout;
+			sourceTree = "<group>";
+		};
+		6D78D33C2FBD8C8400539410 /* FnB */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D33B2FBD8C8400539410 /* FnBMenuView.swift */,
+			);
+			path = FnB;
+			sourceTree = "<group>";
+		};
+		6D78D3402FBD8C8400539410 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D33D2FBD8C8400539410 /* FilterChipView.swift */,
+				6D78D33E2FBD8C8400539410 /* HeroCarouselView.swift */,
+				6D78D33F2FBD8C8400539410 /* MovieCardView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		6D78D3422FBD8C8400539410 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3402FBD8C8400539410 /* Components */,
+				6D78D3412FBD8C8400539410 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		6D78D3452FBD8C8400539410 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3432FBD8C8400539410 /* CastRowView.swift */,
+				6D78D3442FBD8C8400539410 /* RatingBadgeView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		6D78D3472FBD8C8400539410 /* MovieDetail */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3452FBD8C8400539410 /* Components */,
+				6D78D3462FBD8C8400539410 /* MovieDetailView.swift */,
+			);
+			path = MovieDetail;
+			sourceTree = "<group>";
+		};
+		6D78D34A2FBD8C8400539410 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3482FBD8C8400539410 /* EditProfileView.swift */,
+				6D78D3492FBD8C8400539410 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		6D78D34C2FBD8C8400539410 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D34B2FBD8C8400539410 /* SearchView.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		6D78D3512FBD8C8400539410 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				6D2565D32FC14004000C4FAC /* SeatMapSkeletonView.swift */,
+				6D78D34D2FBD8C8400539410 /* FloatingHoldTimerBar.swift */,
+				6D78D34E2FBD8C8400539410 /* MiniCartView.swift */,
+				6D78D34F2FBD8C8400539410 /* SeatLegendView.swift */,
+				6D78D3502FBD8C8400539410 /* SeatMapCanvas.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		6D78D3532FBD8C8400539410 /* SeatMap */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3512FBD8C8400539410 /* Components */,
+				6D78D3522FBD8C8400539410 /* SeatMapView.swift */,
+			);
+			path = SeatMap;
+			sourceTree = "<group>";
+		};
+		6D78D3572FBD8C8400539410 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3542FBD8C8400539410 /* CinemaAccordionView.swift */,
+				6D78D3552FBD8C8400539410 /* DatePickerStrip.swift */,
+				6D78D3562FBD8C8400539410 /* ShowtimeBadgeView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		6D78D3592FBD8C8400539410 /* Showtimes */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3572FBD8C8400539410 /* Components */,
+				6D78D3582FBD8C8400539410 /* ShowtimePickerView.swift */,
+			);
+			path = Showtimes;
+			sourceTree = "<group>";
+		};
+		6D78D35D2FBD8C8400539410 /* Tickets */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D35A2FBD8C8400539410 /* ETicketView.swift */,
+				6D78D35B2FBD8C8400539410 /* MyTicketsView.swift */,
+				6D78D35C2FBD8C8400539410 /* TicketCardView.swift */,
+			);
+			path = Tickets;
+			sourceTree = "<group>";
+		};
+		6D78D35E2FBD8C8400539410 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3362FBD8C8400539410 /* Auth */,
+				6D78D33A2FBD8C8400539410 /* Checkout */,
+				6D78D33C2FBD8C8400539410 /* FnB */,
+				6D78D3422FBD8C8400539410 /* Home */,
+				6D78D3472FBD8C8400539410 /* MovieDetail */,
+				6D78D34A2FBD8C8400539410 /* Profile */,
+				6D78D34C2FBD8C8400539410 /* Search */,
+				6D78D3532FBD8C8400539410 /* SeatMap */,
+				6D78D3592FBD8C8400539410 /* Showtimes */,
+				6D78D35D2FBD8C8400539410 /* Tickets */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6D78D3602FBD8C8400539410 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3212FBD8C8400539410 /* DesignSystem */,
+				6D78D3242FBD8C8400539410 /* LiveActivity */,
+				6D78D3262FBD8C8400539410 /* Navigation */,
+				6D78D3282FBD8C8400539410 /* Services */,
+				6D78D3342FBD8C8400539410 /* ViewModels */,
+				6D78D35E2FBD8C8400539410 /* Views */,
+				6D78D35F2FBD8C8400539410 /* MovieBookingAppApp.swift */,
+				6D4CB988301BBBA900639732 /* Assets.xcassets */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		6D78D3662FBD8C8400539410 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3612FBD8C8400539410 /* CinemaEntity.swift */,
+				6D78D3622FBD8C8400539410 /* FnBOptionEntity.swift */,
+				6D78D3632FBD8C8400539410 /* MovieEntity.swift */,
+				6D78D3642FBD8C8400539410 /* SeatTypeEntity.swift */,
+				6D78D3652FBD8C8400539410 /* ShowtimeEntity.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		6D78D36A2FBD8C8400539410 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3672FBD8C8400539410 /* BookMovieIntent.swift */,
+				6D78D3682FBD8C8400539410 /* CheckTicketsIntent.swift */,
+				6D78D3692FBD8C8400539410 /* CinematicketShortcuts.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		6D78D36D2FBD8C8400539410 /* Snippets */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D36B2FBD8C8400539410 /* BookingSnippetView.swift */,
+				6D78D36C2FBD8C8400539410 /* PaymentQRSnippetView.swift */,
+			);
+			path = Snippets;
+			sourceTree = "<group>";
+		};
+		6D78D36F2FBD8C8400539410 /* AppIntentsExtension */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3662FBD8C8400539410 /* Entities */,
+				6D78D36A2FBD8C8400539410 /* Intents */,
+				6D78D36D2FBD8C8400539410 /* Snippets */,
+				6D78D36E2FBD8C8400539410 /* FirebaseIntentSetup.swift */,
+			);
+			path = AppIntentsExtension;
+			sourceTree = "<group>";
+		};
+		6D78D3722FBD8C8400539410 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3702FBD8C8400539410 /* CacheRepository.swift */,
+				6D78D3712FBD8C8400539410 /* CoreDataStack.swift */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
+		6D78D37C2FBD8C8400539410 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3732FBD8C8400539410 /* Cinema.swift */,
+				6D78D3742FBD8C8400539410 /* FnBItem.swift */,
+				6D78D3752FBD8C8400539410 /* Movie.swift */,
+				6D78D3762FBD8C8400539410 /* Order.swift */,
+				6D78D3772FBD8C8400539410 /* Seat.swift */,
+				6D78D3782FBD8C8400539410 /* SeatMapLayout.swift */,
+				6D78D3792FBD8C8400539410 /* Showtime.swift */,
+				6D78D37A2FBD8C8400539410 /* Ticket.swift */,
+				6D78D37B2FBD8C8400539410 /* UserProfile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6D78D3822FBD8C8400539410 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D37D2FBD8C8400539410 /* CinemaAPI.swift */,
+				6D78D37E2FBD8C8400539410 /* MovieAPI.swift */,
+				6D78D37F2FBD8C8400539410 /* NetworkClient.swift */,
+				6D78D3802FBD8C8400539410 /* ShowtimeAPI.swift */,
+				6D78D3812FBD8C8400539410 /* SSEClient.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		6D78D38E2FBD8C8400539410 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3832FBD8C8400539410 /* FirestoreCinemaRepository.swift */,
+				6D78D3842FBD8C8400539410 /* FirestoreFnBRepository.swift */,
+				6D78D3852FBD8C8400539410 /* FirestoreMovieRepository.swift */,
+				6D78D3862FBD8C8400539410 /* FirestoreOrderRepository.swift */,
+				6D78D3872FBD8C8400539410 /* FirestoreSeatRepository.swift */,
+				6D78D3882FBD8C8400539410 /* FirestoreTicketRepository.swift */,
+				6D78D3892FBD8C8400539410 /* FirestoreUserRepository.swift */,
+				6D78D38A2FBD8C8400539410 /* MovieRepository.swift */,
+				6D78D38B2FBD8C8400539410 /* SeatRepository.swift */,
+				6D78D38C2FBD8C8400539410 /* ShowtimeRepository.swift */,
+				6D78D38D2FBD8C8400539410 /* TicketRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		6D78D3912FBD8C8400539410 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3F62FBD9E2600539410 /* SharedUserSession.swift */,
+				6D78D38F2FBD8C8400539410 /* FirebaseAuthManager.swift */,
+				6D78D3902FBD8C8400539410 /* KeychainWrapper.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		6D78D3952FBD8C8400539410 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3922FBD8C8400539410 /* NotificationManager.swift */,
+				6D78D3932FBD8C8400539410 /* PassKitManager.swift */,
+				6D78D3942FBD8C8400539410 /* PaymentService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		6D78D3972FBD8C8400539410 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3962FBD8C8400539410 /* BookingUseCases.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		6D78D3982FBD8C8400539410 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				6D78D3722FBD8C8400539410 /* Cache */,
+				6D78D37C2FBD8C8400539410 /* Models */,
+				6D78D3822FBD8C8400539410 /* Network */,
+				6D78D38E2FBD8C8400539410 /* Repositories */,
+				6D78D3912FBD8C8400539410 /* Security */,
+				6D78D3952FBD8C8400539410 /* Services */,
+				6D78D3972FBD8C8400539410 /* UseCases */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -470,7 +679,6 @@
 			packageProductDependencies = (
 				1E1ADEAC2FB1DA8600A9DA6C /* FirebaseAuth */,
 				1E1ADEAE2FB1DA9100A9DA6C /* FirebaseFirestore */,
-				1E1ADEB02FB1DA9800A9DA6C /* FirebaseFirestoreSwift-Beta */,
 			);
 			productName = MovieBookingApp;
 			productReference = 1EE996792FA1C3DE0022705C /* MovieBookingApp.app */;
@@ -564,6 +772,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E30E2B12FA1C48800F3A28C /* Configurations in Resources */,
+				6D4CB989301BBBA900639732 /* Assets.xcassets in Resources */,
 				1E1ADEAA2FB1D9CA00A9DA6C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -589,61 +798,101 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E1ADE932FB1D8F900A9DA6C /* CoreDataStack.swift in Sources */,
-				1E1ADE722FB1D8E900A9DA6C /* MovieDetailView.swift in Sources */,
-				1E1ADE712FB1D8E900A9DA6C /* SeatMapView.swift in Sources */,
-				1E1ADE5F2FB1D8E900A9DA6C /* CinematicButton.swift in Sources */,
-				1E1ADE742FB1D8E900A9DA6C /* RatingBadgeView.swift in Sources */,
-				1E1ADE602FB1D8E900A9DA6C /* Colors.swift in Sources */,
-				1E1ADE9E2FB1D8F900A9DA6C /* MovieRepository.swift in Sources */,
-				1E1ADE5B2FB1D8E800A9DA6C /* Typography.swift in Sources */,
-				1E1ADE632FB1D8E900A9DA6C /* HomeView.swift in Sources */,
-				1E1ADE6C2FB1D8E900A9DA6C /* SearchView.swift in Sources */,
-				1E1ADE942FB1D8F900A9DA6C /* KeychainWrapper.swift in Sources */,
-				1E1ADE662FB1D8E900A9DA6C /* HeroCarouselView.swift in Sources */,
-				1E1ADEA02FB1D8F900A9DA6C /* SeatRepository.swift in Sources */,
-				1E1ADEA42FB1D8F900A9DA6C /* Showtime.swift in Sources */,
-				1E1ADE642FB1D8E900A9DA6C /* FilterChipView.swift in Sources */,
-				1E1ADE952FB1D8F900A9DA6C /* FirebaseAuthManager.swift in Sources */,
-				1E1ADE9D2FB1D8F900A9DA6C /* FirestoreCinemaRepository.swift in Sources */,
-				1E1ADE692FB1D8E900A9DA6C /* CinemaAccordionView.swift in Sources */,
-				1E1ADE992FB1D8F900A9DA6C /* SSEClient.swift in Sources */,
-				1E1ADEA22FB1D8F900A9DA6C /* Seat.swift in Sources */,
-				1E1ADE5E2FB1D8E800A9DA6C /* GlassCardView.swift in Sources */,
-				1E1ADE6B2FB1D8E900A9DA6C /* ShowtimePickerView.swift in Sources */,
-				1E1ADEA72FB1D8F900A9DA6C /* Ticket.swift in Sources */,
-				1E1ADE6F2FB1D8E900A9DA6C /* SeatMapCanvas.swift in Sources */,
-				1E1ADEA62FB1D8F900A9DA6C /* SeatMapLayout.swift in Sources */,
-				1E1ADE5A2FB1D8E800A9DA6C /* SeatMapViewModel.swift in Sources */,
-				1E1ADE6E2FB1D8E900A9DA6C /* MiniCartView.swift in Sources */,
-				1E1ADE982FB1D8F900A9DA6C /* MovieAPI.swift in Sources */,
-				1E1ADE9C2FB1D8F900A9DA6C /* TicketRepository.swift in Sources */,
-				1E1ADE962FB1D8F900A9DA6C /* NetworkClient.swift in Sources */,
-				1E1ADE652FB1D8E900A9DA6C /* MovieCardView.swift in Sources */,
-				1E1ADE732FB1D8E900A9DA6C /* CastRowView.swift in Sources */,
-				1E1ADE9F2FB1D8F900A9DA6C /* FirestoreMovieRepository.swift in Sources */,
-				1E1ADEA12FB1D8F900A9DA6C /* FirestoreSeatRepository.swift in Sources */,
-				1E1ADE9B2FB1D8F900A9DA6C /* ShowtimeRepository.swift in Sources */,
-				1E1ADE922FB1D8F900A9DA6C /* CacheRepository.swift in Sources */,
-				1E1ADE5C2FB1D8E800A9DA6C /* HapticManager.swift in Sources */,
-				1E1ADE592FB1D8E800A9DA6C /* AppViewModel.swift in Sources */,
-				1E1ADE6A2FB1D8E900A9DA6C /* DatePickerStrip.swift in Sources */,
-				1E1ADE582FB1D8E800A9DA6C /* AuthViewModel.swift in Sources */,
-				1E1ADE702FB1D8E900A9DA6C /* FloatingHoldTimerBar.swift in Sources */,
-				1E1ADE5D2FB1D8E800A9DA6C /* Animations.swift in Sources */,
-				1E1ADE552FB1D8E800A9DA6C /* MovieDetailViewModel.swift in Sources */,
-				1E1ADE972FB1D8F900A9DA6C /* ShowtimeAPI.swift in Sources */,
-				1E1ADE622FB1D8E900A9DA6C /* MovieBookingAppApp.swift in Sources */,
-				1E1ADE612FB1D8E900A9DA6C /* AppRouter.swift in Sources */,
-				1E1ADE9A2FB1D8F900A9DA6C /* CinemaAPI.swift in Sources */,
-				1E1ADE682FB1D8E900A9DA6C /* ShowtimeBadgeView.swift in Sources */,
-				1E1ADEA52FB1D8F900A9DA6C /* Cinema.swift in Sources */,
-				1E1ADE672FB1D8E900A9DA6C /* LoginView.swift in Sources */,
-				1E1ADE6D2FB1D8E900A9DA6C /* SeatLegendView.swift in Sources */,
-				1E1ADE572FB1D8E800A9DA6C /* ShowtimeViewModel.swift in Sources */,
-				1E1ADE562FB1D8E800A9DA6C /* HomeViewModel.swift in Sources */,
-				1E1ADE752FB1D8E900A9DA6C /* ImageCacheService.swift in Sources */,
-				1E1ADEA32FB1D8F900A9DA6C /* Movie.swift in Sources */,
+				6D78D3992FBD8C8400539410 /* Animations.swift in Sources */,
+				6D78D39A2FBD8C8400539410 /* NetworkClient.swift in Sources */,
+				6D78D39B2FBD8C8400539410 /* DatePickerStrip.swift in Sources */,
+				6D2565D42FC14004000C4FAC /* SeatMapSkeletonView.swift in Sources */,
+				6D78D39C2FBD8C8400539410 /* SeatTypeEntity.swift in Sources */,
+				6D78D39D2FBD8C8400539410 /* CheckoutView.swift in Sources */,
+				6D78D39E2FBD8C8400539410 /* ShowtimePickerView.swift in Sources */,
+				6D78D39F2FBD8C8400539410 /* CheckTicketsIntent.swift in Sources */,
+				6D78D3A02FBD8C8400539410 /* FloatingHoldTimerBar.swift in Sources */,
+				6D78D3A12FBD8C8400539410 /* TicketRepository.swift in Sources */,
+				6D78D3A22FBD8C8400539410 /* KeychainWrapper.swift in Sources */,
+				6D78D3A32FBD8C8400539410 /* TicketCardView.swift in Sources */,
+				6D78D3A42FBD8C8400539410 /* FnBMenuView.swift in Sources */,
+				6D78D3A52FBD8C8400539410 /* PaymentMethodCard.swift in Sources */,
+				6D78D3A62FBD8C8400539410 /* PassKitManager.swift in Sources */,
+				6D78D3A72FBD8C8400539410 /* MovieBookingAppApp.swift in Sources */,
+				6D78D3A82FBD8C8400539410 /* FirestoreOrderRepository.swift in Sources */,
+				6D78D3A92FBD8C8400539410 /* FnBOptionEntity.swift in Sources */,
+				6D78D3AA2FBD8C8400539410 /* Cinema.swift in Sources */,
+				6D78D3AB2FBD8C8400539410 /* SSEClient.swift in Sources */,
+				6D78D3AC2FBD8C8400539410 /* ShowtimeViewModel.swift in Sources */,
+				6D78D3AD2FBD8C8400539410 /* FilterChipView.swift in Sources */,
+				6D78D3AE2FBD8C8400539410 /* NotificationManager.swift in Sources */,
+				6D78D3AF2FBD8C8400539410 /* FirebaseIntentSetup.swift in Sources */,
+				6D78D3B02FBD8C8400539410 /* UserProfile.swift in Sources */,
+				6D78D3B12FBD8C8400539410 /* Movie.swift in Sources */,
+				6D78D3B22FBD8C8400539410 /* SeatMapLayout.swift in Sources */,
+				6D78D3B32FBD8C8400539410 /* LoginView.swift in Sources */,
+				6D78D3B42FBD8C8400539410 /* ProfileView.swift in Sources */,
+				6D78D3B52FBD8C8400539410 /* FirestoreSeatRepository.swift in Sources */,
+				6D78D3B62FBD8C8400539410 /* AppViewModel.swift in Sources */,
+				6D78D3B72FBD8C8400539410 /* SearchView.swift in Sources */,
+				6D78D3B82FBD8C8400539410 /* CastRowView.swift in Sources */,
+				6D78D3B92FBD8C8400539410 /* FirestoreUserRepository.swift in Sources */,
+				6D78D3BA2FBD8C8400539410 /* BookingUseCases.swift in Sources */,
+				6D78D3BB2FBD8C8400539410 /* MyTicketsViewModel.swift in Sources */,
+				6D78D3BC2FBD8C8400539410 /* FirestoreCinemaRepository.swift in Sources */,
+				6D78D3BD2FBD8C8400539410 /* BookingSuccessView.swift in Sources */,
+				6D78D3BE2FBD8C8400539410 /* ETicketView.swift in Sources */,
+				6D78D3BF2FBD8C8400539410 /* SeatMapCanvas.swift in Sources */,
+				6D78D3C02FBD8C8400539410 /* HapticManager.swift in Sources */,
+				6D78D3C12FBD8C8400539410 /* Seat.swift in Sources */,
+				6D78D3C22FBD8C8400539410 /* MyTicketsView.swift in Sources */,
+				6D78D3C32FBD8C8400539410 /* CoreDataStack.swift in Sources */,
+				6D78D3C42FBD8C8400539410 /* ETicketViewModel.swift in Sources */,
+				6D78D3C52FBD8C8400539410 /* FirestoreMovieRepository.swift in Sources */,
+				6D78D3C62FBD8C8400539410 /* AuthViewModel.swift in Sources */,
+				6D78D3C72FBD8C8400539410 /* SeatMapViewModel.swift in Sources */,
+				6D78D3C82FBD8C8400539410 /* CacheRepository.swift in Sources */,
+				6D78D3C92FBD8C8400539410 /* PaymentQRSnippetView.swift in Sources */,
+				6D78D3CA2FBD8C8400539410 /* MovieCardView.swift in Sources */,
+				6D78D3CB2FBD8C8400539410 /* ShowtimeRepository.swift in Sources */,
+				6D78D3CC2FBD8C8400539410 /* ImageCacheService.swift in Sources */,
+				6D78D3CD2FBD8C8400539410 /* BookingSnippetView.swift in Sources */,
+				6D78D3CE2FBD8C8400539410 /* CinemaAPI.swift in Sources */,
+				6D78D3CF2FBD8C8400539410 /* Ticket.swift in Sources */,
+				6D78D3D02FBD8C8400539410 /* CinematicketShortcuts.swift in Sources */,
+				6D78D3D12FBD8C8400539410 /* HomeView.swift in Sources */,
+				6D78D3D22FBD8C8400539410 /* SeatMapView.swift in Sources */,
+				6D78D3D32FBD8C8400539410 /* ShowtimeBadgeView.swift in Sources */,
+				6D78D3D42FBD8C8400539410 /* MovieEntity.swift in Sources */,
+				6D78D3D52FBD8C8400539410 /* LiveActivityManager.swift in Sources */,
+				6D78D3D62FBD8C8400539410 /* FnBViewModel.swift in Sources */,
+				6D78D3D72FBD8C8400539410 /* RatingBadgeView.swift in Sources */,
+				6D78D3D82FBD8C8400539410 /* Showtime.swift in Sources */,
+				6D78D3D92FBD8C8400539410 /* CinemaAccordionView.swift in Sources */,
+				6D78D3DA2FBD8C8400539410 /* PaymentService.swift in Sources */,
+				6D78D3DB2FBD8C8400539410 /* FirestoreFnBRepository.swift in Sources */,
+				6D78D3DC2FBD8C8400539410 /* EditProfileView.swift in Sources */,
+				6D78D3DD2FBD8C8400539410 /* Colors.swift in Sources */,
+				6D78D3DE2FBD8C8400539410 /* SeatLegendView.swift in Sources */,
+				6D78D3F72FBD9E2600539410 /* SharedUserSession.swift in Sources */,
+				6D78D3DF2FBD8C8400539410 /* MovieAPI.swift in Sources */,
+				6D78D3E02FBD8C8400539410 /* CheckoutViewModel.swift in Sources */,
+				6D78D3E12FBD8C8400539410 /* ShowtimeEntity.swift in Sources */,
+				6D78D3E22FBD8C8400539410 /* MovieDetailViewModel.swift in Sources */,
+				6D78D3E32FBD8C8400539410 /* MiniCartView.swift in Sources */,
+				6D78D3E42FBD8C8400539410 /* GlassCardView.swift in Sources */,
+				6D78D3E52FBD8C8400539410 /* CinemaEntity.swift in Sources */,
+				6D78D3E62FBD8C8400539410 /* ProfileViewModel.swift in Sources */,
+				6D78D3E72FBD8C8400539410 /* ShowtimeAPI.swift in Sources */,
+				6D78D3E82FBD8C8400539410 /* HomeViewModel.swift in Sources */,
+				6D78D3E92FBD8C8400539410 /* CinematicButton.swift in Sources */,
+				6D78D3EA2FBD8C8400539410 /* SeatRepository.swift in Sources */,
+				6D78D3EB2FBD8C8400539410 /* Order.swift in Sources */,
+				6D78D3EC2FBD8C8400539410 /* FnBItem.swift in Sources */,
+				6D78D3ED2FBD8C8400539410 /* FirestoreTicketRepository.swift in Sources */,
+				6D78D3EE2FBD8C8400539410 /* ShowtimeActivityAttributes.swift in Sources */,
+				6D78D3EF2FBD8C8400539410 /* MovieDetailView.swift in Sources */,
+				6D78D3F02FBD8C8400539410 /* FirebaseAuthManager.swift in Sources */,
+				6D78D3F12FBD8C8400539410 /* BookMovieIntent.swift in Sources */,
+				6D78D3F22FBD8C8400539410 /* MovieRepository.swift in Sources */,
+				6D78D3F32FBD8C8400539410 /* AppRouter.swift in Sources */,
+				6D78D3F42FBD8C8400539410 /* HeroCarouselView.swift in Sources */,
+				6D78D3F52FBD8C8400539410 /* Typography.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -801,18 +1050,21 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 8PN34TR97W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Cinematicket Dat Ve Xem Phim";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gnoodie.MovieBookingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -829,18 +1081,21 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 8PN34TR97W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Cinematicket Dat Ve Xem Phim";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gnoodie.MovieBookingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -852,7 +1107,6 @@
 		1EE996A12FA1C3DF0022705C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -871,7 +1125,6 @@
 		1EE996A22FA1C3DF0022705C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -890,7 +1143,6 @@
 		1EE996A42FA1C3DF0022705C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -907,7 +1159,6 @@
 		1EE996A52FA1C3DF0022705C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -983,11 +1234,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E1ADEA82FB1D98E00A9DA6C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
-		};
-		1E1ADEB02FB1DA9800A9DA6C /* FirebaseFirestoreSwift-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E1ADEA82FB1D98E00A9DA6C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseFirestoreSwift-Beta";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
