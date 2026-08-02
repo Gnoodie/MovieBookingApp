@@ -14,7 +14,7 @@ struct SelectedSeat {
 @available(iOS 18.0, *)
 struct BookMovieIntent: AppIntent {
     static let title: LocalizedStringResource = "Đặt vé phim"
-    static let description = IntentDescription("Đặt vé một bộ phim bất kỳ qua Siri")
+    static let description = IntentDescription("Đặt vé một bộ phim bất kỳ")
     static var openAppWhenRun: Bool = false
     
     // MARK: - Parameters (Siri hỏi lần lượt từng câu)
