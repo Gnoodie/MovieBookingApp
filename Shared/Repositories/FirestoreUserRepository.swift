@@ -7,7 +7,8 @@ protocol UserRepositoryProtocol {
     func fetchProfile(userId: String) async throws -> UserProfile
     func updateProfile(_ profile: UserProfile) async throws
     func incrementBookingCount(userId: String) async throws
-    func toggleFavorite(userId: String, movieId: String) async throws -> Bool // returns new isFav state
+    func toggleFavorite(userId: String, movieId: String) async throws -> Bool
+    func deleteProfile(userId: String) async throws
 }
 
 // MARK: - FirestoreUserRepository
@@ -74,6 +75,12 @@ final class FirestoreUserRepository: UserRepositoryProtocol {
             try await ref.updateData(["favoriteMovieIds": FieldValue.arrayUnion([movieId])])
         }
         return !isFav
+    }
+
+    // MARK: - Delete Profile
+
+    func deleteProfile(userId: String) async throws {
+        try await db.collection(collection).document(userId).delete()
     }
 
     // MARK: - Mapping

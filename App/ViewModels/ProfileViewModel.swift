@@ -147,24 +147,20 @@ final class ProfileViewModel: ObservableObject {
         Task {
             guard let uid = await currentUID() else { return }
             do {
-                // 1. Xoa du lieu Firestore cua user
-                let db = FirestoreUserRepository()
-                try? await db.deleteProfile(userId: uid)
+                // 1. Xóa dữ liệu Firestore của user
+                try? await userRepository.deleteProfile(userId: uid)
 
-                // 2. Xoa tai khoan Firebase Auth
+                // 2. Xóa tài khoản Firebase Auth (bắt buộc theo Apple 5.1.1)
                 try await FirebaseAuthManager.shared.deleteAccount()
 
-                // 3. Xoa session local
-                SharedUserSession.clearUserUid()
-
-                // 4. Dang xuat khoi app
+                // 3. Đăng xuất khỏi app
                 await MainActor.run {
                     appViewModel?.signOut()
                 }
                 Self.logger.info("Account deleted successfully for user: \(uid)")
             } catch {
                 await MainActor.run {
-                    errorMessage = "Xoa tai khoan that bai: \(error.localizedDescription)"
+                    errorMessage = "Xóa tài khoản thất bại: \(error.localizedDescription)"
                 }
                 Self.logger.error("Delete account failed: \(error.localizedDescription)")
             }
