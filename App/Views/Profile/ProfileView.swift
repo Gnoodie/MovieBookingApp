@@ -1,10 +1,12 @@
 import SwiftUI
+import StoreKit
 
 // MARK: - ProfileView
 
 struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
     @EnvironmentObject private var appViewModel: AppViewModel
+    @Environment(\.requestReview) private var requestReview
 
     init() {
         _viewModel = StateObject(wrappedValue: ProfileViewModel())
@@ -67,13 +69,27 @@ struct ProfileView: View {
                                         iconColor: .accentGold,
                                         title: "Đánh giá ứng dụng",
                                         showChevron: true
-                                    ) { }
+                                    ) {
+                                        requestReview()
+                                    }
                                     ProfileMenuRow(
                                         icon: "doc.text.fill",
                                         iconColor: .textSecondary,
                                         title: "Điều khoản sử dụng",
                                         showChevron: true
                                     ) { }
+                                }
+
+                                // Danger zone: Delete account
+                                ProfileMenuSection(title: "Vùng nguy hiểm") {
+                                    ProfileMenuRow(
+                                        icon: "trash.fill",
+                                        iconColor: .statusError,
+                                        title: "Xóa tài khoản",
+                                        showChevron: true
+                                    ) {
+                                        viewModel.confirmDeleteAccount()
+                                    }
                                 }
 
                                 // Sign out
@@ -133,6 +149,13 @@ struct ProfileView: View {
             Button("Huỷ", role: .cancel) { }
         } message: {
             Text("Bạn có chắc muốn đăng xuất khỏi Cinematicket không?")
+        }
+        // Delete Account Alert
+        .alert("Xóa tài khoản?", isPresented: $viewModel.showDeleteAccountAlert) {
+            Button("Xóa vĩnh viễn", role: .destructive) { viewModel.deleteAccount() }
+            Button("Huỷ", role: .cancel) { }
+        } message: {
+            Text("Toàn bộ dữ liệu tài khoản, lịch sử đặt vé và thông tin cá nhân của bạn sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.")
         }
     }
 }

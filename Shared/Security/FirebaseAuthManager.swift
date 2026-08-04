@@ -29,4 +29,10 @@ public actor FirebaseAuthManager {
     public func signOut() throws {
         try Auth.auth().signOut()
     }
+
+    /// Xóa tài khoản Firebase Auth vĩnh viễn (theo yêu cầu Apple 5.1.1)
+    public func deleteAccount() async throws {
+        guard let user = Auth.auth().currentUser else { return }
+        try await user.delete()
+    }
 }

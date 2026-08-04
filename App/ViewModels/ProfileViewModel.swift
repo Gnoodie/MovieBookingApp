@@ -20,6 +20,9 @@ final class ProfileViewModel: ObservableObject {
     /// Controls sign-out confirmation alert
     @Published var showSignOutAlert: Bool = false
 
+    /// Controls delete account confirmation alert
+    @Published var showDeleteAccountAlert: Bool = false
+
     // MARK: - Dependencies
 
     private let userRepository: UserRepositoryProtocol
@@ -132,6 +135,40 @@ final class ProfileViewModel: ObservableObject {
 
     func signOut() {
         appViewModel?.signOut()
+    }
+
+    // MARK: - Delete Account
+
+    func confirmDeleteAccount() {
+        showDeleteAccountAlert = true
+    }
+
+    func deleteAccount() {
+        Task {
+            guard let uid = await currentUID() else { return }
+            do {
+                // 1. Xoa du lieu Firestore cua user
+                let db = FirestoreUserRepository()
+                try? await db.deleteProfile(userId: uid)
+
+                // 2. Xoa tai khoan Firebase Auth
+                try await FirebaseAuthManager.shared.deleteAccount()
+
+                // 3. Xoa session local
+                SharedUserSession.clearUserUid()
+
+                // 4. Dang xuat khoi app
+                await MainActor.run {
+                    appViewModel?.signOut()
+                }
+                Self.logger.info("Account deleted successfully for user: \(uid)")
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Xoa tai khoan that bai: \(error.localizedDescription)"
+                }
+                Self.logger.error("Delete account failed: \(error.localizedDescription)")
+            }
+        }
     }
 
     // MARK: - Private
