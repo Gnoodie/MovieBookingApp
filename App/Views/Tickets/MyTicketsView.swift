@@ -10,6 +10,10 @@ struct MyTicketsView: View {
     @State private var selectedSegment = 0 // 0: Sắp xem, 1: Lịch sử
     @State private var selectedTicket: Ticket? = nil
 
+    private var currentTickets: [Ticket] {
+        selectedSegment == 0 ? viewModel.activeTickets : viewModel.historyTickets
+    }
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -35,71 +39,72 @@ struct MyTicketsView: View {
 
                         // Content
                         if viewModel.isLoading {
-                        Spacer()
-                        ProgressView()
-                            .tint(.accentTeal)
-                            .scaleEffect(1.2)
-                        Spacer()
-                    } else if let error = viewModel.errorMessage {
-                        Spacer()
-                        Text(error)
-                            .font(.bodyMedium)
-                            .foregroundColor(.statusError)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                        Button("Thử lại") {
-                            Task { await viewModel.fetchTickets() }
-                        }
-                        .foregroundColor(.accentTeal)
-                        Spacer()
-                    } else {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            LazyVStack(spacing: 16) {
-                                let currentTickets = selectedSegment == 0 ? viewModel.activeTickets : viewModel.historyTickets
-                                
-                                if currentTickets.isEmpty {
-                                    emptyStateView
-                                } else {
-                                    ForEach(currentTickets) { ticket in
-                                        TicketCardView(ticket: ticket) {
-                                            selectedTicket = ticket
+                            Spacer()
+                            ProgressView()
+                                .tint(.accentTeal)
+                                .scaleEffect(1.2)
+                            Spacer()
+                        } else if let error = viewModel.errorMessage {
+                            Spacer()
+                            Text(error)
+                                .font(.bodyMedium)
+                                .foregroundColor(.statusError)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            Button("Thử lại") {
+                                Task { await viewModel.fetchTickets() }
+                            }
+                            .foregroundColor(.accentTeal)
+                            Spacer()
+                        } else {
+                            ScrollView(.vertical, showsIndicators: false) {
+                                LazyVStack(spacing: 16) {
+                                    if currentTickets.isEmpty {
+                                        emptyStateView
+                                    } else {
+                                        ForEach(currentTickets) { ticket in
+                                            TicketCardView(ticket: ticket) {
+                                                selectedTicket = ticket
+                                            }
                                         }
                                     }
                                 }
+                                .padding(.horizontal, 16)
+                                .padding(.bottom, 30)
                             }
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 30)
-                        }
-                        .refreshable {
-                            await viewModel.fetchTickets()
+                            .refreshable {
+                                await viewModel.fetchTickets()
+                            }
                         }
                     }
                 }
-            }
-            .navigationBarHidden(true)
-            .background(
-                Group {
-                    if let ticket = selectedTicket {
-                        NavigationLink(
-                            destination: ETicketView(ticket: ticket),
-                            isActive: Binding(
-                                get: { selectedTicket != nil },
-                                set: { if !$0 { selectedTicket = nil } }
-                            )
-                        ) { EmptyView() }
-                        .isDetailLink(false)
+                .navigationBarHidden(true)
+                .background(
+                    Group {
+                        if let ticket = selectedTicket {
+                            NavigationLink(
+                                destination: ETicketView(ticket: ticket),
+                                isActive: Binding(
+                                    get: { selectedTicket != nil },
+                                    set: { if !$0 { selectedTicket = nil } }
+                                )
+                            ) { EmptyView() }
+                            .isDetailLink(false)
+                        }
+                    }
+                )
+                .task {
+                    if appViewModel.isAuthenticated {
+                        await viewModel.fetchTickets()
                     }
                 }
-            )
-            .task {
-                await viewModel.fetchTickets()
             }
         }
         .navigationViewStyle(.stack)
     }
-    
+
     // MARK: - Custom Segmented Control
-    
+
     private var customSegmentedControl: some View {
         HStack(spacing: 0) {
             segmentButton(title: "Sắp xem", index: 0)
@@ -108,7 +113,7 @@ struct MyTicketsView: View {
         .background(Color.backgroundSecondary)
         .cornerRadius(8)
     }
-    
+
     private func segmentButton(title: String, index: Int) -> some View {
         Button {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -127,19 +132,19 @@ struct MyTicketsView: View {
                 )
         }
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "ticket")
                 .font(.system(size: 60))
                 .foregroundColor(.textSecondary.opacity(0.5))
-            
+
             Text(selectedSegment == 0 ? "Bạn chưa có vé nào sắp tới" : "Chưa có lịch sử đặt vé")
                 .font(.headingSmall)
                 .foregroundColor(.textPrimary)
-            
+
             Text(selectedSegment == 0 ? "Hãy đặt vé ngay để thưởng thức những bộ phim hấp dẫn nhé!" : "Các vé bạn đã xem hoặc hết hạn sẽ hiển thị ở đây.")
                 .font(.bodySmall)
                 .foregroundColor(.textSecondary)
