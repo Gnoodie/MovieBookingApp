@@ -5,15 +5,16 @@ import SwiftUI
 struct MyTicketsView: View {
     @StateObject private var viewModel = MyTicketsViewModel()
     @EnvironmentObject var router: AppRouter
-    
+    @EnvironmentObject var appViewModel: AppViewModel
+
     @State private var selectedSegment = 0 // 0: Sắp xem, 1: Lịch sử
     @State private var selectedTicket: Ticket? = nil
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 Color.backgroundPrimary.ignoresSafeArea()
-                
+
                 VStack(spacing: 0) {
                     // Header
                     Text("Vé của tôi")
@@ -23,14 +24,17 @@ struct MyTicketsView: View {
                         .padding(.horizontal, 16)
                         .padding(.top, 16)
                         .padding(.bottom, 8)
-                    
-                    // Segmented Control (Custom)
-                    customSegmentedControl
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
-                    
-                    // Content
-                    if viewModel.isLoading {
+
+                    if !appViewModel.isAuthenticated {
+                        guestTicketsView
+                    } else {
+                        // Segmented Control (Custom)
+                        customSegmentedControl
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 16)
+
+                        // Content
+                        if viewModel.isLoading {
                         Spacer()
                         ProgressView()
                             .tint(.accentTeal)
@@ -143,5 +147,41 @@ struct MyTicketsView: View {
                 .padding(.horizontal, 32)
         }
         .padding(.top, 60)
+    }
+
+    // MARK: - Guest State
+
+    private var guestTicketsView: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 64))
+                .foregroundColor(Color.accentGold)
+
+            Text("Bạn chưa đăng nhập")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(.white)
+
+            Text("Đăng nhập để xem danh sách vé đã đặt và nhận thông tin ưu đãi mới nhất.")
+                .font(.system(size: 14))
+                .foregroundColor(.textSecondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 36)
+
+            Button {
+                appViewModel.showLoginSheet = true
+            } label: {
+                Text("Đăng nhập / Đăng ký")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 28)
+                    .padding(.vertical, 14)
+                    .background(Color.accentGold)
+                    .cornerRadius(12)
+            }
+            .padding(.top, 8)
+
+            Spacer()
+        }
     }
 }

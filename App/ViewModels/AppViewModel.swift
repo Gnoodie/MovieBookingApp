@@ -5,6 +5,7 @@ import os.log
 /// Quản lý trạng thái tổng của toàn bộ ứng dụng (thay thế AppStore TCA)
 public class AppViewModel: ObservableObject {
     @Published public var isAuthenticated: Bool = false
+    @Published public var showLoginSheet: Bool = false
     @Published public var selectedTab: Tab = .home
     private static let logger = Logger(subsystem: "com.cinematicket", category: "AppLifecycle")
     

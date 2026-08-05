@@ -2,16 +2,17 @@ import SwiftUI
 
 public struct LoginView: View {
     @StateObject private var viewModel: AuthViewModel
-    
+    @Environment(\.dismiss) private var dismiss
+
     // Animation states
     @State private var animateGradients = false
-    
+
     public init(appViewModel: AppViewModel? = nil) {
         _viewModel = StateObject(wrappedValue: AuthViewModel(appViewModel: appViewModel))
     }
-    
+
     public var body: some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             // Nền Background động (Animated Gradient)
             LinearGradient(
                 colors: [Color(hex: "#0f0c29"), Color(hex: "#302b63"), Color(hex: "#24243e")],
@@ -24,14 +25,25 @@ public struct LoginView: View {
                     animateGradients.toggle()
                 }
             }
-            
+
             // Hiệu ứng hạt bụi (Dust / Stars) giả lập không gian rạp phim
             Circle()
                 .fill(Color(hex: "#D4AF37").opacity(0.15))
                 .frame(width: 300, height: 300)
                 .blur(radius: 50)
                 .offset(x: -100, y: -200)
-            
+
+            // Nút Đóng modal
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.system(size: 28))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(20)
+            }
+            .zIndex(10)
+
             VStack(spacing: 35) {
                 
                 // Tiêu đề App (Logo)

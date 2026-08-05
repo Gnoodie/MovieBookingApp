@@ -8,6 +8,7 @@ struct CheckoutView: View {
     @StateObject private var viewModel: CheckoutViewModel
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var appViewModel: AppViewModel
 
     @State private var navigateToSuccess: Bool = false
 
@@ -417,7 +418,11 @@ struct CheckoutView: View {
                     variant: .primary,
                     isLoading: viewModel.isProcessingPayment
                 ) {
-                    viewModel.processPayment()
+                    if !appViewModel.isAuthenticated {
+                        appViewModel.showLoginSheet = true
+                    } else {
+                        viewModel.processPayment()
+                    }
                 }
                 .frame(width: 180)
                 .disabled(!viewModel.canPay)

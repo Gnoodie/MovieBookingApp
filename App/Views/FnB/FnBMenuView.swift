@@ -8,6 +8,7 @@ struct FnBMenuView: View {
     @StateObject private var viewModel: FnBViewModel
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var appViewModel: AppViewModel
 
     /// Callback khi user bấm "Tiếp tục" (có hoặc không có F&B)
     let onContinue: ([FnBOrderItem]) -> Void
@@ -64,7 +65,8 @@ struct FnBMenuView: View {
                     movie: viewModel.movie,
                     fnbItems: cartItemsForCheckout
                 )
-                .environmentObject(router),
+                .environmentObject(router)
+                .environmentObject(appViewModel),
                 isActive: $navigateToCheckout
             ) { EmptyView() }
             .isDetailLink(false)

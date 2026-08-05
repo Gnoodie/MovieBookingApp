@@ -8,6 +8,7 @@ struct SeatMapView: View {
     @StateObject private var viewModel: SeatMapViewModel
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var appViewModel: AppViewModel
 
     @State private var navigateToFnB: Bool = false
     @State private var selectedFnBItems: [FnBOrderItem] = []
@@ -42,7 +43,8 @@ struct SeatMapView: View {
                 ) { fnbItems in
                     self.selectedFnBItems = fnbItems
                 }
-                .environmentObject(router),
+                .environmentObject(router)
+                .environmentObject(appViewModel),
                 isActive: $navigateToFnB
             ) { EmptyView() }
             .isDetailLink(false)

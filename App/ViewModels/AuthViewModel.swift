@@ -75,6 +75,7 @@ public class AuthViewModel: ObservableObject {
                 // Đổi trạng thái toàn App để chuyển vào màn hình Home
                 withAnimation {
                     self.appViewModel?.isAuthenticated = true
+                    self.appViewModel?.showLoginSheet = false
                 }
             } catch {
                 self.isLoading = false

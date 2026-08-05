@@ -17,7 +17,9 @@ struct ProfileView: View {
             ZStack {
                 Color.backgroundPrimary.ignoresSafeArea()
 
-                if viewModel.isLoading {
+                if !appViewModel.isAuthenticated {
+                    guestProfileView
+                } else if viewModel.isLoading {
                     ProfileSkeletonView()
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
@@ -116,7 +118,7 @@ struct ProfileView: View {
                                 .padding(.top, 8)
 
                                 // Version
-                                Text("Cinematicket v1.0.0 (Sprint 5)")
+                                Text("Cinematicket v1.0.0")
                                     .font(.system(size: 12))
                                     .foregroundColor(.textDisabled)
                                     .padding(.vertical, 20)
@@ -406,6 +408,85 @@ private struct ToastView: View {
             .padding(.top, 56)
 
             Spacer()
+        }
+    }
+}
+
+// MARK: - Guest Profile View
+
+extension ProfileView {
+    var guestProfileView: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 24) {
+                // Header Card
+                VStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.accentGold.opacity(0.2))
+                            .frame(width: 80, height: 80)
+                        Image(systemName: "person.crop.circle")
+                            .font(.system(size: 44))
+                            .foregroundColor(.accentGold)
+                    }
+
+                    Text("Chào mừng bạn!")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Text("Đăng nhập tài khoản để tích điểm, xem vé đã mua và chỉnh sửa thông tin cá nhân.")
+                        .font(.system(size: 14))
+                        .foregroundColor(.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+
+                    Button {
+                        appViewModel.showLoginSheet = true
+                    } label: {
+                        Text("Đăng nhập / Đăng ký")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color.accentGold)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal, 20)
+                }
+                .padding(.vertical, 24)
+                .background(Color.backgroundSecondary)
+                .cornerRadius(16)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+
+                // App section for guest
+                ProfileMenuSection(title: "Ứng dụng") {
+                    ProfileMenuRow(
+                        icon: "globe",
+                        iconColor: Color(hex: "#30D158"),
+                        title: "Ngôn ngữ",
+                        value: "Tiếng Việt"
+                    ) { }
+                    ProfileMenuRow(
+                        icon: "star.fill",
+                        iconColor: .accentGold,
+                        title: "Đánh giá ứng dụng",
+                        showChevron: true
+                    ) {
+                        requestReview()
+                    }
+                    ProfileMenuRow(
+                        icon: "doc.text.fill",
+                        iconColor: .textSecondary,
+                        title: "Điều khoản sử dụng",
+                        showChevron: true
+                    ) { }
+                }
+
+                Text("Cinematicket v1.0.0")
+                    .font(.system(size: 12))
+                    .foregroundColor(.textDisabled)
+                    .padding(.vertical, 10)
+            }
         }
     }
 }

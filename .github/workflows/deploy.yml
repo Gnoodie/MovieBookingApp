@@ -57,6 +57,7 @@ jobs:
             -scheme "MovieBookingApp" \
             -destination "generic/platform=iOS" \
             -archivePath "build/MovieBookingApp.xcarchive" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${KEY_ID}.p8 \
             -authenticationKeyID "${KEY_ID}" \

@@ -26,19 +26,18 @@ struct MovieBookingAppApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if appViewModel.isAuthenticated {
-                    MainTabView()
-                        .environmentObject(router)
-                        .environmentObject(appViewModel)
-                } else {
-                    LoginView(appViewModel: appViewModel)
-                }
+                MainTabView()
+                    .environmentObject(router)
+                    .environmentObject(appViewModel)
 
                 // Privacy overlay khi app vào background
                 if showPrivacyOverlay {
                     PrivacyOverlayView()
                         .transition(.opacity)
                 }
+            }
+            .sheet(isPresented: $appViewModel.showLoginSheet) {
+                LoginView(appViewModel: appViewModel)
             }
             .onChange(of: scenePhase) { newPhase in
                 withAnimation(.easeOut(duration: 0.2)) {

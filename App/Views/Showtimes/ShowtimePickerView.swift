@@ -7,6 +7,7 @@ import SwiftUI
 struct ShowtimePickerView: View {
     @StateObject private var viewModel: ShowtimeViewModel
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var selectedShowtimeForSeatMap: Showtime? = nil
 
@@ -71,6 +72,7 @@ struct ShowtimePickerView: View {
                     if let showtime = selectedShowtimeForSeatMap {
                         SeatMapView(showtime: showtime, movie: viewModel.movie)
                             .environmentObject(router)
+                            .environmentObject(appViewModel)
                     } else {
                         EmptyView()
                     }

@@ -13,20 +13,21 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
             .document(showtimeId)
             .collection("seats")
             .getDocuments()
-            
-        return try snapshot.documents.compactMap { try mapSeat($0) }
+
+        let seats = try snapshot.documents.compactMap { try mapSeat($0) }
+        return seats.isEmpty ? generateFallbackSeats(showtimeId: showtimeId) : seats
     }
-    
+
     func listenToSeats(showtimeId: String) -> AsyncStream<[Seat]> {
         AsyncStream { continuation in
             let listener = db.collection("showtimes")
                 .document(showtimeId)
                 .collection("seats")
                 .addSnapshotListener { snapshot, error in
-                    guard let docs = snapshot?.documents else {
+                    guard let docs = snapshot?.documents, !docs.isEmpty else {
+                        continuation.yield(self.generateFallbackSeats(showtimeId: showtimeId))
                         return
                     }
-                    // Dùng compactMap an toàn hơn
                     let seats = docs.compactMap { doc -> Seat? in
                         do {
                             return try self.mapSeat(doc)
@@ -34,9 +35,13 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
                             return nil
                         }
                     }
-                    continuation.yield(seats)
+                    if seats.isEmpty {
+                        continuation.yield(self.generateFallbackSeats(showtimeId: showtimeId))
+                    } else {
+                        continuation.yield(seats)
+                    }
                 }
-            
+
             continuation.onTermination = { @Sendable _ in
                 listener.remove()
             }
@@ -149,5 +154,32 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
         let coupleGroupId = data["coupleGroupId"] as? String
 
         return Seat(id: id, row: row, number: number, type: type, status: status, priceMultiplier: priceMultiplier, coupleGroupId: coupleGroupId)
+    }
+
+    /// Helper sinh danh sách ghế dự phòng (5 hàng × 8 ghế) khi Firestore chưa có ghế
+    private func generateFallbackSeats(showtimeId: String) -> [Seat] {
+        var seats: [Seat] = []
+        let rows = ["A", "B", "C", "D", "E"]
+        for row in rows {
+            for number in 1...8 {
+                let id = "\(showtimeId)_\(row)\(number)"
+                let isVip = (row == "A" || row == "B")
+                let isCouple = (row == "E")
+                let type: Seat.SeatType = isVip ? .vip : (isCouple ? .couple : .standard)
+                let status: Seat.SeatStatus = (number == 3 && row == "C") ? .booked : .available
+                let coupleGroupId = isCouple ? "couple-\(showtimeId)-\(row)-\(ceil(Double(number)/2.0))" : nil
+
+                seats.append(Seat(
+                    id: id,
+                    row: row,
+                    number: number,
+                    type: type,
+                    status: status,
+                    priceMultiplier: type.priceMultiplier,
+                    coupleGroupId: coupleGroupId
+                ))
+            }
+        }
+        return seats
     }
 }
