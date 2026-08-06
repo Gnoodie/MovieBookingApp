@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import os.log
+import FirebaseAuth
 
 /// Quản lý trạng thái tổng của toàn bộ ứng dụng (thay thế AppStore TCA)
 public class AppViewModel: ObservableObject {
@@ -14,12 +15,16 @@ public class AppViewModel: ObservableObject {
     }
     
     public init() {
-        // Kiểm tra xem Két sắt Keychain đã có token chưa
-        // Nếu có thì đổi trạng thái sang đã đăng nhập để bỏ qua màn Login
-        if let token = KeychainWrapper.shared.get(forKey: "access_token") {
+        // Ưu tiên kiểm tra phiên đăng nhập trực tiếp từ Firebase Auth
+        if let currentUser = Auth.auth().currentUser {
             self.isAuthenticated = true
-            // Chia sẻ lại UID sang Siri Extension
+            KeychainWrapper.shared.save(currentUser.uid, forKey: "access_token")
+            SharedUserSession.saveUserUid(currentUser.uid)
+        } else if let token = KeychainWrapper.shared.get(forKey: "access_token"), !token.isEmpty {
+            self.isAuthenticated = true
             SharedUserSession.saveUserUid(token)
+        } else {
+            self.isAuthenticated = false
         }
     }
     

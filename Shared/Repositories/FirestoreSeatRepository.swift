@@ -1,5 +1,6 @@
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 /// Implementation thực tế kết nối tới Firebase Firestore cho Seat
 /// Xử lý logic đọc và giữ ghế thông qua Firestore Transactions
@@ -90,7 +91,7 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
             
             // 3. GHI SAU: Tất cả an toàn -> Tiến hành khoá ghế
             // "access_token" là key AuthViewModel dùng để lưu Firebase UID
-            let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
+            let userId = Auth.auth().currentUser?.uid ?? KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
             let holdId = UUID().uuidString
             // Giữ ghế trong 10 phút
             let expiresAt = Calendar.current.date(byAdding: .minute, value: 10, to: Date()) ?? Date()
@@ -143,7 +144,7 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
             } else {
                 // Hold còn hiệu lực — kiểm tra có phải mình đang hold không
                 // "access_token" là key AuthViewModel dùng để lưu Firebase UID
-                let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
+                let userId = Auth.auth().currentUser?.uid ?? KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
                 let heldBy = data["heldBy"] as? String
                 if heldBy == userId {
                     status = .mine

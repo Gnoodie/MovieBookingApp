@@ -1,5 +1,6 @@
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 // MARK: - FirestoreTicketRepository
 
@@ -9,8 +10,8 @@ final class FirestoreTicketRepository: TicketRepositoryProtocol {
     private let collection = "tickets"
 
     func fetchMyTickets() async throws -> [Ticket] {
-        // "access_token" là key AuthViewModel dùng để lưu Firebase UID
-        let userId = KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
+        // Ưu tiên lấy UID trực tiếp từ phiên đăng nhập Firebase Auth
+        let userId = Auth.auth().currentUser?.uid ?? KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
         do {
             // Thử tải từ server trước (online)
             let snapshot = try await db.collection(collection)
