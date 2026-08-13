@@ -26,6 +26,7 @@
 		6D78D3A32FBD8C8400539410 /* TicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D35C2FBD8C8400539410 /* TicketCardView.swift */; };
 		6D78D3A42FBD8C8400539410 /* FnBMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D33B2FBD8C8400539410 /* FnBMenuView.swift */; };
 		6D78D3A52FBD8C8400539410 /* PaymentMethodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3392FBD8C8400539410 /* PaymentMethodCard.swift */; };
+		6D78D3A5AABB00000053ABCD /* QRDemoPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D339AABB00000053ABCD /* QRDemoPaymentSheet.swift */; };
 		6D78D3A62FBD8C8400539410 /* PassKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3932FBD8C8400539410 /* PassKitManager.swift */; };
 		6D78D3A72FBD8C8400539410 /* MovieBookingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D35F2FBD8C8400539410 /* MovieBookingAppApp.swift */; };
 		6D78D3A82FBD8C8400539410 /* FirestoreOrderRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D78D3862FBD8C8400539410 /* FirestoreOrderRepository.swift */; };
@@ -159,6 +160,7 @@
 		6D78D3372FBD8C8400539410 /* BookingSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingSuccessView.swift; sourceTree = "<group>"; };
 		6D78D3382FBD8C8400539410 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		6D78D3392FBD8C8400539410 /* PaymentMethodCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodCard.swift; sourceTree = "<group>"; };
+		6D78D339AABB00000053ABCD /* QRDemoPaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDemoPaymentSheet.swift; sourceTree = "<group>"; };
 		6D78D33B2FBD8C8400539410 /* FnBMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FnBMenuView.swift; sourceTree = "<group>"; };
 		6D78D33D2FBD8C8400539410 /* FilterChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterChipView.swift; sourceTree = "<group>"; };
 		6D78D33E2FBD8C8400539410 /* HeroCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCarouselView.swift; sourceTree = "<group>"; };
@@ -373,6 +375,7 @@
 				6D78D3372FBD8C8400539410 /* BookingSuccessView.swift */,
 				6D78D3382FBD8C8400539410 /* CheckoutView.swift */,
 				6D78D3392FBD8C8400539410 /* PaymentMethodCard.swift */,
+				6D78D339AABB00000053ABCD /* QRDemoPaymentSheet.swift */,
 			);
 			path = Checkout;
 			sourceTree = "<group>";
@@ -812,6 +815,7 @@
 				6D78D3A32FBD8C8400539410 /* TicketCardView.swift in Sources */,
 				6D78D3A42FBD8C8400539410 /* FnBMenuView.swift in Sources */,
 				6D78D3A52FBD8C8400539410 /* PaymentMethodCard.swift in Sources */,
+				6D78D3A5AABB00000053ABCD /* QRDemoPaymentSheet.swift in Sources */,
 				6D78D3A62FBD8C8400539410 /* PassKitManager.swift in Sources */,
 				6D78D3A72FBD8C8400539410 /* MovieBookingAppApp.swift in Sources */,
 				6D78D3A82FBD8C8400539410 /* FirestoreOrderRepository.swift in Sources */,
