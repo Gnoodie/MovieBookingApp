@@ -8,7 +8,7 @@ public class AppViewModel: ObservableObject {
     @Published public var isAuthenticated: Bool = false
     @Published public var showLoginSheet: Bool = false
     @Published public var selectedTab: Tab = .home
-    private static let logger = Logger(subsystem: "com.cinematicket", category: "AppLifecycle")
+    nonisolated private static let logger = Logger(subsystem: "com.cinematicket", category: "AppLifecycle")
     
     public enum Tab: Hashable {
         case home, search, tickets, profile

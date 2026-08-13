@@ -16,9 +16,7 @@ enum PaymentResult {
 @MainActor
 final class PaymentService: ObservableObject {
 
-    // nonisolated(unsafe): cho phép dùng .shared làm default parameter value
-    // trong nonisolated context mà không cần Swift 6 actor hop
-    nonisolated(unsafe) static let shared = PaymentService()
+    static let shared = PaymentService()
     private init() {}
 
     // Callback được gọi khi MoMo/VNPay redirect về app

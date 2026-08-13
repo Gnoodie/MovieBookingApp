@@ -5,7 +5,7 @@ import os.log
 /// Manager xử lý hệ thống Push Notification cục bộ (Local Notifications) cho iOS 15+
 final class NotificationManager {
     static let shared = NotificationManager()
-    private static let logger = Logger(subsystem: "com.cinematicket", category: "Notifications")
+    nonisolated private static let logger = Logger(subsystem: "com.cinematicket", category: "Notifications")
     
     private init() {}
     

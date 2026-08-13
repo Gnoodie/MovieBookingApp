@@ -22,6 +22,7 @@ protocol BookTicketUseCaseProtocol {
 }
 
 /// Concrete implementation — gọi PaymentService rồi OrderRepository
+@MainActor
 final class BookTicketUseCase: BookTicketUseCaseProtocol {
     private let paymentService: PaymentService
     private let orderRepository: OrderRepositoryProtocol

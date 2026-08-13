@@ -17,7 +17,7 @@ final class ETicketViewModel: ObservableObject {
     private var originalBrightness: CGFloat = 0.5
     private var cancellables = Set<AnyCancellable>()
     private let ciContext = CIContext(options: [.useSoftwareRenderer: false])
-    private static let logger = Logger(subsystem: "com.cinematicket", category: "ETicket")
+    nonisolated private static let logger = Logger(subsystem: "com.cinematicket", category: "ETicket")
     
     init(ticket: Ticket) {
         self.ticket = ticket

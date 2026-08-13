@@ -28,7 +28,7 @@ final class ProfileViewModel: ObservableObject {
     private let userRepository: UserRepositoryProtocol
     weak var appViewModel: AppViewModel?
 
-    private static let logger = Logger(subsystem: "com.cinematicket", category: "Profile")
+    nonisolated private static let logger = Logger(subsystem: "com.cinematicket", category: "Profile")
 
     // MARK: - Init
 

@@ -13,7 +13,7 @@ public class AuthViewModel: ObservableObject {
     @Published public var errorMessage: String? = nil
     
     private weak var appViewModel: AppViewModel?
-    private static let logger = Logger(subsystem: "com.cinematicket", category: "Auth")
+    nonisolated private static let logger = Logger(subsystem: "com.cinematicket", category: "Auth")
     
     public init(appViewModel: AppViewModel? = nil) {
         self.appViewModel = appViewModel
