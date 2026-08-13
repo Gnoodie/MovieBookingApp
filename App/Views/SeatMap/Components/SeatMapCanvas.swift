@@ -65,6 +65,10 @@ struct SeatMapCanvas: View {
                         }
                         .onEnded { val in
                             if abs(val.translation.width) < 10 && abs(val.translation.height) < 10 {
+                                // val.location là tọa độ bên trong Canvas frame
+                                // Canvas được vẽ với translate(offset) + scale
+                                // Nên chỉ cần đảo ngược offset pan và scale, KHÔNG trừ xOffset/yOffset
+                                // (xOffset/yOffset chỉ dùng để căn giữa Canvas bằng .offset(), không ảnh hưởng location)
                                 handleTap(at: val.location)
                             } else {
                                 lastOffset = offset
@@ -129,12 +133,19 @@ struct SeatMapCanvas: View {
     // MARK: - Tap Handling
 
     private func handleTap(at location: CGPoint) {
+        // val.location từ DragGesture nằm trong hệ tọa độ của Canvas view
+        // Canvas được render với context.translateBy(offset) + context.scaleBy(scale)
+        // Để tìm điểm trong canvas coordinate space:
+        //   canvas_x = (screen_x - offset.width) / scale
+        //   canvas_y = (screen_y - offset.height) / scale
+        // KHÔNG trừ xOffset/yOffset vì .offset() modifier chỉ di chuyển view trên màn hình,
+        // còn gesture location đã được SwiftUI quy đổi về local frame của view (trước .offset)
         let tapX = (location.x - offset.width) / scale
         let tapY = (location.y - offset.height) / scale
         let point = CGPoint(x: tapX, y: tapY)
 
         #if DEBUG
-        print("📍 [SeatMapCanvas] tap: \(location), computed point: \(point)")
+        print("📍 [SeatMapCanvas] tap location: \(location), offset: \(offset), scale: \(scale), computed: \(point)")
         #endif
 
         // Kiểm tra ghế couple trước (frame rộng hơn)

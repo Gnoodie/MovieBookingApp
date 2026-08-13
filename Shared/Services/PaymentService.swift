@@ -22,6 +22,10 @@ final class PaymentService: ObservableObject {
     // Callback được gọi khi MoMo/VNPay redirect về app
     var pendingPaymentCompletion: ((PaymentResult) -> Void)?
 
+    // QR Demo sheet state
+    @Published var isShowingQRSheet: Bool = false
+    private var qrPaymentContinuation: CheckedContinuation<PaymentResult, Never>?
+
     // MARK: - Public API
 
     func pay(method: PaymentMethod, order: PendingOrderInfo) async -> PaymentResult {
@@ -80,13 +84,29 @@ final class PaymentService: ObservableObject {
         pendingPaymentCompletion = nil
     }
 
-    // MARK: - Private: Mock Pay
+    // MARK: - Private: Mock Pay (QR Demo)
 
     private func mockPay(order: PendingOrderInfo) async -> PaymentResult {
-        // Giả lập delay xử lý thanh toán
-        try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 giây
-        let ref = "MOCK-\(UUID().uuidString.prefix(8).uppercased())"
-        return .success(reference: ref)
+        // Hiển thị QR Sheet — người dùng tap "Xác nhận" để hoàn tất
+        return await withCheckedContinuation { continuation in
+            self.qrPaymentContinuation = continuation
+            self.isShowingQRSheet = true
+        }
+    }
+
+    /// Gọi khi user tap "Xác nhận thanh toán" trên QR Sheet
+    func confirmQRPayment() {
+        let ref = "QR-DEMO-\(UUID().uuidString.prefix(8).uppercased())"
+        isShowingQRSheet = false
+        qrPaymentContinuation?.resume(returning: .success(reference: ref))
+        qrPaymentContinuation = nil
+    }
+
+    /// Gọi khi user đóng QR Sheet mà không xác nhận
+    func cancelQRPayment() {
+        isShowingQRSheet = false
+        qrPaymentContinuation?.resume(returning: .cancelled)
+        qrPaymentContinuation = nil
     }
 
     // MARK: - Private: MoMo Deep-link

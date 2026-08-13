@@ -3,26 +3,26 @@ import Foundation
 // MARK: - PaymentMethod
 
 enum PaymentMethod: String, Codable, CaseIterable {
-    case applePay = "apple_pay"
+    case mockPay  = "mock_pay"   // Thanh toán QR Demo (cất quản lý cho Apple reviewer)
     case momo     = "momo"
     case vnpay    = "vnpay"
-    case mockPay  = "mock_pay"   // Chỉ dùng trong Debug / Dev
+    case applePay = "apple_pay"
 
     var displayName: String {
         switch self {
-        case .applePay: return "Apple Pay"
+        case .mockPay:  return "Thanh toán QR Demo"
         case .momo:     return "MoMo"
         case .vnpay:    return "VNPay"
-        case .mockPay:  return "Thanh toán thử (Dev)"
+        case .applePay: return "Apple Pay"
         }
     }
 
     var icon: String {
         switch self {
-        case .applePay: return "🍎"
+        case .mockPay:  return "⚡"
         case .momo:     return "💜"
         case .vnpay:    return "🔵"
-        case .mockPay:  return "🧪"
+        case .applePay: return "🍎"
         }
     }
 

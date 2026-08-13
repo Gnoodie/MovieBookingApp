@@ -20,7 +20,7 @@ struct PaymentMethodCard: View {
                 Text(method.icon)
                     .font(.system(size: 24))
                     .frame(width: 40, height: 40)
-                    .background(Color.white.opacity(0.08))
+                    .background(iconBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                 // Name + Description
@@ -30,8 +30,16 @@ struct PaymentMethodCard: View {
                             .font(.headingSmall)
                             .foregroundColor(method.isAvailable ? .textPrimary : .textDisabled)
 
-                        // Badge "Sắp có" cho Apple Pay
-                        if !method.isAvailable {
+                        // Badge: "Khuyên dùng" cho QR Demo, "Sắp có" cho Apple Pay
+                        if method == .mockPay {
+                            Text("Khuyên dùng")
+                                .font(.system(size: 9, weight: .black))
+                                .foregroundColor(.black)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 2)
+                                .background(Color(hex: "#D4AF37"))
+                                .cornerRadius(4)
+                        } else if !method.isAvailable {
                             Text("Sắp có")
                                 .font(.system(size: 10, weight: .bold))
                                 .foregroundColor(.textDisabled)
@@ -55,12 +63,16 @@ struct PaymentMethodCard: View {
             .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color.backgroundSecondary)
+                    .fill(method == .mockPay && isSelected
+                          ? Color(hex: "#D4AF37").opacity(0.08)
+                          : Color.backgroundSecondary)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .strokeBorder(
-                        isSelected ? Color.accentTeal : Color.backgroundTertiary,
+                        isSelected
+                            ? (method == .mockPay ? Color(hex: "#D4AF37") : Color.accentTeal)
+                            : Color.backgroundTertiary,
                         lineWidth: isSelected ? 1.5 : 1
                     )
             )
@@ -71,20 +83,31 @@ struct PaymentMethodCard: View {
         .disabled(!method.isAvailable)
     }
 
+    // MARK: - Icon Background
+
+    private var iconBackground: Color {
+        switch method {
+        case .mockPay:  return Color(hex: "#D4AF37").opacity(0.15)
+        default:        return Color.white.opacity(0.08)
+        }
+    }
+
     // MARK: - Radio Indicator
 
     private var radioIndicator: some View {
         ZStack {
             Circle()
                 .strokeBorder(
-                    isSelected ? Color.accentTeal : Color.backgroundTertiary,
+                    isSelected
+                        ? (method == .mockPay ? Color(hex: "#D4AF37") : Color.accentTeal)
+                        : Color.backgroundTertiary,
                     lineWidth: 2
                 )
                 .frame(width: 22, height: 22)
 
             if isSelected {
                 Circle()
-                    .fill(Color.accentTeal)
+                    .fill(method == .mockPay ? Color(hex: "#D4AF37") : Color.accentTeal)
                     .frame(width: 12, height: 12)
                     .transition(.scale.combined(with: .opacity))
             }
@@ -96,10 +119,10 @@ struct PaymentMethodCard: View {
 
     private var methodDescription: String {
         switch method {
-        case .momo:     return "Thanh toán qua ví MoMo"
-        case .vnpay:    return "Thanh toán qua VNPay"
-        case .applePay: return "Thanh toán bằng Apple Pay"
-        case .mockPay:  return "Giả lập thanh toán (Dev)"
+        case .mockPay:  return "Quét mã QR demo — hoàn tất đặt vé ngay lập tức"
+        case .momo:     return "Thanh toán qua ví MoMo (Đang thử nghiệm)"
+        case .vnpay:    return "Thanh toán qua VNPay (Đang thử nghiệm)"
+        case .applePay: return "Thanh toán bằng Apple Pay (Sắp ra mắt)"
         }
     }
 }

@@ -11,6 +11,7 @@ struct CheckoutView: View {
     @EnvironmentObject var appViewModel: AppViewModel
 
     @State private var navigateToSuccess: Bool = false
+    @ObservedObject private var paymentService = PaymentService.shared
 
     // MARK: - Init
 
@@ -77,6 +78,16 @@ struct CheckoutView: View {
                 HapticManager.shared.notification(type: .success)
                 navigateToSuccess = true
             }
+        }
+        .sheet(isPresented: $paymentService.isShowingQRSheet, onDismiss: {
+            // Nếu đóng sheet mà không xác nhận thì huỷ
+            paymentService.cancelQRPayment()
+        }) {
+            QRDemoPaymentSheet(
+                totalFormatted: viewModel.formattedTotal,
+                onConfirm: { paymentService.confirmQRPayment() },
+                onCancel: { paymentService.cancelQRPayment() }
+            )
         }
         .alert(isPresented: Binding(
             get: { viewModel.paymentError != nil },
@@ -370,22 +381,13 @@ struct CheckoutView: View {
 
             VStack(spacing: 8) {
                 ForEach(PaymentMethod.allCases, id: \.self) { method in
-                    // Mock Pay chỉ hiện trong DEBUG
-                    if method == .mockPay {
-                        #if DEBUG
-                        PaymentMethodCard(
-                            method: method,
-                            isSelected: viewModel.selectedPaymentMethod == method,
-                            onTap: { viewModel.selectPaymentMethod(method) }
-                        )
-                        #endif
-                    } else {
-                        PaymentMethodCard(
-                            method: method,
-                            isSelected: viewModel.selectedPaymentMethod == method,
-                            onTap: { viewModel.selectPaymentMethod(method) }
-                        )
-                    }
+                    // Tất cả phương thức đều hiển thị — bao gồm QR Demo
+                    // để Apple reviewer có thể hoàn tất luồng đặt vé
+                    PaymentMethodCard(
+                        method: method,
+                        isSelected: viewModel.selectedPaymentMethod == method,
+                        onTap: { viewModel.selectPaymentMethod(method) }
+                    )
                 }
             }
         }

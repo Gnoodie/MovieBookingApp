@@ -21,7 +21,7 @@ final class CheckoutViewModel: ObservableObject {
     @Published var voucherError: String? = nil
     @Published var voucherApplied: Bool = false
 
-    @Published var selectedPaymentMethod: PaymentMethod = .momo
+    @Published var selectedPaymentMethod: PaymentMethod = .mockPay
     @Published var isProcessingPayment: Bool = false
     @Published var paymentError: String? = nil
 
