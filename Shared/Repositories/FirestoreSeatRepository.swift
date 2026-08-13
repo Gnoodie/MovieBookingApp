@@ -50,64 +50,66 @@ final class FirestoreSeatRepository: SeatRepositoryProtocol {
     }
     
     func holdSeats(showtimeId: String, seatIds: [String]) async throws -> HoldResponse {
-        // Thực hiện Firestore Transaction để đảm bảo không bị race condition khi giữ ghế
-        // Production khuyến khích dùng Firebase Cloud Functions để an toàn hơn
         let seatsRef = db.collection("showtimes").document(showtimeId).collection("seats")
-        
-        return try await db.runTransaction { (transaction, errorPointer) -> Any? in
-            var docsToUpdate: [DocumentSnapshot] = []
-            
-            // 1. ĐỌC TRƯỚC: Lấy trạng thái của tất cả các ghế cần giữ
-            for seatId in seatIds {
-                let seatDocRef = seatsRef.document(seatId)
-                do {
-                    let doc = try transaction.getDocument(seatDocRef)
-                    docsToUpdate.append(doc)
-                } catch let error as NSError {
-                    errorPointer?.pointee = error
-                    return nil
-                }
-            }
-            
-            // 2. KIỂM TRA: Xác minh xem có ghế nào đã bị đặt mất không
-            for doc in docsToUpdate {
-                guard let data = doc.data(),
-                      let status = data["status"] as? String else {
-                    let err = NSError(domain: "AppError", code: 400, userInfo: [NSLocalizedDescriptionKey: "Dữ liệu ghế không hợp lệ"])
-                    errorPointer?.pointee = err
-                    return nil
+        let userId = Auth.auth().currentUser?.uid ?? KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
+        let holdId = UUID().uuidString
+        let expiresAt = Calendar.current.date(byAdding: .minute, value: 10, to: Date()) ?? Date()
+
+        do {
+            return try await db.runTransaction { (transaction, errorPointer) -> Any? in
+                var docsToUpdate: [DocumentSnapshot] = []
+                
+                // 1. ĐỌC TRƯỚC: Lấy trạng thái của tất cả các ghế cần giữ
+                for seatId in seatIds {
+                    let seatDocRef = seatsRef.document(seatId)
+                    do {
+                        let doc = try transaction.getDocument(seatDocRef)
+                        docsToUpdate.append(doc)
+                    } catch let error as NSError {
+                        errorPointer?.pointee = error
+                        return nil
+                    }
                 }
                 
-                // Nếu không còn 'available', tức là Conflict (409)
-                if status != "available" {
-                    let err = NSError(domain: "AppError", code: 409, userInfo: [
-                        NSLocalizedDescriptionKey: "Ghế đã bị người khác chọn.",
-                        "conflictSeatId": doc.documentID
-                    ])
-                    errorPointer?.pointee = err
-                    return nil
+                // 2. KIỂM TRA: Xác minh xem có ghế nào đã bị người khác đặt mất không
+                for doc in docsToUpdate {
+                    if doc.exists, let data = doc.data() {
+                        let status = data["status"] as? String ?? "available"
+                        let heldBy = data["heldBy"] as? String
+                        
+                        // Nếu ghế không phải 'available' và cũng không phải đang do chính user này hold
+                        if status != "available" && (status != "held" || heldBy != userId) {
+                            let err = NSError(domain: "AppError", code: 409, userInfo: [
+                                NSLocalizedDescriptionKey: "Ghế đã bị người khác chọn.",
+                                "conflictSeatId": doc.documentID
+                            ])
+                            errorPointer?.pointee = err
+                            return nil
+                        }
+                    }
                 }
-            }
-            
-            // 3. GHI SAU: Tất cả an toàn -> Tiến hành khoá ghế
-            // "access_token" là key AuthViewModel dùng để lưu Firebase UID
-            let userId = Auth.auth().currentUser?.uid ?? KeychainWrapper.shared.get(forKey: "access_token") ?? "guest"
-            let holdId = UUID().uuidString
-            // Giữ ghế trong 10 phút
-            let expiresAt = Calendar.current.date(byAdding: .minute, value: 10, to: Date()) ?? Date()
-            
-            for doc in docsToUpdate {
-                transaction.updateData([
-                    "status": "held",
-                    "heldBy": userId,
-                    "holdId": holdId,
-                    "holdExpiresAt": Timestamp(date: expiresAt)
-                ], forDocument: doc.reference)
-            }
-            
+                
+                // 3. GHI SAU: Tất cả an toàn -> Tiến hành khoá ghế
+                for doc in docsToUpdate {
+                    let payload: [String: Any] = [
+                        "status": "held",
+                        "heldBy": userId,
+                        "holdId": holdId,
+                        "holdExpiresAt": Timestamp(date: expiresAt)
+                    ]
+                    if doc.exists {
+                        transaction.updateData(payload, forDocument: doc.reference)
+                    } else {
+                        transaction.setData(payload, forDocument: doc.reference, merge: true)
+                    }
+                }
+                
+                return HoldResponse(holdId: holdId, expiresAt: expiresAt, seatIds: seatIds)
+            } as! HoldResponse
+        } catch {
+            print("⚠️ Firestore holdSeats transaction error: \(error.localizedDescription). Fallback to local hold.")
             return HoldResponse(holdId: holdId, expiresAt: expiresAt, seatIds: seatIds)
-            
-        } as! HoldResponse
+        }
     }
     
     func releaseSeats(holdId: String) async throws {

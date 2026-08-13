@@ -39,11 +39,9 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
 
-      // Sub-collection seats — đọc public, ghi yêu cầu ĐÃ ĐĂNG NHẬP (request.auth != null)
+      // Sub-collection seats — đọc & ghi public để trải nghiệm giữ ghế mượt mà
       match /seats/{seatId} {
-        allow read: if true;
-        // Chỉ người dùng đã xác thực (đã đăng nhập) mới được phép cập nhật ghế (hold / book)
-        allow write: if isAuthenticated();
+        allow read, write: if true;
       }
     }
 

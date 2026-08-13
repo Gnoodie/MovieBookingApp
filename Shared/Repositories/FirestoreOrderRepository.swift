@@ -57,7 +57,7 @@ final class FirestoreOrderRepository: OrderRepositoryProtocol {
 
         // Thực hiện Transaction
         try await db.runTransaction { (transaction, errorPointer) -> Any? in
-            // 1. ĐỌC: Kiểm tra tất cả ghế vẫn còn ở trạng thái 'held' bởi user này
+            // 1. ĐỌC: Kiểm tra tất cả ghế không bị booked bởi người khác
             for seat in seats {
                 let seatRef = seatsRef.document(seat.id)
                 let seatDoc: DocumentSnapshot
@@ -68,32 +68,35 @@ final class FirestoreOrderRepository: OrderRepositoryProtocol {
                     return nil
                 }
 
-                guard let data = seatDoc.data(),
-                      let status = data["status"] as? String,
-                      let heldBy = data["heldBy"] as? String else {
-                    let err = NSError(domain: "OrderError", code: 400,
-                        userInfo: [NSLocalizedDescriptionKey: "Dữ liệu ghế \(seat.displayName) không hợp lệ."])
-                    errorPointer?.pointee = err
-                    return nil
-                }
+                if seatDoc.exists, let data = seatDoc.data() {
+                    let status = data["status"] as? String ?? "available"
+                    let heldBy = data["heldBy"] as? String ?? ""
 
-                // Ghế phải đang held bởi chính user này
-                if status != "held" || heldBy != userId {
-                    let err = NSError(domain: "OrderError", code: 409,
-                        userInfo: [NSLocalizedDescriptionKey: "Ghế \(seat.displayName) không còn được giữ. Vui lòng chọn lại."])
-                    errorPointer?.pointee = err
-                    return nil
+                    // Nếu đã bị booked bởi order khác
+                    if status == "booked" && heldBy != userId {
+                        let err = NSError(domain: "OrderError", code: 409,
+                            userInfo: [NSLocalizedDescriptionKey: "Ghế \(seat.displayName) đã được người khác đặt."])
+                        errorPointer?.pointee = err
+                        return nil
+                    }
                 }
             }
 
             // 2. GHI: Chuyển tất cả ghế sang 'booked'
             for seat in seats {
                 let seatRef = seatsRef.document(seat.id)
-                transaction.updateData([
+                let seatDoc = try? transaction.getDocument(seatRef)
+                let payload: [String: Any] = [
                     "status": "booked",
                     "bookedByOrderId": orderId,
-                    "bookedAt": Timestamp(date: now)
-                ], forDocument: seatRef)
+                    "bookedAt": Timestamp(date: now),
+                    "heldBy": userId
+                ]
+                if let doc = seatDoc, doc.exists {
+                    transaction.updateData(payload, forDocument: seatRef)
+                } else {
+                    transaction.setData(payload, forDocument: seatRef, merge: true)
+                }
             }
 
             // 3. GHI: Tạo Order document

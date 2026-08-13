@@ -115,7 +115,13 @@ struct SeatMapView: View {
                 SeatMapCanvas(
                     layout: layout,
                     selectedSeatIds: viewModel.selectedSeatIds,
-                    onSeatTapped: { seat in viewModel.seatTapped(seat) }
+                    onSeatTapped: { seat in
+                        if !appViewModel.isAuthenticated {
+                            appViewModel.showLoginSheet = true
+                        } else {
+                            viewModel.seatTapped(seat)
+                        }
+                    }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
@@ -141,7 +147,9 @@ struct SeatMapView: View {
                     selectedSeats: viewModel.selectedSeats,
                     totalPrice: viewModel.totalPriceFormatted,
                     onContinue: {
-                        if viewModel.isHoldActive {
+                        if !appViewModel.isAuthenticated {
+                            appViewModel.showLoginSheet = true
+                        } else if viewModel.isHoldActive {
                             navigateToFnB = true
                         } else {
                             viewModel.holdSelectedSeats()

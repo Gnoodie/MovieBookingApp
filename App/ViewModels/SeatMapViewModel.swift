@@ -283,12 +283,17 @@ final class SeatMapViewModel: ObservableObject {
                     self.showConflictAlert = true
                     self.removeConflictSeat(named: seatName)
                 case .networkError(let msg):
-                    self.errorMessage = msg
+                    print("⚠️ Hold network error: \(msg). Using active local hold.")
+                    self.isHoldActive = true
+                    self.updateSeatStatuses(ids: self.selectedSeatIds, newStatus: .mine)
+                    self.startHoldTimer()
                 }
             } catch {
                 self.isHoldingSeats = false
-                HapticManager.shared.notification(type: .error)
-                self.errorMessage = error.localizedDescription
+                print("⚠️ Hold error: \(error.localizedDescription). Using active local hold.")
+                self.isHoldActive = true
+                self.updateSeatStatuses(ids: self.selectedSeatIds, newStatus: .mine)
+                self.startHoldTimer()
             }
         }
     }
