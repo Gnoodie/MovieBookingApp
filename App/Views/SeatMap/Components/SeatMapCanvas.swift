@@ -65,7 +65,7 @@ struct SeatMapCanvas: View {
                         }
                         .onEnded { val in
                             if abs(val.translation.width) < 10 && abs(val.translation.height) < 10 {
-                                handleTap(at: val.location, xOffset: xOffset, yOffset: yOffset)
+                                handleTap(at: val.location)
                             } else {
                                 lastOffset = offset
                             }
@@ -128,10 +128,14 @@ struct SeatMapCanvas: View {
 
     // MARK: - Tap Handling
 
-    private func handleTap(at location: CGPoint, xOffset: CGFloat, yOffset: CGFloat) {
-        let tapX = (location.x - xOffset - offset.width) / scale
-        let tapY = (location.y - yOffset - offset.height) / scale
+    private func handleTap(at location: CGPoint) {
+        let tapX = (location.x - offset.width) / scale
+        let tapY = (location.y - offset.height) / scale
         let point = CGPoint(x: tapX, y: tapY)
+
+        #if DEBUG
+        print("📍 [SeatMapCanvas] tap: \(location), computed point: \(point)")
+        #endif
 
         // Kiểm tra ghế couple trước (frame rộng hơn)
         if let seat = layout.seat(at: point) {
